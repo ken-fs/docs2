@@ -7,8 +7,8 @@ import type { Locale } from "./locales";
  */
 const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
   en: () => import("./dictionaries/en").then((m) => m.default),
-  "zh-Hans": () => import("./dictionaries/zh-Hans").then((m) => m.default),
-  "zh-Hant": () => import("./dictionaries/zh-Hant").then((m) => m.default),
+  "zh-CN": () => import("./dictionaries/zh-CN").then((m) => m.default),
+  "zh-TW": () => import("./dictionaries/zh-TW").then((m) => m.default),
   es: () => import("./dictionaries/es").then((m) => m.default),
   pt: () => import("./dictionaries/pt").then((m) => m.default),
   ja: () => import("./dictionaries/ja").then((m) => m.default),

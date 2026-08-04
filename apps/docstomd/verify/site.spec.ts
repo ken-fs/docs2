@@ -2,8 +2,21 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
 
-const LOCALES = ["en", "zh-Hans", "zh-Hant", "es", "pt", "ja"] as const;
+/** [hreflang 语言码, URL 前缀]。英文不带前缀。 */
+const LOCALES = [
+  ["en", ""],
+  ["zh-CN", "zh-cn"],
+  ["zh-TW", "zh-tw"],
+  ["es", "es"],
+  ["pt", "pt"],
+  ["ja", "ja"],
+] as const;
 const SLUGS = ["", "docx-to-markdown", "word-to-markdown", "google-docs-to-markdown"];
+
+/** 全站 trailingSlash，路径一律以 / 结尾。 */
+function url(prefix: string, slug: string) {
+  return `/${[prefix, slug].filter(Boolean).map((p) => `${p}/`).join("")}`;
+}
 // 固件跟测试放一起：rich.docx 是手工拼的（textutil 生成的 docx 没有 pStyle、
 // 没有 w:tbl、没有 numPr，测不出东西），丢了就得重造，不能放 /tmp。
 const FIXTURES = path.join(__dirname, "fixtures");
@@ -25,10 +38,10 @@ function watchNetwork(page: import("@playwright/test").Page) {
   return { external, errors };
 }
 
-for (const locale of LOCALES) {
+for (const [locale, prefix] of LOCALES) {
   for (const slug of SLUGS) {
-    const path = `/${locale}${slug ? `/${slug}` : ""}`;
-    test(`renders ${path}`, async ({ page }) => {
+    const path = url(prefix, slug);
+    test(`renders ${path} (${locale})`, async ({ page }) => {
       const { external, errors } = watchNetwork(page);
       await page.goto(path, { waitUntil: "networkidle" });
 
@@ -48,7 +61,7 @@ for (const locale of LOCALES) {
 
 test("no horizontal overflow at 375px", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  for (const path of ["/en", "/ja/docx-to-markdown", "/zh-Hant/word-to-markdown", "/pt/google-docs-to-markdown"]) {
+  for (const path of ["/", "/ja/docx-to-markdown/", "/zh-tw/word-to-markdown/", "/pt/google-docs-to-markdown/"]) {
     await page.goto(path, { waitUntil: "networkidle" });
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -65,24 +78,41 @@ test("no horizontal overflow at 375px", async ({ page }) => {
   }
 });
 
-test("language switch keeps the slug and writes a cookie", async ({ page, context }) => {
-  await page.goto("/en/word-to-markdown");
-  await page.getByRole("button", { name: /language|语言|語言|idioma|言語/i }).click();
-  await page.getByRole("menuitemradio", { name: "日本語" }).click();
-  await expect(page).toHaveURL(/\/ja\/word-to-markdown$/);
+test("language switch keeps the slug", async ({ page }) => {
+  await page.goto("/word-to-markdown/");
+  const box = page.locator('[data-slot="lang-switch"]');
+
+  await box.locator("summary").click();
+  await box.getByRole("link", { name: "日本語" }).click();
+  await expect(page).toHaveURL(/\/ja\/word-to-markdown\/$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
 
-  const cookie = (await context.cookies()).find((c) => c.name === "locale");
-  expect(cookie?.value).toBe("ja");
-
   // 切回去，slug 还得在
-  await page.getByRole("button", { name: /language|言語/i }).click();
-  await page.getByRole("menuitemradio", { name: "Español" }).click();
-  await expect(page).toHaveURL(/\/es\/word-to-markdown$/);
+  await box.locator("summary").click();
+  await box.getByRole("link", { name: "Español" }).click();
+  await expect(page).toHaveURL(/\/es\/word-to-markdown\/$/);
+
+  // 英文没有前缀，切回英文应该落在裸 slug 上
+  await box.locator("summary").click();
+  await box.getByRole("link", { name: "English" }).click();
+  await expect(page).toHaveURL(/\/word-to-markdown\/$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+});
+
+test("the switcher's six links sit in the static HTML", async ({ request }) => {
+  // 爬虫不跑 JS 也得能顺着链接找到另外五个语种，所以链接必须在源码里，
+  // 不能等展开才挂载
+  const html = await (await request.get("/ja/word-to-markdown/")).text();
+  const box = html.match(/<details[^>]*data-slot="lang-switch"[\s\S]*?<\/details>/)?.[0];
+  expect(box, "lang-switch 不在静态 HTML 里").toBeTruthy();
+
+  for (const [locale, prefix] of LOCALES) {
+    expect(box, `缺 ${locale} 的链接`).toContain(`href="${url(prefix, "word-to-markdown")}"`);
+  }
 });
 
 test("accordion opens and closes with a height transition", async ({ page }) => {
-  await page.goto("/en");
+  await page.goto("/");
   const triggers = page.locator("#faq button");
   const first = triggers.first();
   const second = triggers.nth(1);
@@ -113,7 +143,7 @@ test("accordion opens and closes with a height transition", async ({ page }) => 
 
 test("docx converts, tabs slide, preview and download work", async ({ page }) => {
   const { external, errors } = watchNetwork(page);
-  await page.goto("/en");
+  await page.goto("/");
 
   await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/rich.docx`);
 
@@ -174,7 +204,7 @@ test("docx converts, tabs slide, preview and download work", async ({ page }) =>
 
 test("copy puts markdown on the clipboard", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto("/en");
+  await page.goto("/");
   await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/rich.docx`);
   await expect(page.locator("pre").first()).toBeVisible({ timeout: 15000 });
 
@@ -187,7 +217,7 @@ test("copy puts markdown on the clipboard", async ({ page, context }) => {
 });
 
 test("pasting a file from the clipboard converts it", async ({ page }) => {
-  await page.goto("/en");
+  await page.goto("/");
   // 造一个带 files 的 paste 事件，走的是 window 上的监听
   const b64 = readFileSync(`${FIXTURES}/rich.docx`).toString("base64");
   const paste = () =>
@@ -218,52 +248,65 @@ test("pasting a file from the clipboard converts it", async ({ page }) => {
   await expect(page.getByText("pasted.docx")).toBeVisible();
 });
 
-test("the cookie the switcher writes stops the proxy from guessing", async ({ page, context }) => {
-  // 先按日语协商一次
-  await page.goto("/en");
-  await page.getByRole("button", { name: /language/i }).click();
-  await page.getByRole("menuitemradio", { name: "Português" }).click();
-  await expect(page).toHaveURL(/\/pt$/);
-
-  // 再裸访问 /，应该被 cookie 带去葡语，而不是 Accept-Language 的 en
-  await page.goto("/");
-  await expect(page).toHaveURL(/\/pt$/);
-  await expect(page.locator("html")).toHaveAttribute("lang", "pt");
-  void context;
-});
-
-test("unsupported language prefixes fold to the nearest locale", async ({ page }) => {
-  const cases: [string, RegExp][] = [
-    // 不支持的语种 → 退到英文，而不是 /en/de 然后 404
-    ["/de", /\/en$/],
-    ["/ko/word-to-markdown", /\/en\/word-to-markdown$/],
-    // 地区变体 → 折到对应的字/语言
-    ["/zh-CN", /\/zh-Hans$/],
-    ["/zh-TW/docx-to-markdown", /\/zh-Hant\/docx-to-markdown$/],
-    ["/pt-BR", /\/pt$/],
-    ["/es-MX/word-to-markdown", /\/es\/word-to-markdown$/],
-    ["/ja-JP", /\/ja$/],
-  ];
-
-  for (const [from, to] of cases) {
-    const res = await page.goto(from);
-    expect(res?.status(), `status for ${from}`).toBe(200);
-    await expect(page, `${from} should land on ${to}`).toHaveURL(to);
-    await expect(page.locator("h1")).toBeVisible();
+test("every canonical URL answers 200", async ({ request }) => {
+  for (const [, prefix] of LOCALES) {
+    for (const slug of SLUGS) {
+      const p = url(prefix, slug);
+      expect((await request.get(p)).status(), `status for ${p}`).toBe(200);
+    }
   }
 });
 
-test("real 404s stay 404s", async ({ page }) => {
-  // 普通错路径不该被当成语言标签，否则每个 typo 都变成软 404
-  for (const path of ["/en/nope", "/nonsense-path", "/en/docx-to-markdown/extra"]) {
-    const res = await page.goto(path);
-    expect(res?.status(), `status for ${path}`).toBe(404);
+test("paths that don't exist are real 404s, not soft ones", async ({ request }) => {
+  // 静态导出没有 proxy 兜底了。打错的路径必须真 404 ——
+  // 回一个 200 的英文首页就是软 404，比 404 更伤索引
+  for (const p of [
+    "/nope/",
+    "/nonsense-path/",
+    "/docx-to-markdown/extra/",
+    // 没做的语种就是没有这一页
+    "/de/",
+    "/ko/word-to-markdown/",
+    // 大小写不同的前缀不该另开一份，路径一律小写
+    "/ZH-CN/",
+    // 英文不带前缀，/en/ 不该存在，否则同一份内容两个地址
+    "/en/",
+    "/en/word-to-markdown/",
+  ]) {
+    expect((await request.get(p)).status(), `status for ${p}`).toBe(404);
   }
+});
+
+test("a missing trailing slash redirects to the canonical form", async ({ request }) => {
+  for (const [from, to] of [
+    ["/word-to-markdown", "/word-to-markdown/"],
+    ["/ja/docx-to-markdown", "/ja/docx-to-markdown/"],
+  ]) {
+    const res = await request.get(from, { maxRedirects: 0 });
+    expect(res.status(), `status for ${from}`).toBe(308);
+    expect(res.headers()["location"], `location for ${from}`).toBe(to);
+  }
+});
+
+test("sitemap and robots list only URLs that exist", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  const locs = [...xml.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
+  expect(locs).toHaveLength(LOCALES.length * SLUGS.length);
+  for (const loc of locs) {
+    expect(loc, `${loc} 少了尾斜杠`).toMatch(/\/$/);
+    const p = new URL(loc).pathname;
+    expect((await request.get(p)).status(), `sitemap 里的 ${p}`).toBe(200);
+  }
+
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain("sitemap.xml");
+  // 别把整站 Disallow 掉
+  expect(robots).not.toMatch(/^Disallow: \/$/m);
 });
 
 test("legacy .doc converts too", async ({ page }) => {
   const { external, errors } = watchNetwork(page);
-  await page.goto("/zh-Hans");
+  await page.goto("/zh-cn/");
   await page.locator('input[type=file]').setInputFiles(`${FIXTURES}/sample.doc`);
   await expect(page.locator("pre").first()).toBeVisible({ timeout: 20000 });
   const md = await page.locator("pre").first().innerText();
@@ -275,7 +318,7 @@ test("legacy .doc converts too", async ({ page }) => {
 
 test("batch of two files offers a zip", async ({ page }) => {
   const { external, errors } = watchNetwork(page);
-  await page.goto("/en");
+  await page.goto("/");
   await page.locator("input[type=file]").setInputFiles([
     `${FIXTURES}/rich.docx`,
     `${FIXTURES}/sample.doc`,

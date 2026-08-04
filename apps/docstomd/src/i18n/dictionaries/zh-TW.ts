@@ -22,7 +22,7 @@ const LEGACY: Faq = {
 };
 
 const zhHant: Dictionary = {
-  htmlLang: "zh-Hant",
+  htmlLang: "zh-TW",
   chrome: {
     eyebrow: "Word → Markdown",
     breadcrumbHome: "首頁",

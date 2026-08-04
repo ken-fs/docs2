@@ -21,7 +21,7 @@ const LEGACY: Faq = {
 };
 
 const zhHans: Dictionary = {
-  htmlLang: "zh-Hans",
+  htmlLang: "zh-CN",
   chrome: {
     eyebrow: "Word → Markdown",
     breadcrumbHome: "首页",

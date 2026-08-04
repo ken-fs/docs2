@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { PAGE_KEYS, urlOf } from "@/content/tools";
 import { LOCALES } from "@/i18n/locales";
 
+// 静态导出下 Next 要求元数据路由显式声明是静态的
+export const dynamic = "force-static";
+
 /**
  * 六语种 × 四个页面 = 24 条，每条都带上全部 hreflang 互指。
  * Google 要求这个关系是双向的，所以 alternates 里也包含自己。
