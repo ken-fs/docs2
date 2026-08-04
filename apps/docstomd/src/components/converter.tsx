@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
-import JSZip from "jszip";
 import { Button } from "@/components/ui/button";
 import {
   Tabs,
@@ -12,13 +11,12 @@ import {
 } from "@/components/ui/tabs";
 import { count, type Dictionary } from "@/i18n/types";
 import {
-  convertDocx,
   DEFAULT_OPTIONS,
   LegacyDocError,
   NotADocxError,
   type ConvertOptions,
   type ConvertResult,
-} from "@/lib/convert";
+} from "@document-tools/converters/types";
 import { cn } from "@/lib/utils";
 
 type Job = {
@@ -99,6 +97,10 @@ export function Converter({ t }: { t: T }) {
         );
 
         try {
+          // mammoth + turndown + cfb 加起来几 MB，只在真的有文件要转时才拉进来
+          const { convertDocx } = await import(
+            "@document-tools/converters/docx-to-markdown"
+          );
           const result = await convertDocx(file, options);
           setJobs((prev) =>
             prev.map((j) =>
@@ -177,6 +179,8 @@ export function Converter({ t }: { t: T }) {
   };
 
   const downloadZip = async () => {
+    // 打包下载是少数人才点的按钮，JSZip 别进首屏包
+    const { default: JSZip } = await import("jszip");
     const zip = new JSZip();
     for (const j of done) {
       if (j.result) zip.file(mdName(j.name), j.result.markdown);

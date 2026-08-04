@@ -5,8 +5,8 @@
  * 所以这里直接拼 Markdown，但输出风格要和 .docx 那边对齐（同样的 bullet、
  * 同样的围栏、同样的管道表格），否则两种输入出来的东西看着像两个工具。
  */
-import type { DocParagraph, DocRun } from "./doc";
-import type { ConvertOptions } from "./convert";
+import type { DocParagraph, DocRun } from "./legacy-doc";
+import type { ConvertOptions } from "./types";
 
 /** 行内 Markdown 元字符，转义掉免得正文里的 * _ 被当标记。 */
 function escapeInline(text: string) {

@@ -1,9 +1,12 @@
 import { readFileSync } from "node:fs";
+import path from "node:path";
 import { expect, test } from "@playwright/test";
 
 const LOCALES = ["en", "zh-Hans", "zh-Hant", "es", "pt", "ja"] as const;
 const SLUGS = ["", "docx-to-markdown", "word-to-markdown", "google-docs-to-markdown"];
-const FIXTURES = "/tmp/d2m-fixtures";
+// 固件跟测试放一起：rich.docx 是手工拼的（textutil 生成的 docx 没有 pStyle、
+// 没有 w:tbl、没有 numPr，测不出东西），丢了就得重造，不能放 /tmp。
+const FIXTURES = path.join(__dirname, "fixtures");
 
 /** 站点承诺"文件不出本机"，所以任何外部请求都算 bug。 */
 function watchNetwork(page: import("@playwright/test").Page) {

@@ -1,75 +1,22 @@
+/**
+ * DOCX → Markdown：mammoth 出 HTML，turndown 转 Markdown。
+ * 老 .doc 没有 HTML 中间层，走 legacy-doc.ts 的二进制解析器。
+ */
 import mammoth from "mammoth";
 import TurndownService from "turndown";
-import { DocParseError, parseDoc } from "./doc";
-import { docToMarkdown } from "./doc-to-markdown";
-
-export type ImageMode = "inline" | "strip" | "placeholder";
-
-export type ConvertOptions = {
-  bullet: "-" | "*" | "+";
-  heading: "atx" | "setext";
-  codeFence: "```" | "~~~";
-  images: ImageMode;
-  keepTables: boolean;
-};
-
-export const DEFAULT_OPTIONS: ConvertOptions = {
-  bullet: "-",
-  heading: "atx",
-  codeFence: "```",
-  images: "inline",
-  keepTables: true,
-};
-
-export type ConvertResult = {
-  markdown: string;
-  warnings: string[];
-  /** 走的是 .doc 二进制解析器，结果比 .docx 粗糙。 */
-  legacy?: boolean;
-  stats: {
-    words: number;
-    headings: number;
-    tables: number;
-    images: number;
-    links: number;
-    ms: number;
-  };
-};
-
-/**
- * .doc 走的是自己写的二进制解析器（src/lib/doc.ts），能出正文/标题/表格/
- * 粗斜体删除线，但拿不到图片和精确的列表编号格式。留这个类型是为了让 UI
- * 能提示「这是老格式，结果比 .docx 粗糙」。
- */
-export class LegacyDocError extends Error {
-  constructor(message = "legacy-doc") {
-    super(message);
-    this.name = "LegacyDocError";
-  }
-}
-
-export class NotADocxError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "NotADocxError";
-  }
-}
-
-const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04];
-const OLE_MAGIC = [0xd0, 0xcf, 0x11, 0xe0];
-
-function startsWith(bytes: Uint8Array, magic: number[]) {
-  return magic.every((b, i) => bytes[i] === b);
-}
-
-/**
- * 靠文件头判断真实格式，不信扩展名 —— 很多 .doc 其实是改名的 .docx，反之亦然。
- */
-export function sniff(bytes: Uint8Array): "docx" | "doc" | "unknown" {
-  if (startsWith(bytes, ZIP_MAGIC)) return "docx";
-  if (startsWith(bytes, OLE_MAGIC)) return "doc";
-  return "unknown";
-}
+import { DocParseError, parseDoc } from "./legacy-doc";
+import { docToMarkdown } from "./legacy-doc-to-markdown";
+import {
+  countStats,
+  DEFAULT_OPTIONS,
+  LegacyDocError,
+  NotADocxError,
+  sniff,
+  tidy,
+  wrapFence,
+  type ConvertOptions,
+  type ConvertResult,
+} from "./types";
 
 function buildTurndown(opts: ConvertOptions) {
   const td = new TurndownService({
@@ -200,19 +147,6 @@ function buildTurndown(opts: ConvertOptions) {
   return td;
 }
 
-/** 代码里本来就有 ``` 时，围栏要更长，否则块会提前闭合。 */
-function wrapFence(text: string, fence: "```" | "~~~") {
-  const char = fence[0];
-  const longest = Math.max(
-    0,
-    ...(text.match(new RegExp(`^\\${char}{3,}`, "gm")) ?? []).map(
-      (m) => m.length,
-    ),
-  );
-  const bar = char.repeat(Math.max(3, longest + 1));
-  return `${bar}\n${text}\n${bar}`;
-}
-
 function slug(s: string) {
   return (
     s
@@ -223,36 +157,6 @@ function slug(s: string) {
   );
 }
 
-/** 连续空行压到最多一个，行尾空格清掉（除了 markdown 的双空格换行）。 */
-function tidy(md: string) {
-  return md
-    .replace(/\r\n?/g, "\n")
-    .replace(/[ \t]+$/gm, (m) => (m === "  " ? m : ""))
-    .replace(/\n{3,}/g, "\n\n")
-    .replace(/^\n+/, "")
-    .trimEnd();
-}
-
-function count(md: string) {
-  // 围栏里的 # 和 | 不算标题/表格，两种围栏字符都要剥掉
-  const withoutCode = md
-    .replace(/^(`{3,})[\s\S]*?^\1/gm, "")
-    .replace(/^(~{3,})[\s\S]*?^\1/gm, "");
-  return {
-    words: (md.match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) ?? []).length,
-    headings: (withoutCode.match(/^#{1,6}\s+\S/gm) ?? []).length,
-    tables: (withoutCode.match(/^\|[^\n]*\|\s*$/gm) ?? []).length
-      ? (withoutCode.match(/^\|\s*---/gm) ?? []).length
-      : 0,
-    images: (md.match(/!\[[^\]]*\]\(/g) ?? []).length,
-    links: (md.match(/(?<!!)\[[^\]]*\]\(/g) ?? []).length,
-  };
-}
-
-/**
- * 老 .doc：自己解二进制。图片和列表编号格式拿不到，所以直接在 warnings 里
- * 说清楚，别让用户以为是转坏了。
- */
 function convertLegacyDoc(
   buffer: ArrayBuffer,
   opts: ConvertOptions,
@@ -282,7 +186,7 @@ function convertLegacyDoc(
     markdown,
     warnings,
     legacy: true,
-    stats: { ...count(markdown), ms: Math.round(performance.now() - started) },
+    stats: { ...countStats(markdown), ms: Math.round(performance.now() - started) },
   };
 }
 
@@ -341,6 +245,6 @@ export async function convertDocx(
   return {
     markdown,
     warnings,
-    stats: { ...count(markdown), ms: Math.round(performance.now() - started) },
+    stats: { ...countStats(markdown), ms: Math.round(performance.now() - started) },
   };
 }

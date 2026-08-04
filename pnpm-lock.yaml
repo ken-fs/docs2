@@ -6,20 +6,22 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  apps/docstomd:
     dependencies:
       '@base-ui/react':
         specifier: ^1.6.0
         version: 1.6.0(@types/react@19.2.18)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@document-tools/converters':
+        specifier: workspace:*
+        version: link:../../packages/converters
       '@formatjs/intl-localematcher':
         specifier: ^0.8.13
         version: 0.8.13
       '@iconify/react':
         specifier: ^6.0.2
         version: 6.0.2(react@19.2.4)
-      cfb:
-        specifier: ^1.2.2
-        version: 1.2.2
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -29,9 +31,6 @@ importers:
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
-      mammoth:
-        specifier: ^1.12.0
-        version: 1.12.0
       negotiator:
         specifier: ^1.0.0
         version: 1.0.0
@@ -47,9 +46,6 @@ importers:
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
-      turndown:
-        specifier: ^7.2.4
-        version: 7.2.4
     devDependencies:
       '@iconify-json/ph':
         specifier: ^1.2.2
@@ -72,9 +68,6 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.4(@types/react@19.2.18)
-      '@types/turndown':
-        specifier: ^5.0.6
-        version: 5.0.6
       eslint:
         specifier: ^9
         version: 9.39.5(jiti@2.7.0)
@@ -84,6 +77,25 @@ importers:
       tailwindcss:
         specifier: ^4
         version: 4.3.3
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+
+  packages/converters:
+    dependencies:
+      cfb:
+        specifier: ^1.2.2
+        version: 1.2.2
+      mammoth:
+        specifier: ^1.12.0
+        version: 1.12.0
+      turndown:
+        specifier: ^7.2.4
+        version: 7.2.4
+    devDependencies:
+      '@types/turndown':
+        specifier: ^5.0.6
+        version: 5.0.6
       typescript:
         specifier: ^5
         version: 5.9.3
