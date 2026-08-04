@@ -14,6 +14,7 @@ import {
   DEFAULT_OPTIONS,
   LegacyDocError,
   NotADocxError,
+  ZipBombError,
   type ConvertOptions,
   type ConvertResult,
 } from "@document-tools/converters/types";
@@ -38,7 +39,9 @@ function kb(n: number) {
 }
 
 function mdName(name: string) {
-  return name.replace(/\.(docx?|DOCX?)$/, "") + ".md";
+  // 粘贴的内容没有文件名，t.pastedName 可能带空格甚至 CJK，压成能当文件名的样子
+  const base = name.replace(/\.(docx?|DOCX?)$/, "").replace(/[/\\?%*:|"<>]/g, "-");
+  return `${base.trim() || "document"}.md`;
 }
 
 function save(blob: Blob, filename: string) {
@@ -110,8 +113,11 @@ export function Converter({ t }: { t: T }) {
           setActiveId((cur) => cur ?? job.id);
         } catch (err) {
           const legacy = err instanceof LegacyDocError;
+          // 这几类错自己的话说得比通用文案清楚（哪种格式、为什么拒绝），直接透给用户
           const message =
-            legacy || err instanceof NotADocxError
+            legacy ||
+            err instanceof NotADocxError ||
+            err instanceof ZipBombError
               ? err.message
               : t.readFail;
           setJobs((prev) =>
@@ -122,6 +128,42 @@ export function Converter({ t }: { t: T }) {
             ),
           );
         }
+      }
+    },
+    [jobs.length],
+  );
+
+  /**
+   * 粘贴过来的富文本走这条路：没有文件，只有一段 HTML。
+   *
+   * 剪贴板里的 HTML 来自任意网页，不比上传的文件可信 —— convertHtml 里同样
+   * 先过 DOMPurify 再进 turndown。
+   */
+  const runHtml = useCallback(
+    async (html: string, options: ConvertOptions, t: T) => {
+      const job: Job = {
+        id: `paste-${html.length}-${jobs.length}`,
+        name: t.pastedName,
+        size: html.length,
+        status: "chewing",
+      };
+      setJobs((prev) => [...prev, job]);
+
+      try {
+        const { convertHtml } = await import(
+          "@document-tools/converters/html-to-markdown"
+        );
+        const result = convertHtml(html, options);
+        setJobs((prev) =>
+          prev.map((j) => (j.id === job.id ? { ...j, status: "done", result } : j)),
+        );
+        setActiveId(job.id);
+      } catch {
+        setJobs((prev) =>
+          prev.map((j) =>
+            j.id === job.id ? { ...j, status: "failed", error: t.readFail } : j,
+          ),
+        );
       }
     },
     [jobs.length],
@@ -150,17 +192,25 @@ export function Converter({ t }: { t: T }) {
     return () => clearTimeout(t);
   }, [copied]);
 
-  // 支持整站粘贴上传
+  // 支持整站粘贴：优先当文件，其次收剪贴板里的富文本
   useEffect(() => {
     const onPaste = (e: ClipboardEvent) => {
       const files = Array.from(e.clipboardData?.files ?? []).filter((f) =>
         /\.docx?$/i.test(f.name),
       );
-      if (files.length) void run(files, opts, t);
+      if (files.length) {
+        void run(files, opts, t);
+        return;
+      }
+
+      // 从 Google Docs / Word 网页版复制过来的是 text/html，没有文件。
+      // 这是 google-docs-to-markdown 那页真正要处理的输入。
+      const html = e.clipboardData?.getData("text/html");
+      if (html?.trim()) void runHtml(html, opts, t);
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
-  }, [opts, run, t]);
+  }, [opts, run, runHtml, t]);
 
   const copy = async () => {
     if (!active?.result) return;

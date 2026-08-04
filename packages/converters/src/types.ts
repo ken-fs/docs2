@@ -58,6 +58,57 @@ export class NotADocxError extends Error {
   }
 }
 
+export class ZipBombError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ZipBombError";
+  }
+}
+
+/** 解压后的总大小上限。正常 .docx 展开后是几 MB 量级，400MB 只可能是恶意构造。 */
+const MAX_INFLATED = 400 * 1024 * 1024;
+/** 压缩比上限。文本压 20 倍很常见，1000 倍的只有全零填充。 */
+const MAX_RATIO = 1000;
+
+/**
+ * 读 zip 中央目录里声明的解压后大小，超限就拒绝，别让 mammoth 真去解压。
+ *
+ * .docx 本身就是个 zip，所以用户丢进来的每个文件都是一个潜在的 zip bomb：
+ * 几十 KB 的输入能展开成几 GB，浏览器标签页直接 OOM 掉。文件大小限制挡不住
+ * 这个 —— 炸弹的特点恰恰是压缩前很小。
+ *
+ * 只信中央目录里的声明值做预筛：这个值可以撒谎，但撒谎往小了说没有意义（本来
+ * 就是想蒙过检查再爆开），而往大了说会被这里挡掉。真正的兜底还是浏览器自己的
+ * 内存限制 —— 这里图的是把明显的恶意输入挡在解压之前。
+ */
+export function checkZipSize(bytes: Uint8Array): void {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+
+  let total = 0;
+  // 中央目录项的签名是 PK\x01\x02，逐个扫过去累加 uncompressed size
+  for (let i = 0; i + 46 <= bytes.length; i++) {
+    if (
+      bytes[i] === 0x50 &&
+      bytes[i + 1] === 0x4b &&
+      bytes[i + 2] === 0x01 &&
+      bytes[i + 3] === 0x02
+    ) {
+      total += view.getUint32(i + 24, true);
+    }
+  }
+
+  if (total > MAX_INFLATED) {
+    throw new ZipBombError(
+      "This file expands to far more than it should. Refusing to open it.",
+    );
+  }
+  if (bytes.length > 0 && total / bytes.length > MAX_RATIO) {
+    throw new ZipBombError(
+      "This file's compression ratio looks like a zip bomb. Refusing to open it.",
+    );
+  }
+}
+
 const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04];
 const OLE_MAGIC = [0xd0, 0xcf, 0x11, 0xe0];
 

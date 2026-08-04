@@ -8,10 +8,12 @@
   },
   "exports": {
     "./types": "./src/types.ts",
-    "./docx-to-markdown": "./src/docx-to-markdown.ts"
+    "./docx-to-markdown": "./src/docx-to-markdown.ts",
+    "./html-to-markdown": "./src/html-to-markdown.ts"
   },
   "dependencies": {
     "cfb": "^1.2.2",
+    "dompurify": "^3.4.13",
     "mammoth": "^1.12.0",
     "turndown": "^7.2.4"
   },

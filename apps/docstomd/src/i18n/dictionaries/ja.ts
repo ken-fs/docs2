@@ -82,6 +82,7 @@ const ja: Dictionary = {
     tooBig: "25 MB を超えています。大きすぎます。",
     readFail:
       "読めませんでした。ファイルが壊れているか、パスワードがかかっているかもしれません。",
+    pastedName: "貼り付けた内容",
     source: "ソース",
     preview: "プレビュー",
     copy: "コピー",

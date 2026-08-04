@@ -78,6 +78,7 @@ const zhHant: Dictionary = {
     failed: "沒成",
     tooBig: "超過 25 MB，太大了。",
     readFail: "讀不動。檔案可能損壞了，或設了密碼。",
+    pastedName: "貼上的內容",
     source: "原始碼",
     preview: "預覽",
     copy: "複製",

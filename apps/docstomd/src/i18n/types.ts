@@ -80,6 +80,8 @@ export type Dictionary = {
     failed: string;
     tooBig: string;
     readFail: string;
+    /** 粘贴富文本时给这份内容起的名字，没有文件名可用 */
+    pastedName: string;
     source: string;
     preview: string;
     copy: string;

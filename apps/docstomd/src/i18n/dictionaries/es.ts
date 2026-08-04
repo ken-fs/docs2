@@ -82,6 +82,7 @@ const es: Dictionary = {
     tooBig: "Más de 25 MB. Demasiado grande.",
     readFail:
       "No se pudo leer. El archivo puede estar dañado o protegido con contraseña.",
+    pastedName: "contenido pegado",
     source: "fuente",
     preview: "vista",
     copy: "Copiar",

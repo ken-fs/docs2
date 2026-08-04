@@ -304,6 +304,119 @@ test("sitemap and robots list only URLs that exist", async ({ request }) => {
   expect(robots).not.toMatch(/^Disallow: \/$/m);
 });
 
+test("a hostile .docx can't smuggle scripts into the markdown", async ({ page }) => {
+  const { external, errors } = watchNetwork(page);
+  await page.goto("/");
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/hostile.docx`);
+  await expect(page.locator("pre").first()).toBeVisible({ timeout: 15000 });
+
+  const md = await page.locator("pre").first().innerText();
+
+  // 正文照常转出来 —— 净化不该把好内容一起吃掉
+  expect(md).toContain("Hostile Document");
+  expect(md).toContain("hostile body marker");
+  expect(md).toContain("https://example.com/safe");
+
+  // 危险协议一个都不许进 markdown。mammoth 会把 w:hyperlink 的 Target 原样写进
+  // href，turndown 再照抄成 [label](javascript:...) —— 用户把这段贴到自己博客上
+  // 就是一个能点的 XSS，危害转移给了下游
+  expect(md.toLowerCase()).not.toContain("javascript:");
+  expect(md.toLowerCase()).not.toContain("vbscript:");
+  expect(md.toLowerCase()).not.toContain("data:text/html");
+  expect(md).not.toContain("<script");
+
+  // 链接文字要留着，只是不再可点
+  expect(md).toContain("click me");
+
+  // 用户有权知道文件里有东西被删了
+  const warn = page.locator("details", { hasText: /removed unsafe/i });
+  await expect(warn).toBeVisible();
+
+  // 预览面板里不能出现真的可点链接
+  await page.getByRole("tab", { name: /preview/i }).click();
+  const panel = page.locator("[role=tabpanel]").filter({ hasText: "hostile body marker" });
+  await expect(panel.locator("a")).toHaveCount(0);
+
+  expect(external).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+test("nothing from a hostile .docx ever executes", async ({ page }) => {
+  // 上一个测试查的是产物，这个查的是运行时：哪怕净化漏了，也得看到它没跑起来
+  const fired: string[] = [];
+  await page.exposeFunction("__pwned", (how: string) => fired.push(how));
+  await page.addInitScript(() => {
+    // 任何脚本真的执行、或者 alert 真的弹出来，都记一笔
+    window.alert = () => {
+      (window as unknown as { __pwned: (s: string) => void }).__pwned("alert");
+    };
+  });
+
+  await page.goto("/");
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/hostile.docx`);
+  await expect(page.locator("pre").first()).toBeVisible({ timeout: 15000 });
+  await page.getByRole("tab", { name: /preview/i }).click();
+
+  // 预览里的每个可点元素都点一遍，看有没有东西跑起来
+  const panel = page.locator("[role=tabpanel]").filter({ hasText: "hostile body marker" });
+  const clickables = panel.locator("a, [onclick], span");
+  for (let i = 0; i < (await clickables.count()); i++) {
+    await clickables.nth(i).click({ force: true, timeout: 2000 }).catch(() => {});
+  }
+
+  expect(fired, "有东西执行了").toEqual([]);
+  // 也不该跳走
+  expect(new URL(page.url()).pathname).toBe("/");
+});
+
+test("a zip bomb is refused before it's unpacked", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/bomb.docx`);
+
+  // .docx 本身就是 zip，几 KB 能声明展开成 3GB。文件大小限制挡不住这个，
+  // 所以要在解压前看中央目录里声明的尺寸
+  await expect(page.getByText(/zip bomb|expands to far more/i)).toBeVisible({
+    timeout: 15000,
+  });
+  // 没有产出结果，也没把标签页拖死
+  await expect(page.locator("pre")).toHaveCount(0);
+});
+
+test("pasted rich text converts and gets sanitized", async ({ page }) => {
+  const { errors } = watchNetwork(page);
+  await page.goto("/");
+
+  // 模拟从 Google Docs 复制过来：剪贴板里只有 text/html，没有文件。
+  // 这段 HTML 来自任意网页，和上传的文件一样不可信。
+  await page.evaluate(() => {
+    const dt = new DataTransfer();
+    dt.setData(
+      "text/html",
+      '<h1>Pasted Heading</h1><p><b>bold</b> and <a href="javascript:alert(1)">evil</a>' +
+        ' and <a href="https://example.com/ok">fine</a></p>' +
+        '<p onmouseover="alert(2)">hover</p><script>alert(3)<\/script>' +
+        "<table><tr><th>A</th></tr><tr><td>1</td></tr></table>",
+    );
+    window.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true }));
+  });
+
+  await expect(page.locator("pre").first()).toBeVisible({ timeout: 15000 });
+  const md = await page.locator("pre").first().innerText();
+
+  expect(md).toContain("# Pasted Heading");
+  expect(md).toContain("**bold**");
+  expect(md).toContain("https://example.com/ok");
+  expect(md).toContain("| A |");
+
+  expect(md.toLowerCase()).not.toContain("javascript:");
+  expect(md).not.toContain("onmouseover");
+  expect(md).not.toContain("alert(3)");
+  // 事件属性删掉，但文字留着
+  expect(md).toContain("hover");
+
+  expect(errors).toEqual([]);
+});
+
 test("legacy .doc converts too", async ({ page }) => {
   const { external, errors } = watchNetwork(page);
   await page.goto("/zh-cn/");

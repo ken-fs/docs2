@@ -79,6 +79,7 @@ const zhHans: Dictionary = {
     failed: "没成",
     tooBig: "超过 25 MB，太大了。",
     readFail: "读不动。文件可能损坏了，或者设了密码。",
+    pastedName: "粘贴的内容",
     source: "源码",
     preview: "预览",
     copy: "复制",

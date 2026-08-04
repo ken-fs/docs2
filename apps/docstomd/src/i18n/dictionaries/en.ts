@@ -81,6 +81,7 @@ const en: Dictionary = {
     failed: "failed",
     tooBig: "Over 25 MB. Too big.",
     readFail: "Couldn't read it. The file may be damaged or password-protected.",
+    pastedName: "pasted content",
     source: "source",
     preview: "preview",
     copy: "Copy",
