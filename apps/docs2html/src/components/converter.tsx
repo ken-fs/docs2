@@ -474,8 +474,8 @@ export function Converter({
         className={cn(
           "relative border bg-sheet-deep/50 px-6 py-10 transition-all duration-200 ease-draft sm:px-10 sm:py-12",
           dragging
-            ? "border-indigo bg-cyan-soft/35 shadow-[0_4px_0_0_var(--indigo-deep)]"
-            : "border-dashed border-grid-firm hover:border-indigo/60",
+            ? "border-prussian bg-wash/60 shadow-[0_4px_0_0_var(--prussian-deep)]"
+            : "border-dashed border-grid-firm hover:border-prussian/60",
         )}
       >
         {/* 图纸编号，纯装饰 */}
@@ -492,7 +492,7 @@ export function Converter({
               icon="ph:tray-arrow-down-duotone"
               className={cn(
                 "h-14 w-14 transition-transform duration-200 ease-tick",
-                dragging ? "scale-110 text-indigo" : "text-graphite-soft",
+                dragging ? "scale-110 text-prussian" : "text-graphite-soft",
               )}
             />
           </div>
@@ -506,7 +506,7 @@ export function Converter({
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">
-            <Button tone="indigo" onClick={() => inputRef.current?.click()}>
+            <Button tone="prussian" onClick={() => inputRef.current?.click()}>
               <Icon icon="ph:folder-open-bold" />
               {t.pick}
             </Button>
@@ -541,7 +541,7 @@ export function Converter({
 
       {/* ── 文本输入 ─────────────────────────────────────── */}
       {input.paste !== "none" && (
-        <div className="mt-5 border border-grid-firm bg-sheet/60 px-5 py-4">
+        <div className="mt-5 border border-grid-firm bg-sheet px-5 py-4">
           <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="font-mono text-[11px] tracking-[0.18em] text-graphite-faint uppercase">
               {t.pasteHeading}
@@ -575,11 +575,11 @@ export function Converter({
                     ? t.pastePlaceholderCsv
                     : t.pastePlaceholderText
             }
-            className="w-full resize-y border border-grid-firm bg-sheet px-3 py-2 font-mono text-[13px] leading-relaxed text-graphite outline-none transition-colors placeholder:text-graphite-faint focus:border-indigo"
+            className="w-full resize-y border border-grid-firm bg-sheet px-3 py-2 font-mono text-[13px] leading-relaxed text-graphite outline-none transition-colors placeholder:text-graphite-faint focus:border-prussian"
           />
           <div className="mt-2 flex items-center gap-2">
             <Button
-              tone="indigo"
+              tone="prussian"
               size="sm"
               disabled={!typed.trim()}
               onClick={() => void runText(typed, t.typedName, opts, t)}
@@ -599,7 +599,7 @@ export function Converter({
       {/* ── 输出旋钮 ─────────────────────────────────────── */}
       {/* 旋钮按引擎给：CSV 页面上没有「图片怎么处理」这回事，摆一个只会让人
           以为自己漏了什么。 */}
-      <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-4 border border-grid-firm bg-sheet/60 px-5 py-4">
+      <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-4 border border-grid-firm bg-sheet px-5 py-4">
         <span className="font-mono text-[11px] tracking-[0.18em] text-graphite-faint uppercase">
           {t.knobs}
         </span>
@@ -720,7 +720,7 @@ export function Converter({
       </div>
 
       {stale && (
-        <p className="anim-plot mt-3 flex items-center gap-2 border-l-2 border-indigo bg-cyan-soft/25 py-2 pl-3 text-sm text-graphite-soft">
+        <p className="anim-plot mt-3 flex items-center gap-2 border-l-2 border-prussian bg-wash/45 py-2 pl-3 text-sm text-graphite-soft">
           <Icon icon="ph:arrow-counter-clockwise-bold" className="h-4 w-4" />
           {t.stale}
         </p>
@@ -737,7 +737,7 @@ export function Converter({
               {done.length > 1 && (
                 <button
                   onClick={downloadZip}
-                  className="font-mono text-[11px] text-indigo underline decoration-dotted underline-offset-4 transition-colors hover:text-indigo-deep"
+                  className="font-mono text-[11px] text-prussian underline decoration-dotted underline-offset-4 transition-colors hover:text-prussian-deep"
                 >
                   {count(done.length, t.zip)}
                 </button>
@@ -754,10 +754,10 @@ export function Converter({
                       "group relative w-full border px-3 py-2.5 text-left transition-all duration-150 ease-draft",
                       j.status === "done" &&
                         j.id === activeId &&
-                        "-translate-y-[2px] border-indigo bg-sheet shadow-[0_3px_0_0_var(--indigo-deep)]",
+                        "-translate-y-[2px] border-prussian bg-sheet shadow-[0_3px_0_0_var(--prussian-deep)]",
                       j.status === "done" &&
                         j.id !== activeId &&
-                        "border-grid-firm bg-sheet/55 hover:border-indigo hover:bg-sheet",
+                        "border-grid-firm bg-sheet/55 hover:border-prussian hover:bg-sheet",
                       j.status === "failed" &&
                         "cursor-default border-amber/60 bg-amber/12",
                       (j.status === "waiting" || j.status === "chewing") &&
@@ -780,7 +780,7 @@ export function Converter({
                                 : fmtBytes(j.size)}
                         </p>
                         {j.error && (
-                          <p className="mt-1.5 text-[12px] leading-snug text-indigo-deep">
+                          <p className="mt-1.5 text-[12px] leading-snug text-prussian-deep">
                             {j.error}
                           </p>
                         )}
@@ -788,7 +788,7 @@ export function Converter({
                     </div>
                     {j.status === "chewing" && (
                       <span className="absolute inset-x-0 bottom-0 h-[2px] overflow-hidden bg-grid">
-                        <span className="anim-scan block h-full w-1/3 bg-indigo" />
+                        <span className="anim-scan block h-full w-1/3 bg-prussian" />
                       </span>
                     )}
                   </button>
@@ -837,7 +837,7 @@ export function Converter({
                     <Button tone="ghost" size="sm" onClick={copy}>
                       <Icon
                         icon={copied ? "ph:check-bold" : "ph:copy-bold"}
-                        className={cn(copied && "text-cyan")}
+                        className={cn(copied && "text-prussian")}
                       />
                       {copied ? t.copied : t.copy}
                     </Button>
@@ -857,7 +857,7 @@ export function Converter({
                 {/* 工作表选择。只在真有多张表时出现 —— 单表工作簿摆一排
                     只能选一个的按钮没有意义。 */}
                 {active.book && active.book.sheets.length > 1 && (
-                  <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border border-grid-firm bg-sheet/60 px-4 py-3">
+                  <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border border-grid-firm bg-sheet px-4 py-3">
                     <span className="font-mono text-[11px] tracking-[0.18em] text-graphite-faint uppercase">
                       {t.sheets}
                     </span>
@@ -894,7 +894,7 @@ export function Converter({
                           t,
                         )
                       }
-                      className="font-mono text-[11px] text-indigo underline decoration-dotted underline-offset-4 transition-colors hover:text-indigo-deep"
+                      className="font-mono text-[11px] text-prussian underline decoration-dotted underline-offset-4 transition-colors hover:text-prussian-deep"
                     >
                       {t.sheetsAll}
                     </button>
@@ -1002,8 +1002,8 @@ function Chip({
       className={cn(
         "rounded-[2px] border px-2 py-1 text-[12px] leading-none transition-all duration-150 ease-draft",
         on
-          ? "border-indigo-deep bg-indigo text-sheet"
-          : "border-grid-firm bg-sheet/70 text-graphite-soft hover:border-indigo hover:text-graphite",
+          ? "border-prussian-deep bg-prussian text-sheet"
+          : "border-grid-firm bg-sheet text-graphite-soft hover:border-prussian hover:text-graphite",
       )}
     >
       {children}
@@ -1016,7 +1016,7 @@ function StatusMark({ status }: { status: Job["status"] }) {
     return (
       <Icon
         icon="ph:check-square-bold"
-        className="anim-plot mt-0.5 h-4 w-4 shrink-0 text-cyan"
+        className="anim-plot mt-0.5 h-4 w-4 shrink-0 text-prussian"
       />
     );
   if (status === "failed")
@@ -1027,7 +1027,7 @@ function StatusMark({ status }: { status: Job["status"] }) {
     return (
       <Icon
         icon="ph:circle-notch-bold"
-        className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-indigo"
+        className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-prussian"
       />
     );
   return (

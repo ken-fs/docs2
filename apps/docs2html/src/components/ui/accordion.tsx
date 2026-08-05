@@ -41,8 +41,8 @@ function AccordionTrigger({
         data-slot="accordion-trigger"
         className={cn(
           "group/acc flex flex-1 items-start gap-2.5 bg-transparent py-4 text-left text-[15px] font-medium text-graphite select-none",
-          "transition-colors duration-150 ease-draft hover:text-indigo",
-          "focus-visible:relative focus-visible:z-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo",
+          "transition-colors duration-150 ease-draft hover:text-prussian",
+          "focus-visible:relative focus-visible:z-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-prussian",
           "data-disabled:pointer-events-none data-disabled:opacity-50",
           className,
         )}
@@ -50,13 +50,13 @@ function AccordionTrigger({
       >
         <span
           aria-hidden
-          className="mt-[7px] inline-block h-[6px] w-[6px] shrink-0 bg-indigo transition-transform duration-200 ease-tick group-data-panel-open/acc:rotate-45 group-data-panel-open/acc:scale-125"
+          className="mt-[7px] inline-block h-[6px] w-[6px] shrink-0 bg-prussian transition-transform duration-200 ease-tick group-data-panel-open/acc:rotate-45 group-data-panel-open/acc:scale-125"
         />
         <span className="flex-1">{children}</span>
         {/* 加号转 45° 会变成 ×，看着像「删除」；所以展开时直接换成减号 */}
         <span
           aria-hidden
-          className="relative mt-[3px] h-3.5 w-3.5 shrink-0 text-graphite-faint transition-colors duration-150 group-hover/acc:text-indigo"
+          className="relative mt-[3px] h-3.5 w-3.5 shrink-0 text-graphite-faint transition-colors duration-150 group-hover/acc:text-prussian"
         >
           <span className="absolute top-1/2 left-0 h-[1.5px] w-full -translate-y-1/2 bg-current" />
           <span className="absolute top-0 left-1/2 h-full w-[1.5px] -translate-x-1/2 bg-current transition-transform duration-200 ease-tick group-data-panel-open/acc:scale-y-0" />

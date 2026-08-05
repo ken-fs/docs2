@@ -29,7 +29,7 @@ function withMailto(text: string, key: string) {
       {text.slice(0, at)}
       <a
         href={`mailto:${CONTACT_EMAIL}`}
-        className="text-indigo underline decoration-indigo/40 underline-offset-2 hover:decoration-indigo"
+        className="text-prussian underline decoration-prussian/40 underline-offset-2 hover:decoration-prussian"
         key={key}
       >
         {CONTACT_EMAIL}
@@ -64,8 +64,8 @@ export function LegalShell({
         />
 
         <article className="max-w-[44rem] pt-7 pb-16 lg:pt-9">
-          <p className="mb-4 flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-indigo uppercase">
-            <span className="inline-block h-[7px] w-[7px] bg-indigo" />
+          <p className="mb-4 flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-prussian uppercase">
+            <span className="inline-block h-[7px] w-[7px] bg-prussian" />
             {page.eyebrow}
           </p>
           <h1 className="font-display text-[2.1rem] leading-[1.1] tracking-tight text-graphite sm:text-[2.6rem]">
@@ -99,7 +99,7 @@ export function LegalShell({
                 <ul className="mt-3.5 space-y-2 text-[14px] leading-relaxed text-graphite-soft">
                   {section.items.map((item) => (
                     <li key={item} className="flex gap-2.5">
-                      <span className="mt-[9px] h-[3px] w-[3px] shrink-0 bg-indigo" />
+                      <span className="mt-[9px] h-[3px] w-[3px] shrink-0 bg-prussian" />
                       {withMailto(item, item)}
                     </li>
                   ))}
@@ -126,7 +126,7 @@ export function LegalShell({
                 <li key={k}>
                   <Link
                     href={pathOf(locale, k)}
-                    className="text-[13px] text-graphite-soft transition-colors duration-150 hover:text-indigo"
+                    className="text-[13px] text-graphite-soft transition-colors duration-150 hover:text-prussian"
                   >
                     {dict.legal[k].short}
                   </Link>

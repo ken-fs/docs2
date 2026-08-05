@@ -2,13 +2,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── 蓝图工作台：冷白纸 / 石墨 / 靛蓝 ──────────────────────────────
-   和 docstomd 的暖纸活字车间刻意不同。两站是同一个人做的，但用户不该
-   走错门都不知道 —— 一眼看得出是两个站，才不会以为自己点错了返回键。
+/* ── 蓝图工作台：冷白纸 / 石墨 / 普鲁士蓝 ──────────────────────────
+   和 docstomd 的绿栏纸刻意不同。两站是同一个人做的，但用户不该走错门都
+   不知道 —— 一眼看得出是两个站，才不会以为自己点错了返回键。
 
    为什么是蓝图：这站的产物是 HTML 源码，是给人接着改的图纸，不是印好的
    成品。冷色、细网格、等宽字号更重，都是往"技术图纸"那个方向靠。
-   方案里写的 #4F46E5 太像 SaaS 模板，这里用靛蓝但压低彩度、往青里偏一点。 */
+
+   主色是普鲁士蓝 #0052a0（oklch H=252）—— 氰版晒图（cyanotype，就是
+   "blueprint"这个词的来源）显影出来的就是这个蓝。原来用的 #3a57be 是
+   H=268，偏紫，跟满街的 SaaS 主色难分辨；往青里推 16 度、明度压两档之后
+   才真的像晒出来的图纸。方案里写的 #4F46E5（H=277）更靠紫，早就否掉了。 */
 :root {
   /* 纸与石墨 */
   --sheet: oklch(0.972 0.006 232);
@@ -21,15 +25,36 @@
    * 和 sheet-deep 上分别是 4.97 和 4.60，两处都过。改前跑 pnpm verify:contrast。 */
   --graphite-faint: oklch(0.526 0.022 250);
 
-  /* 强调：靛蓝 + 青 + 琥珀（琥珀只用在警告上） */
-  --indigo: oklch(0.494 0.166 268);
-  --indigo-deep: oklch(0.398 0.152 270);
-  --cyan: oklch(0.712 0.118 218);
-  --cyan-soft: oklch(0.882 0.052 216);
-  --amber: oklch(0.766 0.148 74);
+  /* 强调只有两个：普鲁士蓝 + 琥珀。
+   *
+   * 原来有三个，中间那个是青（H=218）。删了并进 prussian —— 它管的全是
+   * 「成功/确认」（勾选标记、复制反馈、H1 下划线），而主色本身就是「跑通了、
+   * 拿到干净 HTML」的颜色，不需要再单设一个。更实际的理由：青和普鲁士蓝
+   * 差 34 度，同一页里两种蓝混着出现，看着像没调准而不是像故意的，而真的
+   * 晒图上只有一种蓝。琥珀留着 —— 它是唯一的失败色，跟蓝对立，不是第三种蓝。
+   *
+   * amber 的明度压过一大截：原来 0.766，在纸上只有 1.98:1，连图形的 3:1
+   * 门槛都不到，那个失败图标本来是看不清的。verify/contrast.mjs 没报出来，
+   * 因为它只走文字节点，而 amber 只用在 <Icon> 上（converter 的任务状态），
+   * 是 SVG。是拿 verify/color.mjs 手算才发现的。现在 4.77，按图形门槛富余 ——
+   * 留这么多是因为它迟早会配上文字标签，那时门槛跳到 4.5。 */
+  --prussian: oklch(0.44 0.148 252);
+  --prussian-deep: oklch(0.352 0.132 254);
+  /* 主色的极淡态：选区、拖拽高亮。色相跟 prussian 对齐，不是另一个色。 */
+  --wash: oklch(0.888 0.046 250);
+  --amber: oklch(0.54 0.148 74);
 
+  /* 描线用：分隔线、卡片边框、刻度。border-grid / border-grid-firm 在组件里
+   * 用了十几处，所以这两个值动不了 —— 背景网格另开两个变量，见下。 */
   --grid: oklch(0.226 0.021 254 / 0.1);
   --grid-firm: oklch(0.226 0.021 254 / 0.22);
+
+  /* 背景网格专用，比描线淡一个数量级。
+   * 第一版直接拿 --grid / --grid-firm 画背景，结果网格成了页面主角：满屏
+   * 线条盖过标题，而且透过半透明卡片，整页看着像张线框图而不像做好的页面。
+   * 网格的职责是让人认出「这是张工程纸」，不是让人盯着看。 */
+  --grid-bg: oklch(0.226 0.021 254 / 0.045);
+  --grid-bg-firm: oklch(0.226 0.021 254 / 0.085);
 
   /* 缓动：技术感偏线性和急停，少用弹跳 */
   --draft: cubic-bezier(0.2, 0.9, 0.28, 1);
@@ -44,13 +69,14 @@
   --color-graphite: var(--graphite);
   --color-graphite-soft: var(--graphite-soft);
   --color-graphite-faint: var(--graphite-faint);
-  --color-indigo: var(--indigo);
-  --color-indigo-deep: var(--indigo-deep);
-  --color-cyan: var(--cyan);
-  --color-cyan-soft: var(--cyan-soft);
+  --color-prussian: var(--prussian);
+  --color-prussian-deep: var(--prussian-deep);
+  --color-wash: var(--wash);
   --color-amber: var(--amber);
   --color-grid: var(--grid);
   --color-grid-firm: var(--grid-firm);
+  --color-grid-bg: var(--grid-bg);
+  --color-grid-bg-firm: var(--grid-bg-firm);
 
   --font-display: var(--font-space-grotesk);
   --font-sans: var(--font-inter);
@@ -74,31 +100,36 @@
   body {
     color: var(--graphite);
     background-color: var(--sheet);
-    /* 工程纸的网格：24px 主格 + 一层冷光晕。禁纯平背景。 */
+    /*
+     * 工程纸的网格：24px 细格 + 144px 粗格（每六格一根重线）。禁纯平背景。
+     *
+     * 粗格是 144 而不是「每五格」的 120 —— 实测内容栏在 1440 视口下是
+     * left 144 / right 1296，两边都是 144 的整数倍，所以重线正好压在内容栏
+     * 的左右边缘上。网格于是不是页边装饰，而是内容栏的定位基准，跟真的
+     * 绘图纸一样：先有格，元素吸在格上。用 120 的话差 24px，重线穿过正文，
+     * 看着像网格和布局各画各的。改容器宽度或 padding 的话这个数要跟着改。
+     *
+     * 原来这儿还压着两团角落渐变光晕（右上冷青 + 左上淡紫）。删掉了：
+     * 真的图纸上没有光晕，那是屏幕味儿 —— 而且「角落两团柔光渐变」正是
+     * 当前 AI 生成页面最容易认出来的一处笔迹。粗细双层网格是图纸自己的
+     * 语言，同样不平，但说的是「这是张纸」而不是「这是块屏幕」。
+     */
     background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
-      radial-gradient(
-        56rem 40rem at 88% -6%,
-        oklch(0.826 0.072 232 / 0.42),
-        transparent 62%
-      ),
-      radial-gradient(
-        48rem 36rem at 4% 12%,
-        oklch(0.846 0.058 276 / 0.34),
-        transparent 60%
-      );
+      linear-gradient(var(--grid-bg-firm) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-bg-firm) 1px, transparent 1px),
+      linear-gradient(var(--grid-bg) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-bg) 1px, transparent 1px);
     background-size:
+      144px 144px,
+      144px 144px,
       24px 24px,
-      24px 24px,
-      100% 100%,
-      100% 100%;
+      24px 24px;
     background-attachment: fixed;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background: var(--cyan-soft);
+    background: var(--wash);
     color: var(--graphite);
   }
 
@@ -115,7 +146,7 @@
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--indigo);
+    background: var(--prussian);
   }
 }
 
@@ -132,19 +163,19 @@
   }
   .plate-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 0 0 var(--indigo-deep);
+    box-shadow: 0 4px 0 0 var(--prussian-deep);
   }
   .plate-lift:active {
     transform: translateY(0);
-    box-shadow: 0 1px 0 0 var(--indigo-deep);
+    box-shadow: 0 1px 0 0 var(--prussian-deep);
   }
 
   /* 标注下划线：技术图纸上的引线，不是荧光笔 */
   .underscore {
     background-image: linear-gradient(
       transparent 88%,
-      var(--cyan) 88%,
-      var(--cyan) 96%,
+      var(--prussian) 88%,
+      var(--prussian) 96%,
       transparent 96%
     );
   }

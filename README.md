@@ -45,6 +45,7 @@ pnpm verify:cross     # 两站正文不互抄 + 站内工具页各写各的
 pnpm verify:i18n      # 六种语言没有漏翻
 pnpm verify:browsers  # Chromium / Chrome / Firefox / WebKit / 移动端基本转换
 pnpm verify:contrast  # 两站每页每个文字元素过一遍 WCAG AA
+pnpm verify:color     # oklch → hex + 对比度速算，挑色值用
 pnpm verify:perf      # Lighthouse，含 Core Web Vitals 预算
 ```
 
@@ -58,6 +59,8 @@ node apps/docs2html/verify/serve.mjs &  # 3312
 `serve.mjs` 模拟 Cloudflare Pages 的行为（大小写敏感、尾斜杠、404），因为一期就托管在那儿，而 macOS 的文件系统不区分大小写，本地「能打开」不代表线上能。
 
 关于 `verify:contrast`：改色板必跑。Lighthouse 的 color-contrast 审计只看首屏、只抽样，改一个色变量它未必报。这个脚本把 25 个页面里 header/main/footer 所有含文字的元素全走一遍（FAQ 折叠面板会先点开，Base UI 收起时是真的不渲染），按 WCAG AA 判：正文 4.5:1，大字 3:1。它上线时就抓到两处既存不达标 —— docstomd 的 `--ink-faint`（3.98）和 docs2html 的 `--graphite-faint`（3.87），Playwright 和 Lighthouse 都漏了。
+
+它有个盲区：只走文字节点，图标是 SVG 走不到。docs2html 的 `--amber`（失败图标）当时在纸上只有 1.98:1，连图形的 3:1 门槛都不到，是 `verify:color` 手算才发现的。两个配着用：`verify:color` 纯算，改一个值立刻能看到它跟其他所有色的关系（包括还没写进 CSS 的候选值），不用 build；`verify:contrast` 跑真页面，验的是落地结果。带三个参数可以单独算一个候选值 —— `pnpm verify:color 0.44 .148 252`。
 
 关于 `verify:perf`：它两种节流方式各跑一遍。Lighthouse 默认的 Lantern 模拟在 localhost 上测 LCP 会系统性虚高（把整包 JS 都算成 LCP 的前置依赖，八个页面一律 2.6s 且彼此相差不到 12ms），所以 Core Web Vitals 取 `--throttling-method=devtools` 那遍，分数取默认那遍以便和 PageSpeed Insights 对得上。细节写在 `verify/lighthouse.mjs` 的 `run()` 上面。
 

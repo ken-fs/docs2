@@ -229,7 +229,7 @@
 }
 
 /*
- * WCAG 对比度，全部实测（verify/_color.mjs 算的，不是估的）。
+ * WCAG 对比度，全部实测（pnpm verify:color 算的，不是估的）。
  * 4.5 是正文门槛，3.0 是大字/图形门槛。
  *
  *   ink        on paper        16.30

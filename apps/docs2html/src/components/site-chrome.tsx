@@ -28,7 +28,7 @@ export function SiteHeader({
           <Link href={pathOf(locale, "home")} className="flex items-baseline gap-2">
             {/* 数字 2 是这个域名的记忆点，单独上色 */}
             <span className="font-display text-[22px] font-semibold tracking-tight text-graphite">
-              docs<span className="text-indigo">2</span>html
+              docs<span className="text-prussian">2</span>html
             </span>
             <span className="hidden font-mono text-[10px] tracking-[0.2em] text-graphite-faint uppercase sm:inline">
               .com
@@ -45,8 +45,8 @@ export function SiteHeader({
               href={pathOf(locale, k)}
               className={
                 k === current
-                  ? "whitespace-nowrap text-indigo"
-                  : "whitespace-nowrap transition-colors duration-150 hover:text-indigo"
+                  ? "whitespace-nowrap text-prussian"
+                  : "whitespace-nowrap transition-colors duration-150 hover:text-prussian"
               }
             >
               {dict.pages[k].short}
@@ -82,8 +82,8 @@ export function SiteFooter({
               href={pathOf(locale, k)}
               className={
                 k === current
-                  ? "text-[12px] text-indigo"
-                  : "text-[12px] text-graphite-soft transition-colors duration-150 hover:text-indigo"
+                  ? "text-[12px] text-prussian"
+                  : "text-[12px] text-graphite-soft transition-colors duration-150 hover:text-prussian"
               }
             >
               {dict.legal[k].short}
@@ -111,7 +111,7 @@ export function Breadcrumb({
 }) {
   return (
     <nav className="pt-4 font-mono text-[11px] text-graphite-faint">
-      <Link href={pathOf(locale, "home")} className="hover:text-indigo">
+      <Link href={pathOf(locale, "home")} className="hover:text-prussian">
         {homeLabel}
       </Link>
       <span className="px-1.5">/</span>
@@ -131,7 +131,7 @@ export function SiblingSite({ dict }: { dict: Dictionary }) {
   const c = dict.chrome;
   return (
     <section className="mt-14 border-t border-grid-firm pt-8">
-      <div className="plate flex flex-wrap items-center justify-between gap-4 border border-grid-firm bg-sheet/60 px-5 py-4">
+      <div className="plate flex flex-wrap items-center justify-between gap-4 border border-grid-firm bg-sheet px-5 py-4">
         <div className="max-w-[34rem]">
           <h2 className="font-display text-[17px] leading-snug text-graphite">
             {c.siblingHeading}
@@ -143,7 +143,7 @@ export function SiblingSite({ dict }: { dict: Dictionary }) {
         <a
           href={SIBLING_SITE}
           rel="noopener"
-          className="inline-flex shrink-0 items-center gap-1.5 border border-indigo px-3 py-1.5 font-mono text-[11px] tracking-[0.1em] text-indigo uppercase transition-colors duration-150 hover:bg-indigo hover:text-sheet"
+          className="inline-flex shrink-0 items-center gap-1.5 border border-prussian px-3 py-1.5 font-mono text-[11px] tracking-[0.1em] text-prussian uppercase transition-colors duration-150 hover:bg-prussian hover:text-sheet"
         >
           {c.siblingCta}
           <Icon icon="ph:arrow-up-right-bold" className="h-3 w-3" />
@@ -173,7 +173,7 @@ export function ContactCue({
         {cue}{" "}
         <Link
           href={pathOf(locale, "contact")}
-          className="text-indigo underline decoration-indigo/40 underline-offset-2 hover:decoration-indigo"
+          className="text-prussian underline decoration-prussian/40 underline-offset-2 hover:decoration-prussian"
         >
           {label}
         </Link>

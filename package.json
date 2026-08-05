@@ -14,7 +14,8 @@
     "verify:perf": "node verify/lighthouse.mjs",
     "verify:browsers": "node verify/browsers.mjs",
     "verify:i18n": "node verify/i18n.mjs",
-    "verify:contrast": "node verify/contrast.mjs"
+    "verify:contrast": "node verify/contrast.mjs",
+    "verify:color": "node verify/color.mjs"
   },
   "packageManager": "pnpm@10.30.2",
   "devDependencies": {

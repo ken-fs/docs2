@@ -24,7 +24,7 @@ const tabsListVariants = cva("group/tabs-list relative z-1 flex items-stretch", 
   variants: {
     variant: {
       /** 色块在框内滑动，整组带细描边 —— 用在结果区的 source / preview */
-      slab: "rounded-[2px] border border-grid-firm bg-sheet/70",
+      slab: "rounded-[2px] border border-grid-firm bg-sheet",
       /** 只有底部一条线跟着走 —— 用在正文里不抢戏的地方 */
       underline: "gap-4 border-b border-grid",
     },
@@ -49,7 +49,7 @@ function TabsList({
       <TabsPrimitive.Indicator
         data-slot="tabs-indicator"
         className={cn(
-          "absolute left-0 -z-1 w-(--active-tab-width) translate-x-(--active-tab-left) bg-indigo",
+          "absolute left-0 -z-1 w-(--active-tab-width) translate-x-(--active-tab-left) bg-prussian",
           "transition-[translate,width] duration-200 ease-draft",
           variant === "slab" ? "top-0 h-full" : "bottom-[-1px] h-[2px]",
         )}
@@ -65,11 +65,11 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
       className={cn(
         "relative inline-flex items-center justify-center gap-1.5 bg-transparent px-3 py-1.5 font-mono text-[11px] whitespace-nowrap select-none",
         "text-graphite-soft transition-colors duration-150 hover:text-graphite",
-        "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo",
+        "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-prussian",
         "data-disabled:pointer-events-none data-disabled:opacity-45",
         // Indicator 是实心色块，所以选中态的字要反白
         "group-data-[variant=slab]/tabs-list:data-active:text-sheet",
-        "group-data-[variant=underline]/tabs-list:data-active:text-indigo",
+        "group-data-[variant=underline]/tabs-list:data-active:text-prussian",
         "[&_svg]:pointer-events-none [&_svg]:h-3.5 [&_svg]:w-3.5",
         className,
       )}
@@ -83,7 +83,7 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
     <TabsPrimitive.Panel
       data-slot="tabs-content"
       className={cn(
-        "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo",
+        "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-prussian",
         className,
       )}
       {...props}

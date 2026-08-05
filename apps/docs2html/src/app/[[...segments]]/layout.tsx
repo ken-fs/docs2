@@ -6,9 +6,15 @@ import { DEFAULT_LOCALE } from "@/i18n/locales";
 import "../globals.css";
 
 /**
- * 字体和 docstomd 那边完全不同一套。那边是 Fraunces + IBM Plex（有衬线、暖），
- * 这边是 Space Grotesk + Inter + JetBrains Mono（几何、冷）—— 两站放一起
- * 一眼分得出，不会让人以为点错了返回键。
+ * 字体和 docstomd 那边完全不同一套。那边是 Bricolage Grotesque + IBM Plex
+ * （畸变的字怀、切角末端，暖），这边是 Space Grotesk + Inter + JetBrains Mono
+ * （几何、规整、冷）—— 两站放一起一眼分得出，不会让人以为点错了返回键。
+ *
+ * 换色板那轮考虑过把 Space Grotesk 也换掉（它和 Inter 是当前被选中频率最高
+ * 的一对），量了 Familjen Grotesk / Archivo / Chivo / Syne / Darker Grotesque
+ * 一圈 —— 保住现有行数（3/2/2）的只有前两个。最后决定不换：docstomd 刚换成
+ * Bricolage Grotesque，这边再挑一个 grotesque，两站的标题只会更像，而「一眼
+ * 分得开」是硬要求，比「避开常见字体」优先。几何 vs 畸变这个对比已经够。
  *
  * 等宽字体在这站的分量比那边重：产物是 HTML 源码，源码框是页面主体。
  * JetBrains Mono 有连字和清晰的 0/O 区分，读代码比 Plex Mono 舒服。

@@ -50,7 +50,7 @@ export function LangSwitch({
     <details ref={box} data-slot="lang-switch" className="group/lang relative">
       <summary
         aria-label={label}
-        className="flex cursor-pointer list-none items-center gap-1.5 border border-grid-firm bg-sheet/70 px-2 py-1 font-mono text-[11px] text-graphite-soft transition-all duration-150 ease-draft select-none hover:border-indigo hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo group-open/lang:border-indigo group-open/lang:bg-sheet group-open/lang:text-graphite [&::-webkit-details-marker]:hidden"
+        className="flex cursor-pointer list-none items-center gap-1.5 border border-grid-firm bg-sheet px-2 py-1 font-mono text-[11px] text-graphite-soft transition-all duration-150 ease-draft select-none hover:border-prussian hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-prussian group-open/lang:border-prussian group-open/lang:bg-sheet group-open/lang:text-graphite [&::-webkit-details-marker]:hidden"
       >
         <Icon icon="ph:translate-bold" className="h-3.5 w-3.5" />
         {LOCALE_SHORT[locale]}
@@ -77,13 +77,13 @@ export function LangSwitch({
                   className={
                     current
                       ? "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] font-medium text-graphite"
-                      : "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] text-graphite-soft transition-colors duration-100 hover:bg-indigo hover:text-sheet"
+                      : "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] text-graphite-soft transition-colors duration-100 hover:bg-prussian hover:text-sheet"
                   }
                 >
                   {current && (
                     <Icon
                       icon="ph:check-bold"
-                      className="pointer-events-none absolute left-2 h-3 w-3 text-indigo"
+                      className="pointer-events-none absolute left-2 h-3 w-3 text-prussian"
                     />
                   )}
                   {LOCALE_NAMES[l]}

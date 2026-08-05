@@ -75,8 +75,8 @@ export function ToolShell({
           }`}
         >
           <div className="lg:col-span-7">
-            <p className="mb-4 flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-indigo uppercase">
-              <span className="inline-block h-[7px] w-[7px] bg-indigo" />
+            <p className="mb-4 flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] text-prussian uppercase">
+              <span className="inline-block h-[7px] w-[7px] bg-prussian" />
               {page.eyebrow}
             </p>
             <h1 className="font-display text-[2.5rem] leading-[1.05] tracking-tight text-graphite sm:text-[3.4rem]">
@@ -94,7 +94,7 @@ export function ToolShell({
           {/* 便签条。docstomd 那边是歪着贴的纸条，这边是正交的图纸卡片 ——
               手感刻意不同，两站放一起一眼分得出。 */}
           <aside className="lg:col-span-5 lg:pt-14">
-            <div className="plate corners border border-grid-firm bg-sheet/70 px-5 py-4">
+            <div className="plate corners border border-grid-firm bg-sheet px-5 py-4">
               <p className="font-mono text-[10px] tracking-[0.18em] text-graphite-soft uppercase">
                 {page.note.heading}
               </p>
@@ -103,7 +103,7 @@ export function ToolShell({
                   <li key={item} className="flex gap-2">
                     <Icon
                       icon="ph:check-bold"
-                      className="mt-[3px] h-3.5 w-3.5 shrink-0 text-cyan"
+                      className="mt-[3px] h-3.5 w-3.5 shrink-0 text-prussian"
                     />
                     {item}
                   </li>
@@ -132,7 +132,7 @@ export function ToolShell({
             <ol className="mt-3 space-y-2.5 text-[13px] leading-relaxed text-graphite-soft">
               {page.body.steps.map((step, i) => (
                 <li key={step} className="flex gap-2.5">
-                  <span className="mt-[1px] shrink-0 font-mono text-[11px] text-indigo">
+                  <span className="mt-[1px] shrink-0 font-mono text-[11px] text-prussian">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {step}
@@ -150,7 +150,7 @@ export function ToolShell({
                 <li key={item} className="flex gap-2.5">
                   <Icon
                     icon="ph:check-bold"
-                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-cyan"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-prussian"
                   />
                   {item}
                 </li>
@@ -167,7 +167,7 @@ export function ToolShell({
                 <li key={item} className="flex gap-2.5">
                   <Icon
                     icon="ph:minus-bold"
-                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-indigo"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-prussian"
                   />
                   {item}
                 </li>
@@ -241,7 +241,7 @@ export function ToolShell({
               <li key={k}>
                 <Link
                   href={pathOf(locale, k)}
-                  className="plate-lift block h-full border border-grid-firm bg-sheet/60 px-4 py-3.5 hover:border-indigo"
+                  className="plate-lift block h-full border border-grid-firm bg-sheet px-4 py-3.5 hover:border-prussian"
                 >
                   <span className="font-display text-[15px] leading-snug text-graphite">
                     {dict.pages[k].short}
@@ -256,7 +256,7 @@ export function ToolShell({
               <li>
                 <Link
                   href={pathOf(locale, "home")}
-                  className="plate-lift block h-full border border-grid-firm bg-sheet/60 px-4 py-3.5 hover:border-indigo"
+                  className="plate-lift block h-full border border-grid-firm bg-sheet px-4 py-3.5 hover:border-prussian"
                 >
                   <span className="font-display text-[15px] leading-snug text-graphite">
                     {c.startOver}
