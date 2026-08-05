@@ -51,10 +51,11 @@ export function LegalShell({
   const page = dict.legal[legalKey];
   const c = dict.chrome;
   const others = LEGAL_KEYS.filter((k) => k !== legalKey);
+  const route = { kind: "legal", key: legalKey } as const;
 
   return (
     <>
-      <SiteHeader locale={locale} current={legalKey} dict={dict} />
+      <SiteHeader locale={locale} route={route} dict={dict} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 sm:px-8">
         <Breadcrumb
@@ -134,7 +135,7 @@ export function LegalShell({
         </article>
       </main>
 
-      <SiteFooter locale={locale} current={legalKey} dict={dict} />
+      <SiteFooter locale={locale} route={route} dict={dict} />
     </>
   );
 }

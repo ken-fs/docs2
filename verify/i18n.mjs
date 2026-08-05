@@ -23,6 +23,14 @@ const SITES = [
       "google-docs-to-markdown",
       // 正式页面也要查：AdSense 审核会看，而它们最容易被漏在翻译流程外面
       "about", "contact", "privacy", "terms", "cookies",
+      // 内容页的字数是工具页的好几倍，漏翻一段的概率也高好几倍
+      "guides",
+      "guides/word-to-markdown-keep-formatting",
+      "guides/pdf-to-markdown-layout",
+      "guides/google-docs-to-markdown-paste",
+      "guides/html-to-markdown-clean",
+      "guides/csv-to-markdown-tables",
+      "guides/excel-to-markdown-formulas",
     ],
   },
   {
@@ -32,6 +40,13 @@ const SITES = [
       "", "markdown-to-html", "docx-to-html", "google-docs-to-html",
       "text-to-html", "csv-to-html-table", "excel-to-html-table",
       "about", "contact", "privacy", "terms", "cookies",
+      "guides",
+      "guides/markdown-tables-to-html",
+      "guides/word-to-html-keep-formatting",
+      "guides/google-docs-to-html-clean",
+      "guides/plain-text-to-html-paragraphs",
+      "guides/csv-to-html-table-large-files",
+      "guides/excel-to-html-table-formulas",
     ],
   },
 ];
@@ -120,6 +135,13 @@ async function proseOf(page, origin, path) {
     const walk = (el, trail) => {
       // svg 里面是图标路径，不是文字
       if (el.tagName === "SVG" || el.closest("svg")) return;
+      // <pre> 里是代码样例：转换器的真实输入和输出。它六种语言必须逐字一样 ——
+      // 「| Part | Qty |」翻成「| 零件 | 数量 |」就不再是这个转换器会吐出的东西，
+      // 而样例的全部价值就在于它是真的。这不是漏翻，翻了才是错。
+      //
+      // 排除整棵 <pre> 子树，不是只跳过 <pre> 这一个节点：里面还套着 <code>，
+      // 而叶子文字在 <code> 上，跳过父节点等于什么都没排除。
+      if (el.tagName === "PRE" || el.closest("pre")) return;
       const kids = [...el.children];
       if (kids.length === 0) {
         const t = el.innerText?.trim();

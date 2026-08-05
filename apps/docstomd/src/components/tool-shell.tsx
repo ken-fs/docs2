@@ -44,10 +44,11 @@ export function ToolShell({
   const isHome = pageKey === "home";
   const others = TOOL_KEYS.filter((k) => k !== pageKey);
   const input = TOOL_INPUT[pageKey];
+  const route = { kind: "tool", key: pageKey } as const;
 
   return (
     <>
-      <SiteHeader locale={locale} current={pageKey} dict={dict} />
+      <SiteHeader locale={locale} route={route} dict={dict} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 sm:px-8">
         {!isHome && (
@@ -277,7 +278,7 @@ export function ToolShell({
         </section>
       </main>
 
-      <SiteFooter locale={locale} current={pageKey} dict={dict} />
+      <SiteFooter locale={locale} route={route} dict={dict} />
     </>
   );
 }

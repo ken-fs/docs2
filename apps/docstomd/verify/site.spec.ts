@@ -23,8 +23,21 @@ const SLUGS = [
 ];
 /** 方案 §15 要求 AdSense 上线前这五页齐备，而且每个语种都得有。 */
 const LEGAL = ["about", "contact", "privacy", "terms", "cookies"];
+/**
+ * 长尾内容页。7 个工具页只对应 6 篇 —— docx-to-markdown 和 word-to-markdown
+ * 是同一个转换器，各写一篇就是两页抢同一批词。Word 那篇挂在两个工具页上。
+ */
+const GUIDES = [
+  "guides",
+  "guides/word-to-markdown-keep-formatting",
+  "guides/pdf-to-markdown-layout",
+  "guides/google-docs-to-markdown-paste",
+  "guides/html-to-markdown-clean",
+  "guides/csv-to-markdown-tables",
+  "guides/excel-to-markdown-formulas",
+];
 /** sitemap 和 canonical 检查覆盖全站，不只是工具页。 */
-const ALL_SLUGS = [...SLUGS, ...LEGAL];
+const ALL_SLUGS = [...SLUGS, ...LEGAL, ...GUIDES];
 
 /** 全站 trailingSlash，路径一律以 / 结尾。 */
 function url(prefix: string, slug: string) {
@@ -411,6 +424,12 @@ test("paths that don't exist are real 404s, not soft ones", async ({ request }) 
     // 正式页面也只有这五个 slug，别的拼法不该有
     "/privacy-policy/",
     "/cookie/",
+    // 不认识的 guide slug 必须真 404，不能回退到 /guides/ 列表页 ——
+    // 回退等于每个拼写错误都变成一份重复内容的软 404
+    "/guides/nope/",
+    "/guides/word-to-markdown/",
+    "/ja/guides/nope/",
+    "/guides/word-to-markdown-keep-formatting/extra/",
   ]) {
     expect((await request.get(p)).status(), `status for ${p}`).toBe(404);
   }

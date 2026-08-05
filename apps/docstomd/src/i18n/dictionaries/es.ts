@@ -62,6 +62,11 @@ const es: Dictionary = {
     footerLegal: "Las páginas formales",
     legalContactCue: "¿Algo aquí no queda claro, o hay algo que quieres que cambiemos?",
     legalUpdated: "En vigor desde",
+    guide: {
+      cta: "Abrir el conversor",
+      pairedWith: "Usa",
+      moreHeading: "Las otras guías",
+    },
     features: [
       "Convertir .docx a Markdown",
       "Convertir .doc antiguo a Markdown",
@@ -1010,6 +1015,548 @@ const es: Dictionary = {
           ],
         },
       ],
+    },
+  },
+  guideIndex: {
+    short: "Guías",
+    eyebrow: "Guías",
+    title: "Guías — las partes incómodas de convertir documentos a Markdown",
+    description:
+      "Seis recorridos por las conversiones que no salen bien la primera vez: formato de Word, maquetación de PDF, pegar desde Google Docs, HTML desordenado, tablas CSV y fórmulas de Excel.",
+    h1: "Guías",
+    lede: [
+      "Cada conversor tiene una página que explica lo que hace. Estas son para lo que viene después: el archivo que salió mal, y por qué.",
+      "Una guía por motor de conversión, escritas a partir de las preguntas que la gente manda de verdad. Cada página enlaza directo a la herramienta de la que habla.",
+    ],
+  },
+  guides: {
+    "word-to-markdown-keep-formatting": {
+      short: "Formato de Word",
+      eyebrow: "Guía · Word → Markdown",
+      title: "Convertir Word a Markdown: qué formato sobrevive y qué no",
+      description:
+        "Qué partes de un .docx llegan a Markdown y cuáles se descartan a propósito. Títulos, listas, tablas y énfasis sobreviven como estructura; tipografías, colores y maquetación de página no. Cómo distinguirlos antes de convertir.",
+      keywords: [
+        "word a markdown conservar formato",
+        "docx a markdown formato",
+        "convertir word a markdown sin perder formato",
+        "documento word a markdown",
+        "docx a markdown limpio",
+      ],
+      h1: "Qué sobrevive cuando Word se vuelve Markdown",
+      lede: [
+        "«Conservar el formato» significa dos cosas distintas, y de cuál de las dos hables depende que te guste el resultado.",
+        "Lo que sobrevive es el esqueleto: títulos, listas, tablas, énfasis — las partes que dicen cómo está armado el documento. La otra mitad, su aspecto, no tiene dónde ir: Markdown es texto plano, y el texto plano no tiene tipografías, colores, márgenes ni saltos de página. Ese es el techo del formato, no una función que falte.",
+      ],
+      tool: "word-to-markdown",
+      sections: [
+        {
+          heading: "La estructura sobrevive, la apariencia no",
+          body: [
+            "Abre un .docx y cada párrafo lleva un nombre de estilo al lado de su formato. El nombre del estilo es la parte con significado — Título 2, Párrafo de lista, Cita — y el formato es solo cómo Word decidió dibujarlo hoy.",
+            "El conversor lee lo primero y descarta lo segundo. Un Título 2 se vuelve ##, no un texto con un tamaño de letra pegado. Donde acabe ese Markdown, adopta el estilo de títulos de ese proyecto.",
+            "Markdown no tiene sintaxis para una tipografía ni para un margen, lo que significa que no existe ninguna versión de esto que los conserve. Si necesitas que la página se vea idéntica, lo que quieres es un PDF, no Markdown.",
+          ],
+        },
+        {
+          heading: "Los signos # salen de los estilos de título de verdad",
+          body: [
+            "Es lo único que vale la pena hacer en Word antes de convertir, y es la diferencia entre una buena salida y un muro de párrafos.",
+            "Una línea que agrandaste y pusiste en negrita a mano sigue siendo un párrafo normal para el archivo, así que se convierte en un párrafo. Ninguna regla podría devolver «16pt y negrita» a ## sin destrozar de paso cada frase enfatizada del documento.",
+          ],
+          steps: [
+            "En Word, haz clic dentro de uno de tus títulos y echa un ojo a la galería de estilos. Un Normal resaltado es el problema entero en una palabra.",
+            "Elige Título 1, 2 o 3 en esa galería. El aspecto cambiará: edita la definición del estilo si el nuevo aspecto te molesta, en vez de volver a poner tamaños a mano.",
+            "Haz lo mismo con las listas: usa los botones de lista en vez de escribir «1.» y un tabulador. Los números escritos a mano se convierten en texto literal que ya no se renumera.",
+            "Convierte y luego busca # y - en la salida. Un archivo sin ningún # nunca tuvo estructura.",
+          ],
+        },
+        {
+          heading: "Qué llega",
+          body: [
+            "Los seis niveles de título, a partir de los estilos de Word. Los estilos Título y Subtítulo de Word también se mapean a # y ##, porque eso es lo que significan.",
+            "La negrita como **, la cursiva como _, el tachado como ~~. Superíndices y subíndices se quedan como <sup> y <sub>: Markdown no tiene sintaxis para ellos y quitarlos cambiaría lo que dice una fórmula o una llamada a nota.",
+            "Enlaces, listas numeradas y con viñetas a cualquier nivel de anidamiento, citas a partir de los estilos Cita y Cita destacada, y párrafos con estilo Código o Con formato previo como bloques de código con vallas.",
+          ],
+          sample: {
+            beforeLabel: "En Word",
+            before: "Una lista con viñetas anidada,\ny una lista numerada que empieza en 3",
+            afterLabel: "Markdown",
+            after: "- Outer\n  - Inner\n- Second\n\n3. Third\n4. Fourth",
+          },
+        },
+        {
+          heading: "Qué se descarta, y por qué",
+          body: [
+            "Tipografías, tamaños, colores, resaltado, alineación, sangrías, interlineado, saltos de página, encabezados, pies y márgenes. Todo eso es presentación que pertenece a una página, y Markdown no es una página.",
+            "El subrayado es lo que más sorprende. Markdown no tiene subrayado, y lo más parecido — un enlace — sería peor que nada, así que el texto subrayado sale como texto normal.",
+            "El control de cambios y los comentarios se van: obtienes el texto final, no el historial de edición. Los cuadros de texto, SmartArt y gráficos tampoco sobreviven, solo su texto si tienen alguno. Word además le cuenta al conversor los estilos que no pudo mapear; esas notas aparecen encima de la salida, sin repeticiones y con un tope de ocho, seguidas de una línea que dice cuántas más había.",
+          ],
+        },
+        {
+          heading: "Las tablas llegan, las celdas combinadas no",
+          body: [
+            "Las tablas se vuelven tablas de barras estándar. Las barras dentro del texto de una celda se escapan como \\| para que una celda con una barra no parta la fila en dos, y las filas más cortas que la más ancha se rellenan para que la tabla siga siendo rectangular.",
+            "Las celdas combinadas son la excepción, y es una excepción dura: Markdown no tiene colspan ni rowspan. Una celda combinada en dos columnas conserva su texto y deja una celda vacía al lado. Si las combinaciones significan algo, deshazlas en Word primero: muchas veces solo estaban para centrar un título.",
+            "Las celdas admiten formato en línea sin problema: negrita, cursiva, código, enlaces. El contenido de bloque dentro de una celda no sobrevive como bloque: una lista con viñetas dentro de una celda sale con sus elementos pegados, porque una fila de tabla de barras es una sola línea.",
+          ],
+          sample: {
+            beforeLabel: "En Word",
+            before: "Celda de encabezado combinada en dos columnas",
+            afterLabel: "Markdown",
+            after: "| Merged head |  |\n| --- | --- |\n| 1 | 2 |",
+          },
+        },
+        {
+          heading: "Imágenes, y lo único que .doc no puede darte",
+          steps: [
+            "Base64 incrustado mete cada imagen en el propio Markdown. Un archivo autónomo, sin imágenes perdidas — pero un data URI es como un tercio más grande que la imagen, y hace que el archivo sea incómodo de leer en un editor de texto.",
+            "Dejar un hueco escribe ![alt](./images/nombre.png) y te deja el archivo a ti. Úsalo cuando el Markdown vaya a un repositorio que ya tiene una carpeta de imágenes. El nombre se construye a partir del texto alternativo, en minúsculas y con guiones.",
+            "Quitarlas elimina las imágenes por completo. Correcto para una exportación solo de texto, incorrecto si luego te vas a preguntar qué había ahí.",
+          ],
+          body: [
+            "Los .doc antiguos son la excepción. Ese formato es binario, previo a 2007, y aquí se lee byte a byte en tu navegador: las imágenes no se pueden recuperar de él, ni tampoco la numeración exacta de las listas. El texto, los títulos, las tablas, la negrita y la cursiva sí llegan, y la salida dice que tomó ese camino para que no te quedes con la duda. Si tienes Word a mano, un Guardar como .docx da un resultado más limpio.",
+            "Otra cosa que conviene saber: los hipervínculos de Word suelen llevar parámetros de seguimiento, y los documentos guardados desde Google Docs envuelven sus enlaces en una redirección de google.com/url. Ambos se deshacen hasta el destino real, y la salida lo dice: cambiar a dónde apunta un enlace merece un aviso.",
+          ],
+        },
+      ],
+      outro:
+        "Arregla los estilos de título y después suelta el archivo. Nada se sube — el .docx se descomprime en esta pestaña — así que un borrador sin publicar sirve perfectamente para probar.",
+    },
+    "pdf-to-markdown-layout": {
+      short: "Maquetación de PDF",
+      eyebrow: "Guía · PDF → Markdown",
+      title: "PDF a Markdown: por qué los títulos y los párrafos salen mal",
+      description:
+        "Un PDF no tiene títulos, ni párrafos, ni listas: solo glifos en coordenadas. Así se deduce la estructura a partir del tamaño de letra y el espaciado, en qué falla eso, y por qué una página escaneada no produce nada.",
+      keywords: [
+        "pdf a markdown",
+        "convertir pdf a markdown",
+        "pdf a markdown títulos",
+        "extraer texto pdf a markdown",
+        "pdf escaneado a markdown",
+      ],
+      h1: "PDF a Markdown, y por qué la estructura es una deducción",
+      lede: [
+        "Todos los demás conversores de aquí leen una estructura que está de verdad en el archivo. Este no puede, porque un PDF no tiene ninguna.",
+        "Lo que guarda un PDF son caracteres en coordenadas con un tamaño de letra. «Esto es un título» no está ahí dentro. Así que la estructura se deduce, y saber cómo se deduce te dice exactamente cuándo va a estar mal.",
+      ],
+      tool: "pdf-to-markdown",
+      sections: [
+        {
+          heading: "En un PDF no hay estructura",
+          body: [
+            "Un PDF es un formato de impresión. Su trabajo es poner el glifo correcto en el punto correcto de la página, y lo hace guardando fragmentos de texto con una posición y una tipografía. Nada en el archivo dice cuál de ellos es un título, dónde acaba un párrafo, o que seis líneas son una lista con viñetas.",
+            "Así que un documento de Word se convierte; un PDF se reconstruye. Todo lo que viene abajo es una heurística, y cada heurística tiene casos en los que falla. Por eso aparece un aviso encima de la salida en cada conversión de PDF, se vea raro algo o no.",
+            "Si tienes el .docx original, usa ese. Se convierte como debe, porque la estructura está de verdad ahí.",
+          ],
+        },
+        {
+          heading: "Cómo se encuentran los títulos",
+          body: [
+            "Primero se calcula el tamaño del texto de cuerpo: se cuentan los tamaños de letra de todas las líneas, ponderados por cuántos caracteres tiene cada una, y gana el más común. Ponderar por caracteres y no por líneas importa: una línea larga de párrafo dice más sobre cuál es el tamaño de cuerpo que una línea corta de título.",
+            "Después, una línea es un título si es claramente más grande que eso y es corta. La proporción de tamaño elige el nivel: 1,6× o más pasa a #, 1,35× pasa a ##, y 1,15× pasa a ###. Los niveles de título originales ya no están, así que lo que se conserva es solo la relación relativa: estos títulos son del mismo rango entre sí.",
+            "El límite de longitud son 120 caracteres, y está ahí por un fallo concreto: un documento cuyo párrafo de apertura va en letra grande no es un título, y el tamaño por sí solo no puede notar la diferencia. La longitud sí.",
+            "Esta es también la heurística que más se pierde cosas. Un documento que da estilo a sus títulos por grosor y no por tamaño — negrita al mismo tamaño que el cuerpo — no tiene ninguna señal de tamaño, y esos títulos salen como párrafos.",
+          ],
+        },
+        {
+          heading: "Elementos de página, párrafos y listas",
+          body: [
+            "Los encabezados y pies se descartan cuando son a la vez más pequeños que el texto de cuerpo y están dentro del 9% de la altura de la página desde el borde superior o inferior. Es proporcional en lugar de una medida fija, así que A4 y Carta se comportan igual. Si no, un número de página o un sello de «Confidencial» repetido en cada página interrumpiría el texto cuarenta veces.",
+            "Un salto de párrafo es un hueco vertical mayor que 1,8× el tamaño de letra de esa misma línea. Así es como un PDF expresa uno, porque no hay marca de párrafo que leer.",
+            "Las listas se detectan por sus primeros caracteres: un glifo de viñeta (•, ·, ▪, ◦, ‣, ∙) o un número de hasta tres cifras seguido de un punto o un paréntesis de cierre. Una lista dibujada de otra forma no es una lista para el conversor.",
+          ],
+        },
+        {
+          heading: "Palabras partidas entre líneas",
+          body: [
+            "Los PDF cortan palabras con guion al final de línea, y una unión ingenua te da «in- forme». Las líneas se vuelven a pegar en una sola palabra cuando una línea acaba en guion y la siguiente empieza en minúscula: esa combinación es un guion de salto de línea casi siempre.",
+            "Cuando la siguiente línea empieza en mayúscula, el guion se queda. «State-of-the-art» partido después de «state-» conserva su guion, y eso es correcto, porque ese sí es parte de la palabra.",
+            "Las líneas en chino, japonés y coreano se unen sin ningún espacio. Esas escrituras no separan palabras con espacios, así que meter uno en cada salto de línea abriría un hueco en medio de una frase.",
+          ],
+          sample: {
+            beforeLabel: "Dos líneas en el PDF",
+            before: "The quarterly re-\nport is attached.",
+            afterLabel: "Markdown",
+            after: "The quarterly report is attached.",
+          },
+        },
+        {
+          heading: "Un PDF escaneado no te da nada",
+          body: [
+            "Si una página es una imagen de texto — un escaneo, una foto, un fax — no hay caracteres en el archivo que leer, solo un mapa de bits. El conversor lo dice y se detiene, en lugar de devolverte un documento vacío que parece un error.",
+            "Sacar texto de eso necesita OCR, que no es parte de esta herramienta. Un PDF en el que algunas páginas son escaneos y otras no convertirá las páginas reales y listará los números de las que salieron vacías, hasta seis.",
+            "Dos techos: 25 MB y 500 páginas. Los dos van de lo que una pestaña del navegador puede hacer sin bloquearse: un PDF se procesa aquí, en tu navegador, sin ningún servidor de por medio.",
+          ],
+        },
+        {
+          heading: "Qué hacer con las páginas a varias columnas",
+          body: [
+            "Los diseños a dos columnas son el caso más difícil y salen lo mejor posible. El texto se lee en el orden en que lo guarda el archivo, que en un PDF a dos columnas bien hecho es columna por columna, y en uno mal hecho alterna entre columnas línea a línea. No hay forma fiable de saber cuál tienes antes de leerlo.",
+            "Las tablas y las fórmulas son la misma historia: una tabla en un PDF son líneas dibujadas y texto en coordenadas, sin nada que la marque como tabla. Espera las celdas como líneas separadas, no como una tabla de barras.",
+            "Activa las marcas de página si vas a arreglar cosas a mano. Eso inserta un comentario HTML antes de cada página, así puedes encontrar de qué página venía un trozo destrozado y compararlo con el original.",
+          ],
+          sample: {
+            beforeLabel: "Con marcas de página",
+            before: "…fin de la página uno.",
+            afterLabel: "Markdown",
+            after: "…fin de la página uno.\n\n<!-- page 2 -->\n\n## Method",
+          },
+        },
+      ],
+      outro:
+        "Suelta el PDF y lee los avisos de encima de la salida: dicen qué páginas se saltaron y te recuerdan que la estructura se dedujo. Todo se lee en tu navegador; el archivo nunca se sube.",
+    },
+    "google-docs-to-markdown-paste": {
+      short: "Pegar de Google Docs",
+      eyebrow: "Guía · Google Docs → Markdown",
+      title: "Google Docs a Markdown: copiar y pegar, o exportar primero",
+      description:
+        "Dos formas de salir de un documento de Google, y lo que cuesta cada una. Pegar es más rápido y pierde las imágenes; exportar .docx las conserva. Ninguna de las dos necesita acceso a tu Drive.",
+      keywords: [
+        "google docs a markdown",
+        "copiar google docs a markdown",
+        "google docs pegar markdown",
+        "exportar google docs a markdown",
+        "documento google a md",
+      ],
+      h1: "Sacar Markdown de un documento de Google",
+      lede: [
+        "Hay dos caminos y no son equivalentes. Pegar son dos segundos y se lleva las imágenes; exportar el .docx son unos cuantos clics y las conserva.",
+        "Los dos corren enteros en tu navegador, y ninguno pide tu cuenta de Google. Nada de aquí puede ver tu Drive.",
+      ],
+      tool: "google-docs-to-markdown",
+      sections: [
+        {
+          heading: "Copia el contenido, no un enlace a él",
+          body: [
+            "Esto es lo primero que atrapa a la gente. Copiar la URL del documento, o usar «Copiar vínculo», te da una dirección: ahí no hay nada que convertir.",
+            "Lo que quieres es el contenido en el portapapeles. Seleccionar texto en un documento y copiarlo pone ahí una versión HTML con formato junto al texto plano, y ese HTML lleva los títulos, las listas y las tablas.",
+          ],
+          steps: [
+            "Abre el documento y selecciona lo que quieras. Ctrl+A si es todo.",
+            "Copia con Ctrl+C.",
+            "Pulsa Ctrl+V en cualquier parte de la página del conversor. No hay que buscar una caja ni pulsar ningún botón: el pegado lo recoge la propia página.",
+          ],
+        },
+        {
+          heading: "Cómo llega el HTML del portapapeles",
+          body: [
+            "El HTML del portapapeles de Google no es ordenado. Casi todos los elementos llevan un nombre de clase generado como c1 o c17, los elementos de lista reciben nombres lst-kix_, y toda la selección va envuelta en una etiqueta <b> que pone font-weight en normal: una etiqueta de negrita que apaga la negrita, que es la forma en la que el editor lleva la cuenta del formato a nivel de documento.",
+            "Nada de eso llega al Markdown. Las clases, los id y los atributos style los quita el sanitizador, porque Markdown no puede expresar ninguno y el HTML del portapapeles de una página web cualquiera no es algo en lo que confiar. La envoltura <b> se desmonta por separado: dejarla ahí produciría un ** suelto al principio y al final de tu documento.",
+            "Los enlaces también se desmontan. Google enruta los enlaces salientes por google.com/url?q=… para contar clics dentro del editor, y a menudo viajan con ellos parámetros de seguimiento como utm_source. Los dos se quitan para que el enlace apunte a donde dice apuntar. La salida te dice cuándo ha pasado esto: cambiar el destino de un enlace merece una mención.",
+          ],
+          sample: {
+            beforeLabel: "En el portapapeles",
+            before: "<a href=\"https://www.google.com/url?q=\n  https://example.com/a%3Futm_source%3Ddocs\">figures</a>",
+            afterLabel: "Markdown",
+            after: "[figures](https://example.com/a)",
+          },
+        },
+        {
+          heading: "Por qué al pegar se pierden las imágenes",
+          body: [
+            "Las imágenes de un documento viven en los servidores de Google. El HTML del portapapeles las referencia por URL en lugar de llevar los bytes, y esas URL están atadas a tu sesión: caducan, y no resuelven para nadie más.",
+            "Así que un documento pegado llega con su texto intacto y sus imágenes ausentes. Es el límite del formato, no un ajuste.",
+            "Si las imágenes importan, toma el otro camino.",
+          ],
+        },
+        {
+          heading: "La exportación a .docx, para imágenes y documentos largos",
+          steps: [
+            "En el documento: Archivo → Descargar → Microsoft Word (.docx).",
+            "Suelta ese archivo en la caja de la página del conversor. Varios a la vez está bien: vuelven en un solo zip.",
+            "Elige cómo tratar las imágenes antes de copiar el resultado: incrustadas en el archivo, dejadas como referencias ./images/, o quitadas.",
+          ],
+          body: [
+            "Este camino es el más completo y vale la pena para cualquier cosa larga. El .docx lleva información de estilo real, así que los títulos vienen de los estilos de Word y no del mejor intento de un portapapeles, y los documentos largos mantienen mejor su estructura.",
+            "También significa que la página de Google Docs y la de Word corren el mismo conversor sobre el mismo tipo de archivo. Todo lo que es cierto de una lo es de la otra.",
+          ],
+        },
+        {
+          heading: "Qué no llega por ninguno de los dos caminos",
+          body: [
+            "Los comentarios y las sugerencias se descartan: obtienes el documento, no sus márgenes. Resuélvelos o acéptalos antes de exportar si importan.",
+            "Los gráficos, dibujos y chips inteligentes llegan como texto plano en el mejor de los casos. Son objetos que dibuja el editor, y la mayoría no tiene equivalente textual.",
+            "Los encabezados, pies y números de página se van. Pertenecen a una página impresa, y Markdown no tiene páginas.",
+          ],
+        },
+        {
+          heading: "Por qué no hay integración con Drive",
+          body: [
+            "Conectar con Drive significaría pedirte acceso a tus archivos y ejecutar un servidor que guarde un token para ellos. Es un riesgo real y permanente para ti a cambio de ahorrarte un Ctrl+C.",
+            "Un copiar y pegar entrega exactamente los párrafos que seleccionaste y nada más. No hay cuenta, ni pantalla de OAuth, ni complemento que instalar, y no hay nada de nuestro lado que pudiera filtrarse, porque no hay nuestro lado: la conversión ocurre en tu navegador.",
+            "Google Docs también exporta Markdown por su cuenta ahora. Si esa salida te sirve, úsala. Esto existe para los casos en los que quieres elegir el carácter de viñeta, el estilo de las vallas o qué pasa con las imágenes, y para pegar un fragmento en lugar de exportar un documento entero.",
+          ],
+        },
+      ],
+      outro:
+        "Selecciona, copia, pega — o exporta el .docx si necesitas las imágenes. El portapapeles se lee en tu navegador y nada se manda a ninguna parte.",
+    },
+    "html-to-markdown-clean": {
+      short: "HTML desordenado",
+      eyebrow: "Guía · HTML → Markdown",
+      title: "HTML a Markdown: qué se conserva, qué se quita y qué se aplana",
+      description:
+        "Qué etiquetas HTML se mapean a Markdown, cuáles se eliminan por seguridad, y qué les pasa a las tablas, los bloques de código y los estilos en línea. Y los dos ajustes que cambian la forma de la salida.",
+      keywords: [
+        "html a markdown",
+        "convertir html a markdown",
+        "html a md",
+        "html a markdown limpio",
+        "página web a markdown",
+      ],
+      h1: "HTML a Markdown",
+      lede: [
+        "HTML puede expresar muchísimo más que Markdown. Así que esta conversión es sobre todo una cuestión de qué hacer con todo lo que no tiene equivalente.",
+        "Tres respuestas, según la etiqueta: mapearla, quitar la etiqueta y conservar el texto, o quitar las dos cosas. Cuál se aplica lo decide una lista blanca, y vale la pena saber qué hay en ella.",
+      ],
+      tool: "html-to-markdown",
+      sections: [
+        {
+          heading: "Una lista blanca, no una negra",
+          body: [
+            "Solo sobreviven a la primera pasada las etiquetas que significan algo en Markdown: títulos, párrafos, listas, enlaces, imágenes, énfasis, citas, código, tablas y el puñado de etiquetas en línea que las rodea. Todo lo demás se elimina, conservando su texto.",
+            "La razón de que sea una lista blanca es que una lista negra tiene que predecir cada etiqueta peligrosa, y HTML sigue añadiendo etiquetas nuevas. Una entrada que falte es un agujero. Así, la respuesta por defecto para cualquier cosa desconocida es no.",
+            "Los scripts, los manejadores de eventos y los enlaces javascript: se van, y en script, style, iframe, object y embed también se va el contenido, no solo la etiqueta. Conservar el texto de un <script> pegaría su código en tu documento como prosa visible.",
+            "Los atributos van en lista blanca igual: solo href, src, alt, title, colspan, rowspan y start. Así que class, id y style nunca llegan a la salida. Y no es solo seguridad: Markdown tampoco tiene dónde ponerlos.",
+          ],
+        },
+        {
+          heading: "Por qué importa sanear aunque no se renderice nada",
+          body: [
+            "Esta página nunca renderiza tu HTML, así que aquí no hay nada que pueda ejecutarse. El sanitizador existe por lo que pasa después.",
+            "Un enlace escrito como [click me](javascript:alert(1)) lo copia fielmente cualquier conversor de Markdown, y se convierte en un ataque funcional en el momento en que alguien publica ese Markdown en un sitio que lo renderiza. El riesgo no es nuestro, se le entrega a quien use la salida.",
+            "Así que las URL se comprueban contra una lista blanca de protocolos — http, https, mailto, ftp y rutas relativas — y cualquier otra cosa se descarta. Cuando se elimina algo, la salida dice qué era, en lugar de limpiar tu entrada a tus espaldas.",
+          ],
+        },
+        {
+          heading: "Tablas: conservarlas o aplanarlas",
+          body: [
+            "Por defecto una tabla se vuelve una tabla de barras de Markdown. Las barras dentro de las celdas se escapan, el espacio en blanco dentro de una celda se reduce a espacios simples, y las filas cortas se rellenan hasta el ancho de la fila más ancha para que la tabla siga siendo rectangular.",
+            "Aplanar es la alternativa, y existe para las tablas que nunca fueron tablas. Una página maquetada con una tabla para colocar cosas se convierte en una tabla de barras llena de celdas vacías; aplanada, cada fila se vuelve una línea de texto con las celdas unidas por un punto medio, y se lee muchísimo mejor.",
+            "Dos cosas no sobreviven por ninguna de las dos vías. Un <caption> se descarta, porque una tabla de barras no tiene dónde ponerlo: cópialo como una línea encima de la tabla si lo necesitas. Y el contenido de bloque dentro de una celda se colapsa: una lista en una celda sale con sus elementos pegados, porque una fila de tabla de barras tiene que ser una sola línea.",
+          ],
+          sample: {
+            beforeLabel: "HTML",
+            before: "<table><tr><th>Part</th><th>Qty</th></tr>\n<tr><td>Bolt | M6</td><td>12</td></tr></table>",
+            afterLabel: "Markdown",
+            after: "| Part | Qty |\n| --- | --- |\n| Bolt \\| M6 | 12 |",
+          },
+        },
+        {
+          heading: "Las etiquetas que conservan su HTML",
+          body: [
+            "Los superíndices y subíndices se quedan como <sup> y <sub>. Markdown no tiene sintaxis para ellos, y x2 en lugar de x² cambia lo que dice una fórmula: el HTML en crudo es válido en Markdown y estas dos etiquetas las maneja cualquier renderizador.",
+            "El subrayado no recibe ese trato. No tiene un significado que preservar: en la web un subrayado es un enlace, así que conservarlo sería directamente engañoso. El texto subrayado sale como texto normal.",
+            "El tachado se vuelve ~~, que es Markdown de GitHub y no la especificación original, pero hoy es lo bastante universal como para que quitarlo fuera la opción más rara.",
+          ],
+        },
+        {
+          heading: "Listas, bloques de código y los ajustes",
+          body: [
+            "Los elementos de lista se escriben como «- item», con un solo espacio. Casi todas las cadenas de herramientas de Markdown lo escriben así, y la alternativa habitual — tres espacios tras la marca — hace diffs ruidosos cuando un archivo lo editan las dos.",
+            "Las listas anidadas se sangran al ancho de la marca, y un párrafo que continúa dentro de un elemento de lista se sangra hasta alinearse con el texto de arriba en lugar de salirse de la lista. Un <ol> con atributo start conserva su numeración.",
+            "El carácter de viñeta puede ser -, * o +, y la valla de código ``` o ~~~. Elige según el lugar al que vaya el archivo; no hay diferencia funcional. Los títulos también pueden ir en el estilo subrayado, aunque solo los dos primeros niveles tienen uno: del tercero para abajo se quedan con las marcas # de todos modos, y conviene saberlo antes de elegirlo.",
+          ],
+          sample: {
+            beforeLabel: "HTML",
+            before: "<ol><li><p>First para</p>\n<p>Still item one</p></li></ol>",
+            afterLabel: "Markdown",
+            after: "1. First para\n\n   Still item one",
+          },
+        },
+        {
+          heading: "Dos entradas, un camino",
+          body: [
+            "Puedes pegar código HTML en la caja, o soltar un archivo .html. Los dos se tratan igual, porque para el código son la misma cosa: una cadena de HTML no confiable.",
+            "El techo de 25 MB es por entrada, que es muchísimo más que el código de cualquier página. Nada se sube: el análisis, el saneado y la conversión pasan todos en la pestaña.",
+            "Si el resultado vuelve vacío, la salida lo dice. Normalmente significa que la entrada era todo marcado y ningún texto: el <head> de una página, o un fragmento que solo eran estilos.",
+          ],
+        },
+      ],
+      outro:
+        "Pega el código o suelta el archivo, elige si las tablas siguen siendo tablas y copia el Markdown. Todo corre en tu navegador.",
+    },
+    "csv-to-markdown-tables": {
+      short: "Tablas CSV",
+      eyebrow: "Guía · CSV → Markdown",
+      title: "CSV a tabla Markdown: delimitadores, campos entre comillas y alineación",
+      description:
+        "Cómo se detecta el delimitador, qué pasa con las comas y los saltos de línea dentro de campos entre comillas, cómo funciona la fila de alineación, y qué significa en la práctica el límite de 100 000 celdas.",
+      keywords: [
+        "csv a tabla markdown",
+        "convertir csv a markdown",
+        "csv a markdown",
+        "tsv a tabla markdown",
+        "csv con punto y coma a markdown",
+      ],
+      h1: "De CSV a una tabla Markdown",
+      lede: [
+        "Nada dentro de un CSV declara sus propias reglas. Qué carácter separa las columnas, cómo se comportan las comillas, si la primera línea es un encabezado: todo es convención, y circulan varias. Una tabla que sale mal es casi siempre un archivo leído con el juego equivocado.",
+        "Esto cubre cómo se elige el delimitador, qué hacen las comillas, y cómo conseguir que los números queden alineados a la derecha.",
+      ],
+      tool: "csv-to-markdown",
+      sections: [
+        {
+          heading: "Qué carácter separa las columnas",
+          body: [
+            "En archivos reales aparecen cuatro caracteres: coma, punto y coma, tabulador, barra. Los puntos y comas más de lo que se espera — donde 1,50 significa uno y medio la coma ya está tomada, así que las hojas de cálculo recurren al punto y coma.",
+            "La detección es automática, y cuando la respuesta no es una coma la salida dice qué carácter usó. Esa línea vale la pena leerla: un archivo con algo inusual en sus primeras filas, como una línea de título encima del encabezado, puede leerse mal, y así es como te darías cuenta.",
+            "Si lo adivinó mal, fija el delimitador a mano. Coma, punto y coma, tabulador y barra se pueden elegir.",
+          ],
+          steps: [
+            "Suelta el archivo, o pega las filas directamente en la caja.",
+            "Mira la nota de encima de la salida por si detectó un delimitador que no es una coma.",
+            "Si la tabla salió con una columna cuando debería tener seis, elige tú el delimitador.",
+          ],
+        },
+        {
+          heading: "Cuando una celda contiene el separador mismo",
+          body: [
+            "Un campo envuelto en comillas dobles puede contener el delimitador, y unas comillas dobles dentro significan un carácter de comilla literal. Eso es RFC 4180 y se maneja como debe: es la razón entera de que el archivo no se parta simplemente por las comas.",
+            "Los saltos de línea también se esconden entre comillas, y eso choca con el formato de salida: una fila de tabla de barras tiene que ocupar exactamente una línea. Así que un salto dentro de una celda se reescribe como <br>, lo que conserva las dos líneas de una dirección sin partir la fila en dos.",
+            "Las barras verticales en el texto de una celda se escapan como \\|. Sin eso, una barra en un campo de notas convierte una fila de cinco columnas en una de seis.",
+          ],
+          sample: {
+            beforeLabel: "CSV",
+            before: "name,note\nBolt,\"M6 | 40mm\nsteel\"",
+            afterLabel: "Markdown",
+            after: "| name | note |\n| --- | --- |\n| Bolt | M6 \\| 40mm<br>steel |",
+          },
+        },
+        {
+          heading: "La fila de alineación",
+          body: [
+            "La fila de guiones bajo el encabezado puede llevar dos puntos, y fijan cómo se alinea una columna cuando la tabla se renderiza. Izquierda, centro, derecha — la derecha es la que quieres para números.",
+            "Una cosa que hay que saber: el ajuste se aplica a toda la tabla, no por columna. Aquí no hay control por columna, porque un CSV no lleva información sobre qué columnas tienen números, y adivinarlo por los valores fallaría con códigos postales, números de teléfono y cadenas de versión.",
+            "Así que para una tabla casi toda de números, pon derecha y arregla a mano la única columna de texto. Para cualquier cosa mixta, déjalo por defecto: una fila lisa de guiones, que todos los renderizadores tratan como izquierda.",
+          ],
+          sample: {
+            beforeLabel: "Alineación: derecha",
+            before: "Item,Cost\nBolt,0.40",
+            afterLabel: "Markdown",
+            after: "| Item | Cost |\n| ---: | ---: |\n| Bolt | 0.40 |",
+          },
+        },
+        {
+          heading: "Filas de encabezado, y archivos que no tienen ninguna",
+          body: [
+            "La primera fila pasa a ser el encabezado por defecto. Desactívalo y todas las filas serán filas de cuerpo — pero la fila de encabezado en sí no desaparece, sale vacía.",
+            "Eso se ve raro y no es un error: una tabla de barras de Markdown está obligada a tener una fila de encabezado. Una tabla sin ella no se analizaría como tabla en absoluto, así que un encabezado vacío es la única forma de expresar «sin encabezado» y seguir produciendo algo que se renderice.",
+            "Rellénalo después con nombres de columna, o déjalo: una fila de encabezado vacía se renderiza como una franja fina en blanco encima de los datos.",
+          ],
+          sample: {
+            beforeLabel: "Fila de encabezado: ninguna",
+            before: "Bolt,12\nNut,12",
+            afterLabel: "Markdown",
+            after: "|  |  |\n| --- | --- |\n| Bolt | 12 |\n| Nut | 12 |",
+          },
+        },
+        {
+          heading: "Filas irregulares y archivos mal formados",
+          body: [
+            "Las filas con distinto número de columnas se rellenan hasta la más ancha, y la salida te dice qué cuentas vio. Ese mensaje suele ser señal de que algo está roto más arriba: una fila con tres celdas en un archivo de seis columnas normalmente significa que una comilla sin escapar se tragó un delimitador.",
+            "Las líneas vacías se descartan, incluidas las líneas que no son más que delimitadores, que es lo que suele ser un bloque de «,,,» al final.",
+            "Los valores nunca se convierten de tipo. 007 sigue siendo 007 y 1-2 no se vuelve una fecha. Excel te hace eso; esto no, porque cambiar el valor es cambiar tus datos.",
+            "Una marca de orden de bytes al principio del archivo se quita, para que el encabezado de la primera columna no salga con un carácter invisible pegado.",
+          ],
+        },
+        {
+          heading: "Qué significa «grande» aquí",
+          body: [
+            "Dos techos. 25 MB de texto, y 100 000 celdas — eso es filas por columnas, así que un archivo de seis columnas te llega hasta unas 16 000 filas y uno de cien columnas se detiene cerca de las mil.",
+            "El límite de celdas es el que vas a alcanzar, y es cuestión de renderizado más que de análisis. La previsualización construye nodos DOM para cada celda, y unos cuantos cientos de miles bloquearán la pestaña. Negarse es mejor que congelarse.",
+            "Para algo de verdad más grande, pártelo por filas y convierte cada trozo, repitiendo la fila de encabezado en cada uno.",
+          ],
+        },
+      ],
+      outro:
+        "Suelta el CSV o pega las filas, cambia la alineación si las cifras van a la derecha, y copia la tabla. El análisis ocurre en esta pestaña, así que una exportación de clientes se queda en tu disco.",
+    },
+    "excel-to-markdown-formulas": {
+      short: "Fórmulas de Excel",
+      eyebrow: "Guía · Excel → Markdown",
+      title: "Excel a Markdown: qué pasa con las fórmulas y el formato",
+      description:
+        "Las fórmulas se convierten en sus valores calculados, y hay un caso en el que salen vacías. Además, qué pasa con los formatos de moneda y porcentaje, las fechas, las celdas combinadas y las hojas múltiples.",
+      keywords: [
+        "excel a markdown",
+        "xlsx a tabla markdown",
+        "convertir excel a markdown",
+        "fórmulas excel a markdown",
+        "hoja de cálculo a tabla markdown",
+      ],
+      h1: "Excel a Markdown: fórmulas y formato",
+      lede: [
+        "Una tabla Markdown es un rectángulo de texto. Una hoja es un rectángulo de celdas, y una celda puede llevar una fórmula debajo, una máscara de visualización encima y una combinación que la estira sobre sus vecinas. Tres de esas cuatro no tienen dónde aterrizar.",
+        "Lo que deja una pregunta estrecha: de todo lo que sabe la hoja, ¿qué llega a la tabla, y está entre eso lo que viniste a buscar?",
+      ],
+      tool: "excel-to-markdown",
+      sections: [
+        {
+          heading: "Las fórmulas se vuelven sus respuestas",
+          body: [
+            "=SUM(B2:B9) llega como 4211. Esa es la dirección útil, porque Markdown no calcula nada: una fórmula pegada se quedaría en el documento como caracteres inertes que parecen significar algo y no lo hacen.",
+            "Funciona porque Excel guarda en caché el valor calculado junto a la fórmula cada vez que guarda el archivo. El conversor lee ese valor en caché, y por eso no necesita un motor de fórmulas propio y todo esto puede correr en una pestaña del navegador.",
+          ],
+          sample: {
+            beforeLabel: "Celda en Excel",
+            before: "B10:  =SUM(B2:B9)",
+            afterLabel: "Markdown",
+            after: "| Total | 4211 |",
+          },
+        },
+        {
+          heading: "Los libros que nadie ha abierto nunca",
+          body: [
+            "Si el libro lo generó un script — una exportación de Python, un proceso de informes, cualquier cosa que use una biblioteca de hojas de cálculo — y nunca se abrió en Excel, no hay valor en caché. Nadie escribió uno. Esas celdas se convierten en vacías.",
+            "Un viaje de ida y vuelta lo arregla: abre el libro en Excel o LibreOffice, guarda, cierra. Guardar es lo que rellena la caché. Y una hoja que aun así se lee vacía queda señalada encima de la salida, así que no copiarás una tabla de huecos por descuido.",
+            "Los errores de fórmula también salen vacíos, en lugar de como #DIV/0! o #REF!. Una búsqueda rota a lo largo de una columna produce una columna de huecos, así que si una columna está vacía sin motivo aparente, revisa el origen.",
+          ],
+        },
+        {
+          heading: "Los formatos de número no sobreviven",
+          body: [
+            "De todo lo que hay en esta página, esto es lo que conviene leer antes de convertir. Excel guarda la máscara de visualización y el número almacenado en sitios distintos, y solo el número almacenado es dato: la máscara es una instrucción de renderizado.",
+            "Por eso $1.234,50 aterriza como 1234.5 y una celda que muestra 12,50 % aterriza como 0.125. Nada se estropeó: esos son los números que el archivo siempre tuvo, mostrados sin la máscara.",
+            "Si el formato importa, añade en la hoja una columna con la cadena ya formateada, construida con una fórmula TEXTO(), y usa esa columna. Entonces es texto, y el texto llega exactamente como está escrito.",
+            "Las fechas son la excepción. También se guardan como números, pero el formato de número las identifica, así que salen como 1995-01-01, con la hora añadida cuando la hay. Se leen en UTC a propósito: la versión ingenua desplaza cada fecha un día hacia atrás para cualquiera al oeste de Greenwich.",
+          ],
+        },
+        {
+          heading: "Las celdas combinadas se separan",
+          body: [
+            "Un título combinado en A1:C1 se vuelve una celda con el texto y dos celdas vacías al lado. Excel guarda el valor en la celda superior izquierda de una combinación y deja el resto realmente vacío, así que eso es lo que hay que leer.",
+            "Markdown no tiene colspan, así que no hay forma de volver a montarlo. Deshaz las combinaciones en Excel primero si la maquetación importa: muchas veces solo estaban para centrar un título.",
+            "Los colores, tipografías, bordes, formato condicional y comentarios de celda se van por el mismo camino y por la misma razón: Markdown no tiene sintaxis para nada de eso.",
+          ],
+        },
+        {
+          heading: "Hojas, una a una o varias",
+          steps: [
+            "Suelta el libro. Los nombres de las hojas vuelven en una lista con el número de filas, y la primera hoja se convierte.",
+            "Marca las hojas que quieras. Cambiar la selección vuelve a generar la salida a partir de la copia que ya está en memoria: el archivo no se lee otra vez.",
+            "Varias hojas seleccionadas salen como un solo documento, cada tabla bajo un título ## con el nombre de la hoja.",
+          ],
+          body: [
+            "El título solo aparece cuando hay más de una hoja seleccionada. Con una sola ya sabes cuál es, y un título sería ruido.",
+            "Las filas vacías del final se recortan primero, y eso importa más de lo que parece: hacer clic por una zona vacía en Excel puede dejar una hoja diciendo que tiene varios cientos de filas que no contienen nada. Una hoja que queda vacía después del recorte lo dice, en lugar de producir una tabla de huecos.",
+          ],
+        },
+        {
+          heading: "Los techos de tamaño, y los archivos que se rechazan",
+          body: [
+            "10 MB por libro, más bajo que los 25 MB de los otros formatos. Un .xlsx es un zip, y descomprimirlo en una pestaña cuesta muchísima más memoria de lo que sugiere el tamaño del archivo.",
+            "100 000 celdas entre todo lo seleccionado, y por eso elegir menos hojas puede hacer pasar un libro grande que entero no cabe.",
+            "Los libros protegidos con contraseña se rechazan en lugar de leerse a medias. Igual que los .xls binarios antiguos: los dos son contenedores OLE en lugar de zips, y ninguno se puede leer aquí. Ábrelo en Excel y guárdalo como .xlsx sin contraseña.",
+            "Si sueltas un .docx o un PDF en esta página por error, no lo intentará: la cabecera del archivo se comprueba primero, y el mensaje nombra la página que sí lo acepta.",
+          ],
+        },
+      ],
+      outro:
+        "Suelta el libro, marca las hojas que quieras, copia la tabla. El .xlsx se descomprime en esta pestaña y no va a ninguna otra parte, lo que importa cuando el archivo es un modelo financiero.",
     },
   },
 };

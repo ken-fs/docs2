@@ -1,5 +1,5 @@
 // 由 scripts/build-icons.mjs 生成，不要手改。加删图标后跑 pnpm icons。
-// 只收录 src 里实际引用的 26 个图标；整个 ph 集合有 9161 个、约 4.5MB。
+// 只收录 src 里实际引用的 27 个图标；整个 ph 集合有 9161 个、约 4.5MB。
 
 export const phSubset = {
   "prefix": "ph",
@@ -8,6 +8,9 @@ export const phSubset = {
   "icons": {
     "arrow-counter-clockwise-bold": {
       "body": "<path fill=\"currentColor\" d=\"M228 128a100 100 0 0 1-98.66 100H128a99.4 99.4 0 0 1-68.62-27.29a12 12 0 0 1 16.48-17.45a76 76 0 1 0-1.57-109c-.13.13-.25.25-.39.37L54.89 92H72a12 12 0 0 1 0 24H24a12 12 0 0 1-12-12V56a12 12 0 0 1 24 0v20.72l21.48-19.66A100 100 0 0 1 228 128\"/>"
+    },
+    "arrow-right-bold": {
+      "body": "<path fill=\"currentColor\" d=\"m224.49 136.49l-72 72a12 12 0 0 1-17-17L187 140H40a12 12 0 0 1 0-24h147l-51.49-51.52a12 12 0 0 1 17-17l72 72a12 12 0 0 1-.02 17.01\"/>"
     },
     "arrow-up-right-bold": {
       "body": "<path fill=\"currentColor\" d=\"M204 64v104a12 12 0 0 1-24 0V93L72.49 200.49a12 12 0 0 1-17-17L163 76H88a12 12 0 0 1 0-24h104a12 12 0 0 1 12 12\"/>"

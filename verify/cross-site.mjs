@@ -17,14 +17,36 @@ import { chromium } from "@playwright/test";
 const A = "http://localhost:3311"; // docstomd
 const B = "http://localhost:3312"; // docs2html
 
+/**
+ * 工具页 + 长尾内容页。
+ *
+ * 内容页比工具页更该查这一条：两站的六篇是刻意对着写的镜像（Word 那篇对
+ * Word 那篇，CSV 对 CSV），讲的又是同一批客观事实 —— 25 MB、10 万格、
+ * 结合格没有 colspan。工具页只有一两段正文，内容页有二三十段，复制粘贴的
+ * 收益和诱惑都大得多。漏掉它们，这个检查就只盯着最不容易抄的地方。
+ */
 const SLUGS_A = [
   "", "docx-to-markdown", "word-to-markdown", "pdf-to-markdown",
   "html-to-markdown", "csv-to-markdown", "excel-to-markdown",
   "google-docs-to-markdown",
+  "guides",
+  "guides/word-to-markdown-keep-formatting",
+  "guides/pdf-to-markdown-layout",
+  "guides/google-docs-to-markdown-paste",
+  "guides/html-to-markdown-clean",
+  "guides/csv-to-markdown-tables",
+  "guides/excel-to-markdown-formulas",
 ];
 const SLUGS_B = [
   "", "markdown-to-html", "docx-to-html", "google-docs-to-html",
   "text-to-html", "csv-to-html-table", "excel-to-html-table",
+  "guides",
+  "guides/markdown-tables-to-html",
+  "guides/word-to-html-keep-formatting",
+  "guides/google-docs-to-html-clean",
+  "guides/plain-text-to-html-paragraphs",
+  "guides/csv-to-html-table-large-files",
+  "guides/excel-to-html-table-formulas",
 ];
 
 /**

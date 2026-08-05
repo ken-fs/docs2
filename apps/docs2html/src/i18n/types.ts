@@ -59,11 +59,70 @@ export type PageKey =
  */
 export type LegalKey = "about" | "contact" | "privacy" | "terms" | "cookies";
 
+/**
+ * 教程文章。每个工具页配一篇，回答那种「工具页装不下」的问题 ——
+ * 工具页的 FAQ 是三五句就该说完的，而「Word 的表格转过来为什么会散」
+ * 要摊开讲清原因、怎么看出来、怎么绕过去。
+ *
+ * slug 写成搜索的人真会打的那串字，不是内部代号。带 -in-<year> 之类的
+ * 时效词一律不要 —— 这些是操作步骤，不是新闻，一年后还得是对的。
+ *
+ * key 就是 slug（跟 LegalKey 同一套做法），因为它们一一对应，
+ * 再加一层映射只会多一个能对不上的地方。
+ */
+export type GuideKey =
+  | "markdown-tables-to-html"
+  | "word-to-html-keep-formatting"
+  | "google-docs-to-html-clean"
+  | "plain-text-to-html-paragraphs"
+  | "csv-to-html-table-large-files"
+  | "excel-to-html-table-formulas";
+
 /** 一节正文：标题 + 若干段落，需要时再挂一个列表。 */
 export type LegalSection = {
   heading: string;
   body: string[];
   items?: string[];
+};
+
+/**
+ * 一篇教程。
+ *
+ * 跟 LegalCopy 分开建模而不是复用：正式页面是一坨说明文字，教程有它自己
+ * 要交代的东西 —— 配哪个工具页（tool，用来生成那条「直接去转」的链接和
+ * 面包屑）、正文里的分步骤、以及结尾指回工具页的那一句。
+ *
+ * 没有 date / author 字段。这些文章不按时间序排，加个日期只会让它们从第二年
+ * 起看着像过期内容 —— 而内容本身不会过期。Article 结构化数据里那个
+ * datePublished 也因此不发（宁可不发，不发假的）。
+ */
+export type GuideCopy = {
+  /** 导航和面包屑用的短名 */
+  short: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  keywords: string[];
+  h1: string;
+  /** 开头两三句：这篇解决什么问题，读完能做到什么 */
+  lede: string[];
+  /** 这篇配哪个工具页 —— 面包屑和结尾的 CTA 都用它 */
+  tool: PageKey;
+  sections: GuideSection[];
+  /** 结尾那句「现在去转」。CTA 的字面在 chrome 里，这里只写引导句。 */
+  outro: string;
+};
+
+/**
+ * 教程的一节。body 是段落，steps 是有序步骤（真的有先后才用，不是拿来
+ * 装饰的编号），两者都可选但不能都没有。
+ */
+export type GuideSection = {
+  heading: string;
+  body?: string[];
+  steps?: string[];
+  /** 转换前后对照。给出真实的输入和输出，不写「示例内容」这种占位。 */
+  sample?: { beforeLabel: string; before: string; afterLabel: string; after: string };
 };
 
 export type LegalCopy = {
@@ -110,6 +169,20 @@ export type Dictionary = {
     siblingHeading: string;
     siblingNote: string;
     siblingCta: string;
+    /**
+     * 教程壳子上的字。文章正文在 guides 里，这儿只有布局自己要说的那几句。
+     *
+     * 单独一组而不是平铺进 chrome：chrome 已经二十来个键了，教程这几个是
+     * 一起加、一起用的，归堆之后翻译六份时不会漏掉其中一个。
+     */
+    guide: {
+      /** 文章结尾那个按钮，点过去是这篇配的工具页 */
+      cta: string;
+      /** 列表页每张卡片底下那行：这篇配哪个工具 */
+      pairedWith: string;
+      /** 文章末尾「另外几篇」那一段的标题 */
+      moreHeading: string;
+    };
     /** JSON-LD 的 featureList，给结构化数据用，页面上不显示 */
     features: string[];
   };
@@ -214,6 +287,22 @@ export type Dictionary = {
   };
   pages: Record<PageKey, PageCopy>;
   legal: Record<LegalKey, LegalCopy>;
+  guides: Record<GuideKey, GuideCopy>;
+  /**
+   * 教程列表页 /guides/ 自己的文案。
+   *
+   * 不塞进 guides 里当第七篇：它没有 sections、没有配套工具页，
+   * 而每篇文章都必须有 —— 混在一起就得把那两个字段改成可选的，
+   * 于是真正漏写了 sections 的文章也能编译过。
+   */
+  guideIndex: {
+    short: string;
+    eyebrow: string;
+    title: string;
+    description: string;
+    h1: string;
+    lede: string[];
+  };
 };
 
 /** 把 {n} 换成数字，按单复数挑句子。 */

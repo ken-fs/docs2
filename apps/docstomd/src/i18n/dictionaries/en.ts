@@ -62,6 +62,11 @@ const en: Dictionary = {
     footerLegal: "The formal pages",
     legalContactCue: "Something here unclear, or something you want changed?",
     legalUpdated: "In effect since",
+    guide: {
+      cta: "Open the converter",
+      pairedWith: "Uses",
+      moreHeading: "The other guides",
+    },
     features: [
       "Convert .docx to Markdown",
       "Convert legacy .doc to Markdown",
@@ -1008,6 +1013,548 @@ const en: Dictionary = {
           ],
         },
       ],
+    },
+  },
+  guideIndex: {
+    short: "Guides",
+    eyebrow: "Guides",
+    title: "Guides — the awkward parts of converting documents to Markdown",
+    description:
+      "Six walkthroughs for the conversions that don't come out right the first time: Word formatting, PDF layout, Google Docs pastes, messy HTML, CSV tables and Excel formulas.",
+    h1: "Guides",
+    lede: [
+      "Every converter has a page that says what it does. These are for what comes after — the file that converted badly, and the reason why.",
+      "One guide per conversion engine, written from the questions people actually send in. Each one links straight to the tool it's about.",
+    ],
+  },
+  guides: {
+    "word-to-markdown-keep-formatting": {
+      short: "Word formatting",
+      eyebrow: "Guide · Word → Markdown",
+      title: "Convert Word to Markdown: what formatting survives, and what doesn't",
+      description:
+        "Which parts of a .docx come through as Markdown and which are dropped on purpose. Headings, lists, tables and emphasis survive as structure; fonts, colours and page layout don't. How to tell them apart before you convert.",
+      keywords: [
+        "word to markdown keep formatting",
+        "docx to markdown formatting",
+        "convert word to markdown preserve formatting",
+        "word document to markdown without losing formatting",
+        "docx to clean markdown",
+      ],
+      h1: "What survives when Word becomes Markdown",
+      lede: [
+        "\"Keep the formatting\" means two different things, and which one you mean decides whether you'll like the result.",
+        "One of them survives: the outline. Headings, lists, tables, emphasis — the parts that say how the document is put together. The other one, the look of it, has nowhere to go, because Markdown is plain text and plain text has no fonts, colours, margins or page breaks. That's the format's ceiling, not a missing feature.",
+      ],
+      tool: "word-to-markdown",
+      sections: [
+        {
+          heading: "Structure survives, appearance doesn't",
+          body: [
+            "Open a .docx and every paragraph carries a style name alongside its formatting. The style name is the part with meaning — Heading 2, List Paragraph, Quote — and the formatting is only how Word chose to draw it today.",
+            "The converter reads the first and discards the second. A Heading 2 becomes ## — not text with a font size attached. Wherever the Markdown ends up, it picks up that project's own heading style.",
+            "Markdown has no syntax for a typeface or a margin, which means there is no version of this that keeps them. If you need the page to look identical, you want a PDF, not Markdown.",
+          ],
+        },
+        {
+          heading: "The # signs come from real heading styles",
+          body: [
+            "This is the one thing worth doing in Word before you convert, and it's the difference between good output and a wall of paragraphs.",
+            "A line you enlarged and bolded by hand is still a normal paragraph as far as the file is concerned, so it converts to a paragraph. No rule could turn 16pt-and-bold back into ## without also mangling every emphasised sentence in the document.",
+          ],
+          steps: [
+            "In Word, click into one of your headings and glance at the Styles gallery. A highlighted Normal is the whole problem in one word.",
+            "Pick Heading 1, 2 or 3 from that gallery. The look will change — edit the style's definition if the new look bothers you, rather than going back to sizing by hand.",
+            "Do the same for lists — use the list buttons rather than typing \"1.\" and a tab. Hand-typed numbers convert to literal text that no longer renumbers.",
+            "Convert, then scan the output for # and -. A file with no # in it was never structured to begin with.",
+          ],
+        },
+        {
+          heading: "What comes through",
+          body: [
+            "Heading levels one through six, from Word's styles. Word's Title and Subtitle styles map to # and ## as well, since that's what they mean.",
+            "Bold as **, italic as _, strikethrough as ~~. Superscript and subscript stay as <sup> and <sub> — Markdown has no syntax for them and dropping them would change what a formula or a footnote marker says.",
+            "Links, ordered and unordered lists at any nesting depth, blockquotes from the Quote and Intense Quote styles, and paragraphs styled Code or Preformatted as fenced code blocks.",
+          ],
+          sample: {
+            beforeLabel: "In Word",
+            before: "A nested bulleted list,\nand a numbered list starting at 3",
+            afterLabel: "Markdown",
+            after: "- Outer\n  - Inner\n- Second\n\n3. Third\n4. Fourth",
+          },
+        },
+        {
+          heading: "What gets dropped, and why",
+          body: [
+            "Fonts, sizes, colours, highlighting, alignment, indentation, line spacing, page breaks, headers, footers and margins. All of it is presentation belonging to a page, and Markdown isn't a page.",
+            "Underline is the drop most likely to surprise you. Markdown has no underline, and the nearest thing — a link — would be worse than nothing, so underlined text comes out as plain text.",
+            "Track changes and comments go: you get the final text, not the editing history. Text boxes, SmartArt and charts don't survive either, only their text if they hold any. Word will also tell the converter about styles it couldn't map; those notes appear above the output, deduplicated and capped at eight, with a line saying how many more there were.",
+          ],
+        },
+        {
+          heading: "Tables come through, merges don't",
+          body: [
+            "Tables become standard pipe tables. Pipes inside cell text are escaped as \\| so a cell containing a pipe doesn't split the row in two, and rows shorter than the widest row are padded out so the table stays rectangular.",
+            "Merged cells are the exception, and it's a hard one: Markdown has no colspan or rowspan. A cell merged across two columns keeps its text and leaves an empty cell beside it. If the merges carry meaning, unmerge them in Word first — often they were only there to centre a title.",
+            "Cells hold inline formatting fine — bold, italic, code, links. Block content inside a cell does not survive as blocks: a bulleted list in a cell comes out as its items run together, because a pipe table row is one line.",
+          ],
+          sample: {
+            beforeLabel: "In Word",
+            before: "Header cell merged across two columns",
+            afterLabel: "Markdown",
+            after: "| Merged head |  |\n| --- | --- |\n| 1 | 2 |",
+          },
+        },
+        {
+          heading: "Images, and the one thing .doc can't give you",
+          steps: [
+            "Inline base64 embeds every image in the Markdown itself. One self-contained file, no missing pictures — but a data URI is about a third larger than the image was, and it makes the file unpleasant to read in a text editor.",
+            "Keep a slot writes ![alt](./images/name.png) and leaves the file to you. Use this when the Markdown is going into a repo that already has an images folder. The name is built from the alt text, lowercased and hyphenated.",
+            "Drop them removes images entirely. Right for a text-only export, wrong if you'll wonder later what was there.",
+          ],
+          body: [
+            "Old .doc files are the exception. That format is pre-2007 binary, read here byte by byte in your browser, and images can't be recovered from it at all — nor can exact list numbering. Text, headings, tables, bold and italic do come through, and the output says it took that route so you're not left guessing. If Word is handy, a Save As .docx gives a cleaner result.",
+            "One more thing worth knowing: Word hyperlinks often carry tracking parameters, and documents saved out of Google Docs wrap their links in a google.com/url redirect. Both are unwound to the real destination, and the output says so — changing where a link points is worth being told about.",
+          ],
+        },
+      ],
+      outro:
+        "Fix the heading styles, then drop the file in. Nothing is uploaded — the .docx is unzipped in this tab — so an unreleased draft is a fine thing to test with.",
+    },
+    "pdf-to-markdown-layout": {
+      short: "PDF layout",
+      eyebrow: "Guide · PDF → Markdown",
+      title: "PDF to Markdown: why headings and paragraphs come out wrong",
+      description:
+        "A PDF has no headings, paragraphs or lists — only glyphs at coordinates. Here's how structure gets inferred from font size and spacing, what that gets wrong, and why a scanned page produces nothing at all.",
+      keywords: [
+        "pdf to markdown",
+        "convert pdf to markdown",
+        "pdf to markdown headings",
+        "pdf to md converter",
+        "scanned pdf to markdown",
+      ],
+      h1: "PDF to Markdown, and why the structure is guesswork",
+      lede: [
+        "Every other converter here reads structure that's genuinely in the file. This one can't, because a PDF doesn't have any.",
+        "What a PDF stores is characters at coordinates with a font size. \"This is a heading\" isn't in there. So the structure is inferred, and knowing how it's inferred tells you exactly when it will be wrong.",
+      ],
+      tool: "pdf-to-markdown",
+      sections: [
+        {
+          heading: "There is no structure in a PDF",
+          body: [
+            "A PDF is a print format. Its job is to put the right glyph at the right spot on the page, and it does that by storing text runs with a position and a font. Nothing in the file says which of them is a heading, where one paragraph ends, or that six lines are a bulleted list.",
+            "So a Word document converts; a PDF gets reconstructed. Everything below is a heuristic, and every heuristic has cases it gets wrong. That's why one warning appears above the output on every single PDF conversion, whether or not anything looked odd.",
+            "If you have the original .docx, use it instead. It converts properly, because the structure is really in it.",
+          ],
+        },
+        {
+          heading: "How headings are found",
+          body: [
+            "First the body text size is worked out: every line's font size is tallied, weighted by how many characters it holds, and the most common one wins. Weighting by characters rather than by lines matters — one long paragraph line says more about what the body size is than one short heading line does.",
+            "A line is then a heading if it's meaningfully bigger than that, and short. The size ratio picks the level: 1.6× or more becomes #, 1.35× becomes ##, and 1.15× becomes ###. The original heading levels are gone, so what's preserved is only the relative relationship — these headings are the same rank as each other.",
+            "The length limit is 120 characters, and it's there for a specific failure: a document whose opening paragraph is set in large type is not a heading, and font size alone can't tell the difference. Length can.",
+            "This is also the heuristic that misses most often. A document that styles its headings by weight rather than size — bold at the same size as the body — has no size signal at all, and those headings come out as paragraphs.",
+          ],
+        },
+        {
+          heading: "Page furniture, paragraphs and lists",
+          body: [
+            "Headers and footers are dropped when they're both smaller than the body text and sitting within 9% of the page height from the top or bottom edge. Proportional rather than a fixed measurement, so A4 and Letter behave the same. A page number or a \"Confidential\" stamp repeated on every page would otherwise interrupt the text forty times.",
+            "A paragraph break is a vertical gap wider than 1.8× the line's own font size. That's how a PDF expresses one, since there's no paragraph mark to read.",
+            "Lists are found by their first characters: a bullet glyph (•, ·, ▪, ◦, ‣, ∙) or a number up to three digits followed by a dot or a closing bracket. A list drawn some other way is not a list to the converter.",
+          ],
+        },
+        {
+          heading: "Words split across lines",
+          body: [
+            "PDFs hyphenate at line ends, and a naive join gives you \"re- port\". The lines get spliced back into one word when a line ends in a hyphen and the next line starts with a lowercase letter — that combination is a line-break hyphen almost every time.",
+            "When the next line starts with a capital, the hyphen stays. \"State-of-the-art\" broken after \"state-\" keeps its hyphen, which is correct, because that one is part of the word.",
+            "Chinese, Japanese and Korean lines are joined with no space at all. Those scripts don't separate words with spaces, so inserting one on every line break would put a gap in the middle of a sentence.",
+          ],
+          sample: {
+            beforeLabel: "Two lines in the PDF",
+            before: "The quarterly re-\nport is attached.",
+            afterLabel: "Markdown",
+            after: "The quarterly report is attached.",
+          },
+        },
+        {
+          heading: "A scanned PDF gives you nothing",
+          body: [
+            "If a page is an image of text — a scan, a photo, a fax — there are no characters in the file to read, only a bitmap. The converter says so and stops, rather than handing back an empty document that looks like a bug.",
+            "Getting text out of that needs OCR, which isn't part of this tool. A PDF where some pages are scans and others aren't will convert the real pages and list the page numbers of the ones that came back empty, up to six of them.",
+            "Two ceilings: 25 MB and 500 pages. Both are about what a browser tab can do without locking up — a PDF is rendered here, in your browser, with no server involved.",
+          ],
+        },
+        {
+          heading: "What to do about multi-column pages",
+          body: [
+            "Two-column layouts are the hardest case and they're best-effort. Text is read in the order the file stores it, which for a well-made two-column PDF is column by column, and for a badly-made one alternates between columns line by line. There's no reliable way to tell which you have before reading it.",
+            "Tables and formulas are the same story: a PDF table is ruled lines and text at coordinates, with nothing marking it as a table. Expect the cells as separate lines rather than a pipe table.",
+            "Turn on page marks if you're going to fix things up by hand. That inserts an HTML comment before each page, so you can find the page a mangled section came from and check it against the original.",
+          ],
+          sample: {
+            beforeLabel: "Page marks on",
+            before: "…end of page one.",
+            afterLabel: "Markdown",
+            after: "…end of page one.\n\n<!-- page 2 -->\n\n## Method",
+          },
+        },
+      ],
+      outro:
+        "Drop the PDF and read the warnings above the output — they say which pages were skipped and remind you that the structure was inferred. Everything is read in your browser; the file is never uploaded.",
+    },
+    "google-docs-to-markdown-paste": {
+      short: "Google Docs paste",
+      eyebrow: "Guide · Google Docs → Markdown",
+      title: "Google Docs to Markdown: copy and paste, or export first",
+      description:
+        "Two ways out of a Google Doc, and what each one costs you. Pasting is faster and loses images; exporting .docx keeps them. Neither one needs access to your Drive.",
+      keywords: [
+        "google docs to markdown",
+        "copy google docs to markdown",
+        "google docs paste markdown",
+        "export google doc to markdown",
+        "google doc to md",
+      ],
+      h1: "Getting Markdown out of a Google Doc",
+      lede: [
+        "There are two routes and they're not equivalent. Paste is two seconds and drops images; the .docx export takes a few clicks and keeps them.",
+        "Both run entirely in your browser, and neither asks for your Google account. Nothing here can see your Drive.",
+      ],
+      tool: "google-docs-to-markdown",
+      sections: [
+        {
+          heading: "Copy the content, not a link to it",
+          body: [
+            "This catches people first. Copying the document's URL, or using \"Copy link\", gives you an address — there's nothing to convert in that.",
+            "What you want is the content on your clipboard. Selecting text in a Doc and copying puts a rich-text HTML version there alongside the plain text, and that HTML carries the headings, lists and tables.",
+          ],
+          steps: [
+            "Open the Doc and select what you want. Ctrl+A if it's the whole thing.",
+            "Copy with Ctrl+C.",
+            "Press Ctrl+V anywhere on the converter page. There's no box to find and no button to press — the paste is caught by the page itself.",
+          ],
+        },
+        {
+          heading: "What the clipboard HTML arrives looking like",
+          body: [
+            "Google's clipboard HTML is not tidy. Almost every element carries a generated class name like c1 or c17, list items get lst-kix_ names, and the whole selection is wrapped in a <b> tag that sets font-weight to normal — a bold tag that turns bold off, which is how the editor tracks document-level formatting internally.",
+            "None of that reaches the Markdown. Classes, ids and style attributes are stripped by the sanitiser, because Markdown can't express any of them and clipboard HTML from an arbitrary web page isn't something to trust. The <b> wrapper is unwrapped separately: left in place it would produce a stray ** at the top and bottom of your document.",
+            "Links get unwound too. Google routes outbound links through google.com/url?q=… for click tracking inside the editor, and tracking parameters like utm_source often ride along. Both are removed so the link points where it says it points. The output tells you when this happened — changing a link's destination is worth mentioning.",
+          ],
+          sample: {
+            beforeLabel: "On the clipboard",
+            before: "<a href=\"https://www.google.com/url?q=\n  https://example.com/a%3Futm_source%3Ddocs\">figures</a>",
+            afterLabel: "Markdown",
+            after: "[figures](https://example.com/a)",
+          },
+        },
+        {
+          heading: "Why pasting loses images",
+          body: [
+            "Images in a Doc live on Google's servers. The clipboard HTML references them by URL rather than carrying the bytes, and those URLs are tied to your session — they expire, and they don't resolve for anyone else.",
+            "So a pasted document comes through with its text intact and its pictures missing. That's the format's limit, not a setting.",
+            "If the images matter, take the other route.",
+          ],
+        },
+        {
+          heading: "The .docx export, for images and long documents",
+          steps: [
+            "In the Doc: File → Download → Microsoft Word (.docx).",
+            "Drop that file onto the box on the converter page. Several at once is fine — they come back as one zip.",
+            "Pick how images should be handled before you copy the result: embedded in the file, left as ./images/ references, or dropped.",
+          ],
+          body: [
+            "This is the more complete route and it's worth using for anything long. The .docx carries real style information, so headings come from Word styles rather than from a clipboard's best effort, and long documents hold their structure better.",
+            "It also means the Google Docs page and the Word page are running the same converter on the same kind of file. Anything true of one is true of the other.",
+          ],
+        },
+        {
+          heading: "What doesn't come across either way",
+          body: [
+            "Comments and suggested edits are dropped — you get the document, not its margins. Resolve or accept them before exporting if they matter.",
+            "Charts, drawings and smart chips come through as plain text at best. They're objects rendered by the editor, and there's no text equivalent for most of them.",
+            "Headers, footers and page numbers go. They belong to a printed page, and Markdown doesn't have pages.",
+          ],
+        },
+        {
+          heading: "Why there's no Drive integration",
+          body: [
+            "Connecting to Drive would mean asking for access to your files and running a server that holds a token for them. That's a real ongoing risk to you in exchange for saving you one Ctrl+C.",
+            "A copy-paste hands over exactly the paragraphs you selected and nothing else. There's no account, no OAuth screen and no add-on to install, and there's nothing on our side that could leak, because there is no our side — the conversion happens in your browser.",
+            "Google Docs can also export Markdown itself now. If that output suits you, use it. This exists for the cases where you want to choose the bullet character, the fence style or what happens to images, and for pasting a fragment rather than exporting a whole document.",
+          ],
+        },
+      ],
+      outro:
+        "Select, copy, paste — or export the .docx if you need the images. The clipboard is read in your browser and nothing is sent anywhere.",
+    },
+    "html-to-markdown-clean": {
+      short: "Messy HTML",
+      eyebrow: "Guide · HTML → Markdown",
+      title: "HTML to Markdown: what gets kept, stripped and flattened",
+      description:
+        "Which HTML tags map to Markdown, which are removed for safety, and what happens to tables, code blocks and inline styles. Plus the two knobs that change the output shape.",
+      keywords: [
+        "html to markdown",
+        "convert html to markdown",
+        "html to md converter",
+        "clean html to markdown",
+        "web page to markdown",
+      ],
+      h1: "HTML to Markdown",
+      lede: [
+        "HTML can express far more than Markdown can. So this conversion is mostly a question of what to do with everything that has no equivalent.",
+        "Three answers, depending on the tag: map it, drop the tag and keep the text, or drop both. Which one applies is decided by a whitelist, and it's worth knowing what's on it.",
+      ],
+      tool: "html-to-markdown",
+      sections: [
+        {
+          heading: "A whitelist, not a blacklist",
+          body: [
+            "Only tags that mean something in Markdown survive the first pass: headings, paragraphs, lists, links, images, emphasis, blockquotes, code, tables, and the handful of inline tags around them. Everything else is removed, with its text kept.",
+            "The reason it's a whitelist is that a blacklist has to predict every dangerous tag, and HTML keeps adding new ones. One missed entry is a hole. This way the default answer for anything unfamiliar is no.",
+            "Scripts, event handlers and javascript: links go, and for script, style, iframe, object and embed the contents go too — not just the tag. Keeping the text of a <script> would paste its code into your document as visible prose.",
+            "Attributes are whitelisted the same way: only href, src, alt, title, colspan, rowspan and start. So class, id and style never reach the output. That's not only safety — Markdown has nowhere to put them.",
+          ],
+        },
+        {
+          heading: "Why sanitising matters even when nothing is rendered",
+          body: [
+            "This page never renders your HTML, so nothing can execute here. The reason the sanitiser exists is what happens next.",
+            "A link written as [click me](javascript:alert(1)) is copied through faithfully by a Markdown converter, and becomes a working attack the moment someone publishes that Markdown on a site that renders it. The risk isn't ours, it's handed to whoever uses the output.",
+            "So the URLs are checked against a protocol whitelist — http, https, mailto, ftp, and relative paths — and anything else is dropped. When something gets removed, the output says what it was, rather than quietly cleaning up your input behind your back.",
+          ],
+        },
+        {
+          heading: "Tables: keep them or flatten them",
+          body: [
+            "By default a table becomes a Markdown pipe table. Pipes inside cells are escaped, whitespace inside a cell is collapsed to single spaces, and short rows are padded to the width of the widest row so the table stays rectangular.",
+            "Flattening is the alternative, and it exists for tables that were never tables. A page laid out with a table for positioning converts to a pipe table full of empty cells; flattened, each row becomes a line of text with cells joined by a middle dot, which reads far better.",
+            "Two things don't survive either way. A <caption> is dropped, because a pipe table has nowhere to put one — copy it out as a line above the table if you need it. And block content inside a cell collapses: a list in a cell comes out as its items joined together, since a pipe table row has to be one line.",
+          ],
+          sample: {
+            beforeLabel: "HTML",
+            before: "<table><tr><th>Part</th><th>Qty</th></tr>\n<tr><td>Bolt | M6</td><td>12</td></tr></table>",
+            afterLabel: "Markdown",
+            after: "| Part | Qty |\n| --- | --- |\n| Bolt \\| M6 | 12 |",
+          },
+        },
+        {
+          heading: "The tags that keep their HTML",
+          body: [
+            "Superscript and subscript stay as <sup> and <sub>. Markdown has no syntax for them, and x2 instead of x² changes what a formula says — raw HTML is legal in Markdown and every renderer handles these two.",
+            "Underline doesn't get that treatment. It has no meaning to preserve: on the web an underline is a link, so keeping it would be actively misleading. Underlined text comes out as plain text.",
+            "Strikethrough becomes ~~, which is GitHub Flavoured Markdown rather than the original spec, but it's universal enough now that dropping it would be the stranger choice.",
+          ],
+        },
+        {
+          heading: "Lists, code blocks and the knobs",
+          body: [
+            "List items are written as \"- item\" with a single space. Most Markdown toolchains write it that way, and the common alternative — three spaces after the marker — makes for noisy diffs when a file is edited by both.",
+            "Nested lists indent to the width of the marker, and a paragraph continuing inside a list item is indented to line up with the text above it rather than breaking out of the list. An <ol> with a start attribute keeps its numbering.",
+            "The bullet character can be -, * or +, and the code fence can be ``` or ~~~. Pick to match whatever the file is going into; there's no functional difference. Headings can also be set to the underlined style, though only the first two levels have one — the third and below stay as # marks either way, which is worth knowing before you choose it.",
+          ],
+          sample: {
+            beforeLabel: "HTML",
+            before: "<ol><li><p>First para</p>\n<p>Still item one</p></li></ol>",
+            afterLabel: "Markdown",
+            after: "1. First para\n\n   Still item one",
+          },
+        },
+        {
+          heading: "Two inputs, one path",
+          body: [
+            "You can paste HTML source into the box, or drop an .html file. Both are treated identically, because to the code they're the same thing: a string of untrusted HTML.",
+            "The 25 MB cap is per input, which is far more than any page's source. Nothing is uploaded — the parsing, the sanitising and the conversion all happen in the tab.",
+            "If the result comes back empty, the output says so. Usually that means the input was all markup and no text: a page's <head>, or a fragment that was only styling.",
+          ],
+        },
+      ],
+      outro:
+        "Paste the source or drop the file, choose whether tables stay tables, and copy the Markdown out. It all runs in your browser.",
+    },
+    "csv-to-markdown-tables": {
+      short: "CSV tables",
+      eyebrow: "Guide · CSV → Markdown",
+      title: "CSV to Markdown table: delimiters, quoted fields and alignment",
+      description:
+        "How the delimiter gets detected, what happens to commas and newlines inside quoted fields, how the alignment row works, and what the 100,000-cell limit means in practice.",
+      keywords: [
+        "csv to markdown table",
+        "convert csv to markdown",
+        "csv to markdown converter",
+        "tsv to markdown table",
+        "semicolon csv to markdown",
+      ],
+      h1: "CSV to a Markdown table",
+      lede: [
+        "Nothing inside a CSV declares its own rules. Which character splits the columns, how quotes behave, whether the first line is a header — all of it is convention, and several are in circulation. A table that comes out wrong is nearly always a file read against the wrong set.",
+        "This covers how the delimiter is picked, what quoting does, and how to get numbers to line up on the right.",
+      ],
+      tool: "csv-to-markdown",
+      sections: [
+        {
+          heading: "Which character splits the columns",
+          body: [
+            "Four characters turn up in real files: comma, semicolon, tab, pipe. Semicolons more often than people expect — anywhere 1,50 means one and a half, the comma is already spoken for, so spreadsheets reach for the semicolon instead.",
+            "Detection is automatic, and when the answer isn't a comma the output says which character it used. That line is worth reading — a file with something unusual in its first rows, like a title line above the header, can be read wrong, and this is how you'd notice.",
+            "If it guessed wrong, set the delimiter by hand. Comma, semicolon, tab and pipe are all selectable.",
+          ],
+          steps: [
+            "Drop the file, or paste the rows straight into the box.",
+            "Check the note above the output for a detected delimiter that isn't a comma.",
+            "If the table came out as one column when it should be six, pick the delimiter yourself.",
+          ],
+        },
+        {
+          heading: "When a cell contains the separator itself",
+          body: [
+            "A field wrapped in double quotes can contain the delimiter, and a doubled quote inside it means one literal quote character. That's RFC 4180 and it's handled properly — this is the whole reason the file isn't just split on commas.",
+            "Newlines hide inside quotes too, and that collides with the output format: a pipe table row must occupy exactly one line. So a break inside a cell is rewritten as <br>, which keeps both lines of a two-line address without splitting the row in half.",
+            "Pipe characters in cell text are escaped as \\|. Without that, one pipe in a note field turns a five-column row into a six-column one.",
+          ],
+          sample: {
+            beforeLabel: "CSV",
+            before: "name,note\nBolt,\"M6 | 40mm\nsteel\"",
+            afterLabel: "Markdown",
+            after: "| name | note |\n| --- | --- |\n| Bolt | M6 \\| 40mm<br>steel |",
+          },
+        },
+        {
+          heading: "The alignment row",
+          body: [
+            "The row of hyphens under the header can carry colons, and they set how a column is aligned when the table is rendered. Left, centre, right — right being the one you want for numbers.",
+            "One thing to know: the setting applies to the whole table, not per column. There's no per-column control here, because a CSV carries no information about which columns hold numbers, and guessing from the values would get it wrong on postcodes, phone numbers and version strings.",
+            "So for a table of mostly numbers, set right and fix the one text column by hand afterwards. For anything mixed, leave it on default — a plain row of hyphens, which every renderer treats as left.",
+          ],
+          sample: {
+            beforeLabel: "Align: right",
+            before: "Item,Cost\nBolt,0.40",
+            afterLabel: "Markdown",
+            after: "| Item | Cost |\n| ---: | ---: |\n| Bolt | 0.40 |",
+          },
+        },
+        {
+          heading: "Header rows, and files that don't have one",
+          body: [
+            "The first row becomes the header by default. Turn that off and every row becomes a body row — but the header row itself doesn't disappear, it comes out empty.",
+            "That looks odd and it isn't a bug: a Markdown pipe table is required to have a header row. A table without one wouldn't parse as a table at all, so an empty header is the only way to express \"no header\" while still producing something that renders.",
+            "Fill it in with column names afterwards, or leave it — an empty header row renders as a thin blank strip above the data.",
+          ],
+          sample: {
+            beforeLabel: "Header row: none",
+            before: "Bolt,12\nNut,12",
+            afterLabel: "Markdown",
+            after: "|  |  |\n| --- | --- |\n| Bolt | 12 |\n| Nut | 12 |",
+          },
+        },
+        {
+          heading: "Ragged rows and malformed files",
+          body: [
+            "Rows with different column counts are padded out to the widest row, and the output tells you which counts it saw. That message is usually a sign something upstream is broken — a row with three cells in a six-column file normally means an unescaped quote swallowed a delimiter.",
+            "Empty lines are dropped, including lines that are nothing but delimiters, which is what a trailing block of \",,,\" usually is.",
+            "Values are never type-converted. 007 stays 007 and 1-2 doesn't become a date. Excel does that to you; this doesn't, because changing the value is changing your data.",
+            "A byte-order mark at the start of the file is stripped, so the first column header doesn't come out with an invisible character stuck to it.",
+          ],
+        },
+        {
+          heading: "What \"large\" means here",
+          body: [
+            "Two ceilings. 25 MB of text, and 100,000 cells — that's rows times columns, so a six-column file gets you to roughly 16,000 rows and a hundred-column file stops near a thousand.",
+            "The cell limit is the one you'll hit, and it's about rendering rather than parsing. The preview builds DOM nodes for every cell, and a few hundred thousand of them will lock up the tab. Refusing is better than freezing.",
+            "For something genuinely bigger, split it by rows and convert each piece — repeat the header row in each one.",
+          ],
+        },
+      ],
+      outro:
+        "Drop the CSV or paste the rows, switch the alignment if the figures belong on the right, then copy the table. Parsing happens in this tab, so a customer export stays on your disk.",
+    },
+    "excel-to-markdown-formulas": {
+      short: "Excel formulas",
+      eyebrow: "Guide · Excel → Markdown",
+      title: "Excel to Markdown: what happens to formulas and formatting",
+      description:
+        "Formulas convert to their calculated values, and there's one case where they come out empty. Plus what happens to currency and percentage formats, dates, merged cells and multiple sheets.",
+      keywords: [
+        "excel to markdown",
+        "xlsx to markdown table",
+        "convert excel to markdown",
+        "excel formulas to markdown",
+        "spreadsheet to markdown table",
+      ],
+      h1: "Excel to Markdown: formulas and formatting",
+      lede: [
+        "A Markdown table is a rectangle of text. A worksheet is a rectangle of cells, and a cell can carry a formula underneath it, a display mask over it, and a merge stretching it across its neighbours. Three of those four have nowhere to land.",
+        "Which makes the useful question a narrow one: of everything the sheet knows, what reaches the table, and is the part you came for among it?",
+      ],
+      tool: "excel-to-markdown",
+      sections: [
+        {
+          heading: "Formulas become their answers",
+          body: [
+            "=SUM(B2:B9) arrives as 4211. That's the useful direction, because Markdown computes nothing — a pasted formula would sit in the document as inert characters that look like they mean something and don't.",
+            "It works because Excel caches the calculated value next to the formula every time it saves the file. The converter reads the cached value, which is why it doesn't need a formula engine of its own and why the whole thing can run in a browser tab.",
+          ],
+          sample: {
+            beforeLabel: "Cell in Excel",
+            before: "B10:  =SUM(B2:B9)",
+            afterLabel: "Markdown",
+            after: "| Total | 4211 |",
+          },
+        },
+        {
+          heading: "Workbooks nobody has ever opened",
+          body: [
+            "If the workbook was generated by a script — a Python export, a reporting job, anything using a spreadsheet library — and never opened in Excel, there's no cached value. Nothing wrote one. Those cells convert to empty.",
+            "One round trip fixes it: open the workbook in Excel or LibreOffice, save, close. Saving is what fills the cache in. And a sheet that still reads as empty gets named above the output, so you won't copy away a table of blanks by accident.",
+            "Formula errors come out empty too, rather than as #DIV/0! or #REF!. A broken lookup down one column produces a column of blanks — so if a column is empty for no obvious reason, check the source.",
+          ],
+        },
+        {
+          heading: "Number formats don't survive",
+          body: [
+            "Of everything on this page, this is the one to read before converting. Excel keeps the display mask and the stored number in different places, and only the stored number is data — the mask is a rendering instruction.",
+            "Which is why $1,234.50 lands as 1234.5 and a cell reading 12.50% lands as 0.125. Nothing was mangled: those are the numbers the file has always held, shown without the mask.",
+            "If the formatting matters, add a column in the spreadsheet holding the formatted string built with a TEXT() formula, and use that column instead. Then it's text, and text comes through exactly as written.",
+            "Dates are the exception. They're stored as numbers too, but the number format identifies them, so they come out as 1995-01-01, with a time appended when there is one. They're read back in UTC deliberately — the naive version shifts every date back a day for anyone west of Greenwich.",
+          ],
+        },
+        {
+          heading: "Merged cells split",
+          body: [
+            "A title merged across A1:C1 becomes one cell holding the text and two empty cells beside it. Excel keeps the value in the top-left cell of a merge and leaves the rest genuinely empty, so that's what there is to read.",
+            "Markdown has no colspan, so there's no way to put it back. Unmerge in Excel first if the layout matters — often the merges were only there to centre a heading.",
+            "Colours, fonts, borders, conditional formatting and cell comments go the same way, for the same reason: Markdown has no syntax for any of them.",
+          ],
+        },
+        {
+          heading: "Sheets, one at a time or several",
+          steps: [
+            "Drop the workbook. The sheet names come back as a list with row counts, and the first sheet is converted.",
+            "Tick the sheets you want. Changing the selection re-renders from the copy already in memory — the file isn't read again.",
+            "Several selected sheets come out as one document, each table under a ## heading carrying the sheet name.",
+          ],
+          body: [
+            "The heading only appears when more than one sheet is selected. With a single sheet you already know which one it is, and a heading would be noise.",
+            "Trailing empty rows are trimmed first, which matters more than it sounds: clicking around an empty area in Excel can leave a sheet claiming several hundred rows that hold nothing. A sheet that's empty after trimming says so instead of producing a table of blanks.",
+          ],
+        },
+        {
+          heading: "The size ceilings, and the files that get refused",
+          body: [
+            "10 MB per workbook — lower than the 25 MB other formats get. An .xlsx is a zip, and unpacking one in a tab costs far more memory than the file size suggests.",
+            "100,000 cells across everything selected, which is why picking fewer sheets can get a large workbook through when the whole thing won't fit.",
+            "Password-protected workbooks are refused rather than half-read. So are the old binary .xls files — both are OLE containers rather than zips, and neither can be read here. Open it in Excel and save as .xlsx without a password.",
+            "Drop a .docx or a PDF on this page by mistake and it won't try: the file header is checked first, and the message names the page that does take it.",
+          ],
+        },
+      ],
+      outro:
+        "Drop the workbook, tick the sheets you want, copy the table. The .xlsx is unzipped in this tab and goes nowhere else, which matters when the file is a financial model.",
     },
   },
 };

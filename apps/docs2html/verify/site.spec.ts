@@ -41,8 +41,19 @@ const SLUGS = [
 /** 方案 §15 要求 AdSense 上线前这五页齐备，而且每个语种都得有。 */
 const LEGAL = ["about", "contact", "privacy", "terms", "cookies"];
 
+/** 长尾内容页：六个工具页各对应一篇。 */
+const GUIDES = [
+  "guides",
+  "guides/markdown-tables-to-html",
+  "guides/word-to-html-keep-formatting",
+  "guides/google-docs-to-html-clean",
+  "guides/plain-text-to-html-paragraphs",
+  "guides/csv-to-html-table-large-files",
+  "guides/excel-to-html-table-formulas",
+];
+
 /** sitemap 和 canonical 检查覆盖全站，不只是工具页。 */
-const ALL_SLUGS = [...SLUGS, ...LEGAL];
+const ALL_SLUGS = [...SLUGS, ...LEGAL, ...GUIDES];
 
 /** 只有这两页的输入本来就带垃圾，所以只有它们该有「清掉了什么」那一节。 */
 const DIRTY_PAGES = ["docx-to-html", "google-docs-to-html"];
@@ -1303,6 +1314,12 @@ test("paths that don't exist are real 404s, not soft ones", async ({ request }) 
     // 正式页面也只有这五个 slug
     "/privacy-policy/",
     "/cookie/",
+    // 不认识的 guide slug 必须真 404，不能回退到 /guides/ 列表页 ——
+    // 回退等于每个拼写错误都变成一份重复内容的软 404
+    "/guides/nope/",
+    "/guides/markdown-to-html/",
+    "/ja/guides/nope/",
+    "/guides/markdown-tables-to-html/extra/",
   ]) {
     expect((await request.get(p)).status(), `status for ${p}`).toBe(404);
   }

@@ -1,4 +1,4 @@
-import type { LegalKey, PageKey } from "@/i18n/types";
+import type { GuideKey, LegalKey, PageKey } from "@/i18n/types";
 import {
   LOCALES,
   LOCALE_PREFIX,
@@ -41,6 +41,27 @@ export const LEGAL_KEYS: LegalKey[] = [
 ];
 
 /**
+ * 教程文章，一个工具页配一篇。顺序跟 TOOL_KEYS 对齐，列表页照这个顺序排。
+ *
+ * 它们挂在 /guides/ 下面而不是根目录：跟工具页 slug 抢名字空间是一件麻烦事
+ * （"markdown-to-html" 和 "markdown-tables-to-html" 摆在同一层，导航里分不清
+ * 哪个是工具哪个是文章），而多一层目录也把「这是读的，那是用的」说清楚了。
+ * 不叫 /blog/ —— 那个词暗示时间序和更新频率，六篇教程放着不动会看着像
+ * 废弃的博客，而它们本来就不需要更新。
+ */
+export const GUIDE_KEYS: GuideKey[] = [
+  "markdown-tables-to-html",
+  "word-to-html-keep-formatting",
+  "google-docs-to-html-clean",
+  "plain-text-to-html-paragraphs",
+  "csv-to-html-table-large-files",
+  "excel-to-html-table-formulas",
+];
+
+/** /guides/ 这一段。改它等于改全部教程的 URL，所以只在这里写一次。 */
+export const GUIDES_SEGMENT = "guides";
+
+/**
  * 一条路径指向工具页还是正式页面。
  *
  * 做成可辨识联合而不是让 key 变成 PageKey | LegalKey：两类页面的字典结构
@@ -49,16 +70,22 @@ export const LEGAL_KEYS: LegalKey[] = [
  */
 export type Route =
   | { kind: "tool"; key: PageKey }
-  | { kind: "legal"; key: LegalKey };
+  | { kind: "legal"; key: LegalKey }
+  | { kind: "guide"; key: GuideKey }
+  /** /guides/ 本身：教程列表页。没有 key，它不属于任何一篇。 */
+  | { kind: "guideIndex" };
 
 const LEGAL_SET = new Set<string>(LEGAL_KEYS);
 
 /** slug 反查成路由。认不出返回 undefined。 */
 function routeOfSlug(slug: string): Route | undefined {
   if (LEGAL_SET.has(slug)) return { kind: "legal", key: slug as LegalKey };
+  if (slug === GUIDES_SEGMENT) return { kind: "guideIndex" };
   const key = PAGE_KEYS.find((k) => slugOf(k) === slug);
   return key ? { kind: "tool", key } : undefined;
 }
+
+const GUIDE_SET = new Set<string>(GUIDE_KEYS);
 
 /**
  * 每个页面收什么输入。
@@ -195,6 +222,22 @@ export function pathOf(locale: Locale, key: AnyKey) {
 }
 
 /**
+ * 教程的路径。
+ *
+ *   guidePath("en")                          → /guides/
+ *   guidePath("en", "markdown-tables-to-html") → /guides/markdown-tables-to-html/
+ *   guidePath("ja", "markdown-tables-to-html") → /ja/guides/markdown-tables-to-html/
+ *
+ * 没有并进 pathOf：那个函数收的是 AnyKey，而教程多一段路径。把两者塞进
+ * 一个函数就得让参数变成联合类型，每个调用点都要跟着判一次 kind ——
+ * 全站几十处调 pathOf 的地方并不关心教程。
+ */
+export function guidePath(locale: Locale, key?: GuideKey) {
+  const parts = [LOCALE_PREFIX[locale], GUIDES_SEGMENT, key].filter(Boolean);
+  return `/${parts.map((p) => `${p}/`).join("")}`;
+}
+
+/**
  * 一个扩展名该去哪一页。
  *
  * 派生自 TOOL_INPUT，不是另抄一份清单 —— 加工具页时自动就有，不会漏。
@@ -262,39 +305,116 @@ export function parseSegments(
   segments: string[] | undefined,
 ): (Route & { locale: Locale }) | null {
   const parts = segments ?? [];
-  if (parts.length > 2) return null;
+  // 最长的合法路径是 /ja/guides/<slug>/ —— 三段。再长的一律 null，
+  // 由页面 notFound()，别兜成首页（软 404 比真 404 更伤 SEO）。
+  if (parts.length > 3) return null;
 
-  const [first, second] = parts;
+  const [first, second, third] = parts;
   const prefixed = first === undefined ? undefined : localeOfPrefix(first);
   const home = { kind: "tool", key: "home" } as const;
 
-  // 带语言前缀：/ja/ 或 /ja/docx-to-html/
+  // 带语言前缀：/ja/ 或 /ja/docx-to-html/ 或 /ja/guides/<slug>/
   if (prefixed) {
     if (second === undefined) return { locale: prefixed, ...home };
+    if (third !== undefined) {
+      const guide = guideOfSlug(second, third);
+      return guide ? { locale: prefixed, ...guide } : null;
+    }
     const route = routeOfSlug(second);
     return route ? { locale: prefixed, ...route } : null;
   }
 
-  // 不带前缀就是英文：/ 或 /docx-to-html/
-  if (second !== undefined) return null;
+  // 不带前缀就是英文：/ 或 /docx-to-html/ 或 /guides/<slug>/
+  if (third !== undefined) return null;
   if (first === undefined) return { locale: "en", ...home };
+  if (second !== undefined) {
+    const guide = guideOfSlug(first, second);
+    return guide ? { locale: "en", ...guide } : null;
+  }
   const route = routeOfSlug(first);
   return route ? { locale: "en", ...route } : null;
 }
 
-/** 静态导出得把 72 条路径全列出来（12 页 × 6 语种）。 */
+/**
+ * 两段路径是不是「guides/<某篇>」。不是就返回 undefined，让调用方 404 ——
+ * /guides/ 下面认不出的 slug 不能兜到列表页，那样每个打错的地址都会变成
+ * 一个内容重复的软 404。
+ */
+function guideOfSlug(a: string, b: string): Route | undefined {
+  if (a !== GUIDES_SEGMENT) return undefined;
+  return GUIDE_SET.has(b) ? { kind: "guide", key: b as GuideKey } : undefined;
+}
+
+/**
+ * 静态导出得把每条路径都列出来：
+ *   12 页（首页 + 6 工具 + 5 正式）+ 1 个教程列表 + 6 篇教程 = 19
+ *   × 6 语种 = 114 条
+ */
 export function allSegments(): { segments: string[] }[] {
-  return LOCALES.flatMap((locale) =>
-    ALL_KEYS.map((key) => ({
-      segments: [LOCALE_PREFIX[locale], slugOf(key)].filter(Boolean),
-    })),
-  );
+  return LOCALES.flatMap((locale) => {
+    const prefix = LOCALE_PREFIX[locale];
+    return [
+      ...ALL_KEYS.map((key) => ({
+        segments: [prefix, slugOf(key)].filter(Boolean),
+      })),
+      { segments: [prefix, GUIDES_SEGMENT].filter(Boolean) },
+      ...GUIDE_KEYS.map((key) => ({
+        segments: [prefix, GUIDES_SEGMENT, key].filter(Boolean),
+      })),
+    ];
+  });
 }
 
 export const SITE = "https://docs2html.com";
 
 export function urlOf(locale: Locale, key: AnyKey) {
   return `${SITE}${pathOf(locale, key)}`;
+}
+
+/** 教程的绝对地址。不传 key 就是列表页。sitemap 和 JSON-LD 用。 */
+export function guideUrl(locale: Locale, key?: GuideKey) {
+  return `${SITE}${guidePath(locale, key)}`;
+}
+
+/**
+ * 教程的 hreflang 表。不传 key 就是列表页 /guides/ 自己。
+ *
+ * 跟 languageAlternates 分开是因为路径多一段，而那个函数收的是 AnyKey。
+ * 两个都必须包含自己（自引用），Google 要求这个关系双向成立。
+ */
+export function guideAlternates(key?: GuideKey) {
+  const map: Record<string, string> = {};
+  for (const locale of LOCALES) map[locale] = guidePath(locale, key);
+  map["x-default"] = guidePath("en", key);
+  return map;
+}
+
+/**
+ * 一条路由的路径 / hreflang 表。
+ *
+ * pathOf 和 guidePath 分开是对的（前者收 AnyKey，多一段路径塞不进去），
+ * 但页头、语言切换器、metadata 这三处拿到的是「当前这一页」，不是一个 key ——
+ * 它们不该关心这一页是不是教程。这两个函数就是那道收口：判一次 kind，
+ * 后面的代码只跟 Route 打交道。
+ *
+ * 尤其是语言切换器：它必须知道具体是哪一篇。只传「在教程区」的话，从
+ * /guides/word-to-html-keep-formatting/ 切日语会落到 /ja/guides/，
+ * 读者看了半篇文章换个语言就被扔回目录。
+ */
+export function routePath(locale: Locale, route: Route) {
+  return route.kind === "guide"
+    ? guidePath(locale, route.key)
+    : route.kind === "guideIndex"
+      ? guidePath(locale)
+      : pathOf(locale, route.key);
+}
+
+export function routeAlternates(route: Route) {
+  return route.kind === "guide"
+    ? guideAlternates(route.key)
+    : route.kind === "guideIndex"
+      ? guideAlternates()
+      : languageAlternates(route.key);
 }
 
 /** hreflang 用的表：六个语种 + x-default 指向英文。 */

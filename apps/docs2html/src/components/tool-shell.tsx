@@ -58,6 +58,7 @@ export function ToolShell({
   const isHome = pageKey === "home";
   const others = TOOL_KEYS.filter((k) => k !== pageKey);
   const input = TOOL_INPUT[pageKey];
+  const route = { kind: "tool", key: pageKey } as const;
 
   // 清理清单只对「输入本来就脏」的两条路有意义：DOCX 带 mso- 样式，
   // 粘贴进来的富文本带 Google Docs 的类名。纯文本和 CSV 没什么可清的。
@@ -65,7 +66,7 @@ export function ToolShell({
 
   return (
     <>
-      <SiteHeader locale={locale} current={pageKey} dict={dict} />
+      <SiteHeader locale={locale} route={route} dict={dict} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 sm:px-8">
         {!isHome && (
@@ -303,7 +304,7 @@ export function ToolShell({
         </div>
       </main>
 
-      <SiteFooter locale={locale} current={pageKey} dict={dict} />
+      <SiteFooter locale={locale} route={route} dict={dict} />
     </>
   );
 }

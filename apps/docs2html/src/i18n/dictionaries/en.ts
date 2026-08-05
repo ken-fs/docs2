@@ -59,6 +59,11 @@ const en: Dictionary = {
     siblingNote:
       "DocsToMD is this same tool pointed in reverse — Word, PDF, Excel and HTML into Markdown. Same approach, same privacy model, opposite output.",
     siblingCta: "docstomd.com",
+    guide: {
+      cta: "Open the converter",
+      pairedWith: "Uses",
+      moreHeading: "The other guides",
+    },
     features: [
       "Convert Markdown to HTML with GFM tables and task lists",
       "Convert .docx to clean semantic HTML",
@@ -988,6 +993,472 @@ const en: Dictionary = {
           ],
         },
       ],
+    },
+  },
+  guideIndex: {
+    short: "Guides",
+    eyebrow: "Guides",
+    title: "Guides — the awkward parts of converting documents to HTML",
+    description:
+      "Six walkthroughs for the conversions that don't go smoothly the first time: Markdown tables, Word formatting, Google Docs class soup, plain-text paragraphs, big CSV files and Excel formulas.",
+    h1: "Guides",
+    lede: [
+      "Each converter has a page that tells you what it does. These are for the part after that — the file that came out wrong, and why.",
+      "One guide per tool, written from the questions people actually send in. No sign-up, and every page links straight to the converter it's about.",
+    ],
+  },
+  guides: {
+    "markdown-tables-to-html": {
+      short: "Markdown tables",
+      eyebrow: "Guide · Markdown → HTML",
+      title: "How to convert Markdown tables to HTML tables (with alignment)",
+      description:
+        "Pipe tables become real <table> markup with <thead> and th scope attributes. Here's how to write the alignment row, what happens to it in the HTML, and why a table can come out as one long line of text.",
+      keywords: [
+        "markdown table to html",
+        "markdown table to html table",
+        "convert markdown table to html",
+        "markdown pipe table html",
+        "markdown table alignment html",
+      ],
+      h1: "Markdown tables to HTML tables",
+      lede: [
+        "A pipe table is the one bit of Markdown that people most often see fail. It renders on GitHub and then comes out as a paragraph of pipes somewhere else.",
+        "This walks through the syntax that survives conversion, what the HTML looks like on the other side, and the three mistakes that turn a table back into text.",
+      ],
+      tool: "markdown-to-html",
+      sections: [
+        {
+          heading: "What a table needs to be a table",
+          body: [
+            "Pipe tables are not part of CommonMark. They come from GitHub Flavoured Markdown, which means a converter has to opt into them — and some don't. This one does.",
+            "Three things are required. A header row. A delimiter row of hyphens under it. And at least one body row. Drop any of the three and you get paragraphs.",
+          ],
+          steps: [
+            "Write the header row with a pipe between each cell. The outer pipes at the start and end of the line are optional, but they make ragged tables much easier to spot.",
+            "Write the delimiter row directly under it, with no blank line between. At least three hyphens per column is the safe minimum.",
+            "Write your body rows. They don't have to line up in the source; the cells are split on the pipes, not on the columns.",
+          ],
+          sample: {
+            beforeLabel: "Markdown",
+            before: "| Part | Qty |\n| ---- | --- |\n| Bolt | 12 |\n| Nut  | 12 |",
+            afterLabel: "HTML",
+            after: '<table>\n  <thead>\n    <tr>\n      <th scope="col">Part</th>\n      <th scope="col">Qty</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Bolt</td>\n      <td>12</td>\n    </tr>\n  </tbody>\n</table>',
+          },
+        },
+        {
+          heading: "The scope attribute, and why it's there",
+          body: [
+            "Header cells come out as <th scope=\"col\">, not as bold <td>. That attribute is the whole reason a screen reader can announce \"Qty, 12\" instead of reading a bare number with no idea what column it belongs to.",
+            "It costs nothing and it's the difference between a table and a grid of numbers. A layout faked out of divs can't express it at all, which is the strongest argument against ever building one.",
+          ],
+        },
+        {
+          heading: "Alignment: the colon row",
+          body: [
+            "Colons in the delimiter row set alignment per column. A colon on the left aligns left, both sides centres, the right aligns right — which is what you want for numbers.",
+            "In the HTML you get a class, not an inline style: align-left, align-center or align-right. Inline styles are stripped from every output on this site, because a style attribute is the doorway CSS injection walks through.",
+            "That means full-page output has the alignment already working — the stylesheet in the <head> defines those three classes. Fragment output leaves them for your own CSS, which is the point of fragment output: three one-line rules and it matches your site instead of fighting it.",
+          ],
+          sample: {
+            beforeLabel: "Markdown",
+            before: "| Item | Cost |\n| :--- | ---: |\n| Bolt | 0.40 |",
+            afterLabel: "HTML",
+            after: '<th scope="col" class="align-left">Item</th>\n<th scope="col" class="align-right">Cost</th>\n...\n<td class="align-left">Bolt</td>\n<td class="align-right">0.40</td>',
+          },
+        },
+        {
+          heading: "When the table comes out as a paragraph",
+          body: [
+            "Three causes, in the order they turn up.",
+          ],
+          steps: [
+            "A blank line between the header and the delimiter row. That splits it into two paragraphs before the table parser ever sees it.",
+            "A pipe inside a cell's text. Escape it as \\| or the cell splits in two and the row ends up with more cells than the header.",
+            "Not enough hyphens. A single hyphen per column works in some parsers and not others; three is the version everything agrees on.",
+          ],
+        },
+        {
+          heading: "Cells that hold more than text",
+          body: [
+            "Inline Markdown works inside cells: bold, italic, code spans, links. Block-level content does not — no lists, no paragraphs, no fenced code blocks. That's a limit of the table syntax itself, not of this converter.",
+            "A line break inside a cell needs a literal <br>, written by hand. Raw HTML in Markdown is passed through here rather than escaped, so it works, and it gets sanitised on the way out like everything else.",
+          ],
+        },
+      ],
+      outro:
+        "That's every part of a pipe table that behaves differently once it's HTML. The converter takes pasted Markdown or a dropped .md file, and nothing leaves your browser.",
+    },
+    "word-to-html-keep-formatting": {
+      short: "Word formatting",
+      eyebrow: "Guide · DOCX → HTML",
+      title: "Convert Word to HTML: what formatting survives, and what doesn't",
+      description:
+        "Which parts of a .docx come through as HTML and which are dropped on purpose. Headings, tables, lists and images survive as structure; fonts, colours and page layout don't. Here's how to tell them apart before you convert.",
+      keywords: [
+        "word to html keep formatting",
+        "docx to html formatting",
+        "convert word to html preserve formatting",
+        "word document to html without losing formatting",
+        "docx to clean html",
+      ],
+      h1: "What survives when Word becomes HTML",
+      lede: [
+        "\"Keep the formatting\" means two different things, and which one you mean decides whether you'll be happy with the result.",
+        "Structure — headings, lists, tables, emphasis — comes through. Appearance — fonts, colours, margins, page breaks — does not, and that's a deliberate choice rather than a missing feature.",
+      ],
+      tool: "docx-to-html",
+      sections: [
+        {
+          heading: "Structure survives, appearance doesn't",
+          body: [
+            "A .docx stores two separate things about every paragraph: what it is, and what it looks like. \"Heading 2\" is what it is. 16pt Calibri bold with 6pt space after is what it looks like.",
+            "The converter reads the first and throws away the second. A Heading 2 becomes an <h2> — not a <p> with a font size on it. On your site it then picks up your own heading style, which is almost certainly what you wanted.",
+            "The alternative is what Word's own Save As Web Page does: a few thousand lines of mso- styles that reproduce the page exactly and can't be edited or restyled afterwards.",
+          ],
+        },
+        {
+          heading: "Style your headings, don't just embolden them",
+          body: [
+            "This is the one thing worth doing in Word before you convert, and it's the difference between good output and flat output.",
+            "Text that merely looks like a heading — bigger, bold, manually sized — is stored as a normal paragraph. It converts to <p>, because that's genuinely what it is. Nothing can recover the intent from the font size.",
+          ],
+          steps: [
+            "In Word, put the cursor in a heading and check the Styles gallery. If it says Normal, that's the problem.",
+            "Apply Heading 1, 2 or 3 instead. It'll change how it looks; restyle the heading style itself if you don't like it.",
+            "Do the same for lists: use the list buttons rather than typing \"1.\" and a tab. Manually typed numbers convert to literal text, not to an <ol>.",
+            "Convert, then check the output for <h2> and <ul>. If you see a wall of <p>, the document was never structured to begin with.",
+          ],
+        },
+        {
+          heading: "What comes through",
+          body: [
+            "Heading levels as <h1> through <h6>, taken from Word's styles. Bold, italic and strikethrough as <strong>, <em> and <s>. Superscript and subscript. Links, with Google's and Office's tracking parameters stripped off.",
+            "Lists as real <ul> and <ol>, nested up to five levels. Tables as <table>, including merged cells: horizontal merges come through as colspan and vertical ones as rowspan.",
+            "Blockquotes from the Quote style. Paragraphs styled Code or Preformatted as <pre><code>. Captions as <p class=\"caption\">.",
+          ],
+        },
+        {
+          heading: "What gets dropped, and why",
+          body: [
+            "Fonts, sizes, colours, highlighting, alignment, indentation, line spacing, page breaks, headers and footers, margins. All of it is presentation that belongs to a page, and HTML isn't a page.",
+            "Two drops are worth knowing about because they're easy to miss. Underlined text loses its underline — on the web an underline means a link, so Word's underline maps to nothing rather than to something misleading. And blank spacer paragraphs disappear, because they're layout, not content.",
+            "Track changes and comments are dropped: you get the final text, not the editing history. Text boxes, SmartArt and charts don't survive — only their text, if they contain any.",
+          ],
+        },
+        {
+          heading: "Images: three choices",
+          steps: [
+            "Inline as base64 gives you one self-contained .html file you can email or double-click. It's about a third bigger than the images were.",
+            "Separate files gives you a zip: the HTML plus an images/ folder, with every <img> already pointing at the right path. Use this for anything going on a real site.",
+            "Dropped leaves the <img> tags in place with an empty src, so you'll see broken-image placeholders. Delete them, or use one of the other two.",
+          ],
+          body: [
+            "Old .doc files are the exception: images can't be recovered from that format at all, no matter which option you pick. Everything else — text, headings, tables, bold — comes through.",
+          ],
+        },
+      ],
+      outro:
+        "Set your heading styles first, then convert. Files are read in your browser and never uploaded, so you can try it on something confidential.",
+    },
+    "google-docs-to-html-clean": {
+      short: "Google Docs class soup",
+      eyebrow: "Guide · Google Docs → HTML",
+      title: "Clean HTML from Google Docs: removing the c1/c17 class soup",
+      description:
+        "Copying from a Google Doc gives you HTML full of c1 and c17 class names, a font-weight:normal <b> wrapper and google.com/url redirects on every link. Here's what each one is and how to get rid of all of them.",
+      keywords: [
+        "google docs to clean html",
+        "remove google docs classes html",
+        "google docs html class soup",
+        "google docs export clean html",
+        "copy from google docs html",
+      ],
+      h1: "Getting clean HTML out of a Google Doc",
+      lede: [
+        "Copy a few paragraphs out of a Doc, paste them into a CMS, and you get text wrapped in class names like c1 and c17 that point at a stylesheet you don't have.",
+        "Three specific things are wrong with that markup. Once you know what they are, the fix is one paste.",
+      ],
+      tool: "google-docs-to-html",
+      sections: [
+        {
+          heading: "Copy the content, not the link",
+          body: [
+            "This trips people up first: Download → Web Page from the Doc's menu gives you a zip with a full HTML document and an embedded stylesheet — the whole page, styles and all.",
+            "What you want instead is the clipboard. Selecting content in a Doc and copying puts a rich-text HTML version on it, and that version carries the structure without the stylesheet.",
+          ],
+          steps: [
+            "Open the Doc and select the content you want. Ctrl+A works if you want all of it.",
+            "Copy with Ctrl+C — not \"Copy link\", which only gives you a URL to the document.",
+            "Paste into the box on the converter page, or press Ctrl+V anywhere on that page. There's no sign-in and no Drive permission involved; your browser hands over the clipboard, nothing else.",
+          ],
+        },
+        {
+          heading: "Problem one: the class soup",
+          body: [
+            "Google's clipboard HTML puts a class on almost every element — c0, c1, c17, and lst-kix_ names on list items. They're generated per document and refer to CSS that stays behind in the Doc.",
+            "So they're not just noise. They're dead references: they do nothing on your page, they collide with class names of your own, and they make the markup unreadable when you go to edit it.",
+            "They're removed by pattern — c followed by digits, lst-kix_ anything, docs-internal-guid ids. Classes of your own that happen to be in the paste are left alone.",
+          ],
+          sample: {
+            beforeLabel: "Pasted from Docs",
+            before: '<p class="c3"><span class="c1">A sentence.</span></p>',
+            afterLabel: "After cleaning",
+            after: "<p>A sentence.</p>",
+          },
+        },
+        {
+          heading: "Problem two: the bold wrapper that isn't bold",
+          body: [
+            "Docs wraps copied content in <b style=\"font-weight:normal\">. It's a <b> tag that explicitly turns bold off — a quirk of how the editor tracks formatting internally.",
+            "Paste that anywhere the style attribute gets stripped, which is most CMSes, and the whole block turns bold. The tag is unwrapped here rather than kept, so the content comes out at the nesting level it should have been at all along.",
+            "The same pass removes empty <span> elements left behind after their class names go. Those are what make a two-paragraph paste twelve lines long.",
+          ],
+        },
+        {
+          heading: "Problem three: every link is a redirect",
+          body: [
+            "Links in a Doc come out pointing at google.com/url?q=https://example.com/… rather than at the destination. Google uses it for click tracking inside the editor.",
+            "Published on a page, it means every outbound link on your site routes through Google, shows the wrong URL in the status bar, and breaks the day that redirector changes.",
+            "The wrapper is unwound back to the real destination, repeatedly if it's nested. Tracking parameters go too — utm_source and friends, gclid, fbclid, and a handful of others.",
+          ],
+          sample: {
+            beforeLabel: "Pasted from Docs",
+            before: '<a href="https://www.google.com/url?q=https://example.com/a%3Futm_source%3Ddoc">link</a>',
+            afterLabel: "After cleaning",
+            after: '<a href="https://example.com/a">link</a>',
+          },
+        },
+        {
+          heading: "What's left, and what's still on you",
+          body: [
+            "Headings, paragraphs, lists, tables, links, bold and italic — the document, in other words. Scripts, event handlers and inline styles are gone, because clipboard HTML can come from any page on the web and gets treated as untrusted input.",
+            "Two things the cleaner leaves for you. Google's empty spacer paragraphs come through as <p></p>, so delete the ones you don't want. And Docs' images are hosted on Google's servers with URLs that expire — download them and host them yourself, or they'll vanish from your page later.",
+          ],
+        },
+      ],
+      outro:
+        "Select, copy, paste. The clipboard is read in your browser and nothing is sent anywhere.",
+    },
+    "plain-text-to-html-paragraphs": {
+      short: "Text to paragraphs",
+      eyebrow: "Guide · Text → HTML",
+      title: "Plain text to HTML paragraphs: blank lines, <br> and links",
+      description:
+        "A blank line starts a new paragraph, a single newline becomes a <br> or a space depending on one switch, and bare URLs can be linked automatically. What plain text can and can't turn into.",
+      keywords: [
+        "plain text to html",
+        "text to html paragraphs",
+        "convert text to html p tags",
+        "text file to html",
+        "txt to html converter",
+      ],
+      h1: "Plain text into HTML paragraphs",
+      lede: [
+        "Text pasted straight into a page collapses into one block, because HTML ignores your newlines. Every run of whitespace is one space as far as a browser is concerned.",
+        "Two rules decide the whole result: blank lines separate paragraphs, and single newlines are yours to choose about. Everything else follows from those.",
+      ],
+      tool: "text-to-html",
+      sections: [
+        {
+          heading: "Blank lines make paragraphs",
+          body: [
+            "One blank line between two blocks of text produces two <p> elements. That's the only paragraph rule there is, and it's the same convention every plain-text email has used for thirty years.",
+            "A line with spaces or tabs on it still counts as blank. Several blank lines in a row still make one break, not empty paragraphs.",
+            "If your text has no blank lines at all, you get one long paragraph — correctly, since there was nothing to split on. The converter says so when it spots that, rather than letting you find out later.",
+          ],
+          sample: {
+            beforeLabel: "Text",
+            before: "First thought.\n\nSecond thought.",
+            afterLabel: "HTML",
+            after: "<p>First thought.</p>\n<p>Second thought.</p>",
+          },
+        },
+        {
+          heading: "Single newlines: <br> or a space",
+          body: [
+            "Inside a paragraph, a single newline can go one of two ways, and the right answer depends entirely on what the text is.",
+            "Keep them as <br> for anything where the line ending is meaningful: an address, a poem, a signature block, song lyrics. Let the text flow — newlines become spaces — for prose that was hard-wrapped at 72 columns by an old editor. Leaving those as <br> gives you a paragraph with a ragged right edge that won't reflow on a phone.",
+          ],
+          sample: {
+            beforeLabel: "Text",
+            before: "12 Bridge Street\nManchester",
+            afterLabel: "HTML, breaks kept",
+            after: "<p>12 Bridge Street<br>\nManchester</p>",
+          },
+        },
+        {
+          heading: "Turning bare URLs into links",
+          body: [
+            "With linking on, anything starting http://, https:// or www. becomes an <a>. Email addresses become mailto: links.",
+            "The matching is deliberately narrow. A bare example.com is not linked, because there's no way to tell it from a sentence that ends in a filename or an abbreviation with a dot in it. Guessing wrong there produces links to nowhere.",
+            "Trailing punctuation is left out of the link, so a URL at the end of a sentence doesn't swallow the full stop. Links get rel=\"noopener nofollow\" and don't open in a new tab.",
+          ],
+        },
+        {
+          heading: "What plain text can't tell the converter",
+          body: [
+            "Everything here becomes a paragraph. There is no other output, and that's a property of the input rather than a shortcoming.",
+            "A line starting with a hyphen looks like a list to you, but it's a hyphen and a space. Underlining a line with equals signs looks like a heading, but it's a row of equals signs. Guessing would be wrong often enough to be worse than not guessing.",
+            "So: no lists, no headings, no code blocks. Indentation is preserved as characters but collapses in the browser, which means ASCII tables and indented code come out as run-together prose. If your text is really Markdown, use the Markdown page — those conventions mean something there.",
+          ],
+        },
+        {
+          heading: "One thing you don't have to worry about",
+          body: [
+            "Angle brackets, ampersands and quotes are escaped, every one of them. Text containing <b>bold</b> shows those characters on the page instead of turning bold.",
+            "That's the definition of the tool rather than a safety feature bolted on. Plain text is plain text: if it could contain markup, it wouldn't be.",
+          ],
+        },
+      ],
+      outro:
+        "Paste the text or drop a .txt file, pick how single newlines should behave, and copy the HTML out. It all runs in your browser.",
+    },
+    "csv-to-html-table-large-files": {
+      short: "Big CSV files",
+      eyebrow: "Guide · CSV → table",
+      title: "CSV to HTML table: delimiters, quoted fields and large files",
+      description:
+        "How the delimiter is detected, what happens to quoted fields and embedded newlines, why a one-column file reports a delimiter problem, and what the 100,000-cell limit means in practice.",
+      keywords: [
+        "csv to html table",
+        "convert csv to html table",
+        "large csv to html",
+        "csv semicolon to html table",
+        "tsv to html table",
+      ],
+      h1: "CSV to an HTML table, including the big ones",
+      lede: [
+        "A CSV is a text file with a punctuation convention, and there are several conventions. Most conversion problems are really disagreements about which one a file is using.",
+        "This covers how the delimiter gets picked, what quoting does, and where the size limits actually sit.",
+      ],
+      tool: "csv-to-html-table",
+      sections: [
+        {
+          heading: "The delimiter is detected, not assumed",
+          body: [
+            "Commas, semicolons, tabs and pipes are all in use. Semicolons especially: export a spreadsheet in a locale where the comma is the decimal separator and you'll get semicolons, because commas are already taken.",
+            "Detection reads the first ten rows, tries each candidate, and picks the one that gives a consistent column count. A file whose first rows are unusual — a title line above the header, say — can be misread, so the detected delimiter is stated in the output. If it's wrong, override it.",
+          ],
+          steps: [
+            "Drop the file and look at the note above the table saying which delimiter was used.",
+            "If the table has one column when it should have six, set the delimiter by hand from the dropdown.",
+            "Check the first row landed in the header. If the file has no header, switch that off and every row becomes a body row.",
+          ],
+        },
+        {
+          heading: "Quoted fields, and the comma inside a cell",
+          body: [
+            "A field wrapped in double quotes can contain the delimiter, and a doubled quote inside it means a literal quote character. That's RFC 4180 and it's handled properly.",
+            "A quoted field can also contain a newline. In the HTML those become <br> inside the cell, so a two-line address stays on two lines instead of breaking the row apart.",
+          ],
+          sample: {
+            beforeLabel: "CSV",
+            before: 'name,note\nBolt,"M6, 40mm"\n',
+            afterLabel: "HTML",
+            after: '<tr>\n  <td>Bolt</td>\n  <td>M6, 40mm</td>\n</tr>',
+          },
+        },
+        {
+          heading: "The one-column file warning",
+          body: [
+            "A single-column CSV reports a delimiter problem. It's worth explaining because the file is usually fine.",
+            "Detection works by finding which character splits rows consistently. With one column there's nothing to split on, so nothing looks like a delimiter and it says so. The output is still correct: one column, every row present.",
+            "If you'd rather not see it, set the delimiter explicitly instead of leaving it on automatic.",
+          ],
+        },
+        {
+          heading: "What \"large\" means here",
+          body: [
+            "Two separate ceilings. 25 MB per file, and 100,000 cells — that's rows times columns, so a six-column file gets you to about 16,000 rows and a hundred-column file stops at around a thousand.",
+            "The cell limit is the one you'll hit first, and it's about the browser rather than the parser. Every cell becomes DOM nodes in the preview, and a table of a few hundred thousand cells will lock up the tab. Refusing is better than freezing.",
+            "For something genuinely bigger, split it by rows and convert each piece — the header row can be repeated in each one. Empty rows are dropped automatically, including rows that are nothing but delimiters, which is what a trailing block of \",,,\" usually is.",
+          ],
+        },
+        {
+          heading: "What the table looks like",
+          body: [
+            "The header row becomes a <thead> with <th scope=\"col\"> cells; everything else goes in <tbody>. Ragged rows are padded out to the widest row so the table stays rectangular, and the output says how many rows needed it — usually a sign something upstream is broken.",
+            "Nothing is type-converted. 007 stays 007, and a value like 1-2 doesn't turn into a date. Excel does that to you; this doesn't.",
+            "With the responsive option on, the table is wrapped in a <div class=\"table-wrap\"> that scrolls sideways. A twelve-column table can't fit on a phone, and letting it overflow stretches the whole page instead of just itself.",
+          ],
+        },
+      ],
+      outro:
+        "Drop the CSV or paste the rows straight in. Files are parsed in your browser, so client data never leaves the machine.",
+    },
+    "excel-to-html-table-formulas": {
+      short: "Excel formulas",
+      eyebrow: "Guide · Excel → table",
+      title: "Excel to HTML table: what happens to formulas and formatting",
+      description:
+        "Formulas convert to their calculated values, not the formulas themselves — and there's one case where they come out empty. Plus what happens to currency formats, dates, merged cells and multiple sheets.",
+      keywords: [
+        "excel to html table",
+        "xlsx to html table",
+        "convert excel to html",
+        "excel formulas to html",
+        "excel spreadsheet to html table",
+      ],
+      h1: "Excel to HTML: formulas and formatting",
+      lede: [
+        "A spreadsheet holds more than its contents: formulas behind the numbers, number formats over them, merges across them. HTML has none of that.",
+        "So the question isn't whether things are lost — it's which things, and whether any of them are the ones you needed.",
+      ],
+      tool: "excel-to-html-table",
+      sections: [
+        {
+          heading: "Formulas become their answers",
+          body: [
+            "A cell containing =SUM(B2:B9) comes out as 4211. That's almost always what you want in a web page — a formula on a page is a string, and a string that looks like a formula is worse than the number.",
+            "It works because Excel caches the calculated value next to the formula every time it saves. The converter reads the cached value, which is why it doesn't need a formula engine of its own.",
+          ],
+          sample: {
+            beforeLabel: "Cell in Excel",
+            before: "B10:  =SUM(B2:B9)",
+            afterLabel: "HTML",
+            after: "<td>4211</td>",
+          },
+        },
+        {
+          heading: "The one case where they come out empty",
+          body: [
+            "If the workbook was generated by a script — a Python export, a reporting job, something using a spreadsheet library — and never opened in Excel, there's no cached value. Nothing wrote one. Those cells convert to empty.",
+            "The fix is to open the file in Excel or LibreOffice and save it once. That calculates everything and writes the values in. The converter warns you when a sheet's formula cells read as empty, so you're not left guessing.",
+            "Formula errors also come out empty rather than as #DIV/0! or #REF!. A sheet with a broken lookup down one column produces a column of blanks, so it's worth checking the source when a column turns out empty for no obvious reason.",
+          ],
+        },
+        {
+          heading: "Number formats don't survive",
+          body: [
+            "This is the surprise most worth knowing in advance. A number format is a mask Excel paints over a value; the value underneath is plain.",
+            "So $1,234.50 converts to 1234.5 — currency symbol, thousands separator and fixed decimals all gone. A cell showing 12.50% converts to 0.125, because that's the number that was always there.",
+            "If the formatting matters in the output, add a column in the spreadsheet with the formatted string built by a TEXT() formula, and use that column instead. Then it's a string, and strings come through exactly.",
+            "Dates are the exception: they're detected by their number format and come out as 2026-03-14, or with a time appended if there is one. Read back in UTC on purpose — the naive version shifts every date back a day for anyone west of Greenwich.",
+          ],
+        },
+        {
+          heading: "Merged cells split",
+          body: [
+            "A title merged across A1:C1 becomes one cell with the text and two empty cells beside it. Excel keeps the value in the top-left cell and leaves the rest genuinely empty; without the merge information, that's what there is to read.",
+            "HTML can express a merge with colspan and rowspan, so the fix is a one-line edit afterwards. Or unmerge in Excel first — often the merges were only there to centre a heading anyway.",
+          ],
+        },
+        {
+          heading: "Sheets, and the size ceilings",
+          steps: [
+            "The first sheet is converted by default. The rest are listed by name, so tick the ones you want.",
+            "Pick several and each comes out as its own <table> with an <h2> above it carrying the sheet name. Pick one and the name goes in the table's <caption> instead.",
+            "A sheet that's empty after trailing blank rows are trimmed says so, rather than producing an empty table.",
+          ],
+          body: [
+            "Two limits. 10 MB per workbook — lower than the 25 MB for other formats, because an .xlsx is a zip and unpacking it in a tab costs far more memory than its file size suggests. And 100,000 cells across everything you've selected, which is why picking fewer sheets can get a large workbook through.",
+            "Password-protected workbooks are refused rather than half-read, as are the old binary .xls files. Save as .xlsx first for those.",
+          ],
+        },
+      ],
+      outro:
+        "Drop the workbook, pick your sheets, and copy the table out. Everything is read in your browser — a financial model never leaves your machine.",
     },
   },
 };

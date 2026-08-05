@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icon";
-import { pathOf, type AnyKey } from "@/content/tools";
+import { routePath, type Route } from "@/content/tools";
 import { LOCALES, LOCALE_NAMES, LOCALE_SHORT, type Locale } from "@/i18n/locales";
 
 /**
@@ -13,16 +13,19 @@ import { LOCALES, LOCALE_NAMES, LOCALE_SHORT, type Locale } from "@/i18n/locales
  * 挂载，静态 HTML 里就没有那六个链接。爬虫不跑 JS 也得能顺着链接找到另外五个
  * 语种版本，所以这里必须「HTML 里本来就有」，不能靠脚本生成。
  *
- * 换语言时把当前 slug 带过去 —— 从 /ja/word-to-markdown/ 切西语应该落在
+ * 换语言时把当前那一页带过去 —— 从 /ja/word-to-markdown/ 切西语应该落在
  * /es/word-to-markdown/，而不是被踢回首页。
+ *
+ * 收 Route 而不是 key：教程的路径多一段 /guides/，而且必须精确到哪一篇 ——
+ * 只知道「在教程区」的话，读到一半换语言会被扔回目录页。
  */
 export function LangSwitch({
   locale,
-  pageKey,
+  route,
   label,
 }: {
   locale: Locale;
-  pageKey: AnyKey;
+  route: Route;
   label: string;
 }) {
   const box = useRef<HTMLDetailsElement>(null);
@@ -71,7 +74,7 @@ export function LangSwitch({
             return (
               <li key={l}>
                 <Link
-                  href={pathOf(l, pageKey)}
+                  href={routePath(l, route)}
                   hrefLang={l}
                   aria-current={current ? "true" : undefined}
                   className={

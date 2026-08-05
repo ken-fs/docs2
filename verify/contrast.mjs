@@ -23,6 +23,14 @@ const SITES = [
       "html-to-markdown", "csv-to-markdown", "excel-to-markdown",
       "google-docs-to-markdown",
       "about", "contact", "privacy", "terms", "cookies",
+      // 内容页有工具页没有的排版元素：眉标、示例前后对照、正文里的行内代码
+      "guides",
+      "guides/word-to-markdown-keep-formatting",
+      "guides/pdf-to-markdown-layout",
+      "guides/google-docs-to-markdown-paste",
+      "guides/html-to-markdown-clean",
+      "guides/csv-to-markdown-tables",
+      "guides/excel-to-markdown-formulas",
     ],
   },
   {
@@ -32,6 +40,13 @@ const SITES = [
       "", "markdown-to-html", "docx-to-html", "google-docs-to-html",
       "text-to-html", "csv-to-html-table", "excel-to-html-table",
       "about", "contact", "privacy", "terms", "cookies",
+      "guides",
+      "guides/markdown-tables-to-html",
+      "guides/word-to-html-keep-formatting",
+      "guides/google-docs-to-html-clean",
+      "guides/plain-text-to-html-paragraphs",
+      "guides/csv-to-html-table-large-files",
+      "guides/excel-to-html-table-formulas",
     ],
   },
 ];

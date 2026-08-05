@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { LangSwitch } from "@/components/lang-switch";
-import { LEGAL_KEYS, pathOf, TOOL_KEYS, type AnyKey } from "@/content/tools";
+import {
+  guidePath,
+  LEGAL_KEYS,
+  pathOf,
+  TOOL_KEYS,
+  type Route,
+} from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
 import type { Dictionary } from "@/i18n/types";
 
@@ -10,16 +16,18 @@ import type { Dictionary } from "@/i18n/types";
  * 而 AdSense 审核看的就是随便点进哪一页都能找到 About / Privacy 这些。
  */
 
-export function SiteHeader({
-  locale,
-  current,
-  dict,
-}: {
-  locale: Locale;
-  /** 当前页，用来把导航里对应那条标红 */
-  current: AnyKey;
-  dict: Dictionary;
-}) {
+/**
+ * 页头页脚都收整条 Route，不是一个 key。
+ *
+ * 因为教程页在这两处要用到两件 key 说不了的事：语言切换器得知道具体哪一篇
+ * （见 LangSwitch 的注释），而导航高亮要知道「在教程区但不在任何工具页上」——
+ * 硬指一个工具（比如这篇配的那个）会让人以为自己站在那个工具页上。
+ */
+type ChromeProps = { locale: Locale; route: Route; dict: Dictionary };
+
+export function SiteHeader({ locale, route, dict }: ChromeProps) {
+  const inGuides = route.kind === "guide" || route.kind === "guideIndex";
+
   return (
     <header className="border-b border-rule-firm">
       {/* 窄屏放不下 logo + 三个入口 + 语言，所以导航自己占一行、横向滚动 */}
@@ -33,7 +41,7 @@ export function SiteHeader({
               .com
             </span>
           </Link>
-          <LangSwitch locale={locale} pageKey={current} label={dict.chrome.langLabel} />
+          <LangSwitch locale={locale} route={route} label={dict.chrome.langLabel} />
         </div>
         {/* 七个工具入口挤不进 logo 那一行，所以导航自己占一行、宽度不够就横向滚动。
             滚动而不是折行：折行会让页头在窄屏上高度乱跳。 */}
@@ -43,7 +51,7 @@ export function SiteHeader({
               key={k}
               href={pathOf(locale, k)}
               className={
-                k === current
+                route.kind === "tool" && route.key === k
                   ? "whitespace-nowrap text-pine"
                   : "whitespace-nowrap transition-colors duration-150 hover:text-pine"
               }
@@ -51,21 +59,28 @@ export function SiteHeader({
               {dict.pages[k].short}
             </Link>
           ))}
+          {/* 教程入口排在七个工具后面，前面加一道竖线：它不是第八个工具，
+              是另一类东西（读的，不是用的）。没有这个入口的话，六篇文章
+              只能靠 sitemap 和工具页底部那条链接进去 —— 页头是唯一每页都在
+              的地方，内容区要在这儿有一个门。 */}
+          <span aria-hidden className="h-3 w-px shrink-0 bg-rule-firm" />
+          <Link
+            href={guidePath(locale)}
+            className={
+              inGuides
+                ? "whitespace-nowrap text-pine"
+                : "whitespace-nowrap transition-colors duration-150 hover:text-pine"
+            }
+          >
+            {dict.guideIndex.short}
+          </Link>
         </nav>
       </div>
     </header>
   );
 }
 
-export function SiteFooter({
-  locale,
-  current,
-  dict,
-}: {
-  locale: Locale;
-  current: AnyKey;
-  dict: Dictionary;
-}) {
+export function SiteFooter({ locale, route, dict }: ChromeProps) {
   const c = dict.chrome;
 
   return (
@@ -80,7 +95,7 @@ export function SiteFooter({
               key={k}
               href={pathOf(locale, k)}
               className={
-                k === current
+                route.kind === "legal" && route.key === k
                   ? "text-[12px] text-pine"
                   : "text-[12px] text-ink-soft transition-colors duration-150 hover:text-pine"
               }
@@ -98,21 +113,37 @@ export function SiteFooter({
   );
 }
 
-/** 面包屑。首页不画，其余页面一律 home / 当前页。 */
+/**
+ * 面包屑。首页不画，其余页面一律 home / 当前页。
+ *
+ * mid 是给教程文章的第三级用的（home / 教程 / 这一篇）—— 那一层必须
+ * 可点，不然读者从搜索结果直接落在一篇文章上，就没有路子发现还有另外五篇。
+ * JSON-LD 的 BreadcrumbList 也是照这个层级发的，两处得一致。
+ */
 export function Breadcrumb({
   locale,
   label,
   homeLabel,
+  mid,
 }: {
   locale: Locale;
   label: string;
   homeLabel: string;
+  mid?: { label: string; href: string };
 }) {
   return (
     <nav className="pt-4 font-mono text-[11px] text-ink-faint">
       <Link href={pathOf(locale, "home")} className="hover:text-pine">
         {homeLabel}
       </Link>
+      {mid && (
+        <>
+          <span className="px-1.5">/</span>
+          <Link href={mid.href} className="hover:text-pine">
+            {mid.label}
+          </Link>
+        </>
+      )}
       <span className="px-1.5">/</span>
       <span className="text-ink-soft">{label}</span>
     </nav>

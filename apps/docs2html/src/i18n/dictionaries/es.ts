@@ -59,6 +59,11 @@ const es: Dictionary = {
     siblingNote:
       "DocsToMD es esta misma herramienta al revés: Word, PDF, Excel y HTML a Markdown. Mismo enfoque, mismo modelo de privacidad, salida opuesta.",
     siblingCta: "docstomd.com",
+    guide: {
+      cta: "Abrir el conversor",
+      pairedWith: "Usa",
+      moreHeading: "Las otras guías",
+    },
     features: [
       "Convertir Markdown a HTML con tablas GFM y listas de tareas",
       "Convertir .docx a HTML semántico limpio",
@@ -989,6 +994,472 @@ const es: Dictionary = {
           ],
         },
       ],
+    },
+  },
+  guideIndex: {
+    short: "Guías",
+    eyebrow: "Guías",
+    title: "Guías — las partes incómodas de convertir documentos a HTML",
+    description:
+      "Seis recorridos por las conversiones que no salen bien la primera vez: tablas de Markdown, formato de Word, la sopa de clases de Google Docs, párrafos de texto plano, archivos CSV grandes y fórmulas de Excel.",
+    h1: "Guías",
+    lede: [
+      "Cada conversor tiene una página que explica lo que hace. Estas son para lo que viene después: el archivo que salió mal, y por qué.",
+      "Una guía por herramienta, escritas a partir de las preguntas que la gente manda de verdad. Sin registro, y cada página enlaza directo al conversor del que habla.",
+    ],
+  },
+  guides: {
+    "markdown-tables-to-html": {
+      short: "Tablas de Markdown",
+      eyebrow: "Guía · Markdown → HTML",
+      title: "Cómo convertir tablas de Markdown a tablas HTML (con alineación)",
+      description:
+        "Las tablas de barras verticales se convierten en <table> de verdad, con <thead> y atributos scope en los th. Aquí está cómo escribir la fila de alineación, qué le pasa en el HTML, y por qué una tabla puede salir como una línea larga de texto.",
+      keywords: [
+        "tabla markdown a html",
+        "convertir tabla markdown a html",
+        "tabla markdown html",
+        "markdown tabla alineación html",
+        "tablas markdown pipe html",
+      ],
+      h1: "De tablas de Markdown a tablas HTML",
+      lede: [
+        "La tabla de barras es la parte de Markdown que más gente ha visto fallar. Se ve bien en GitHub y en otro sitio sale como un párrafo lleno de barras.",
+        "Esto repasa la sintaxis que sobrevive a la conversión, cómo queda el HTML del otro lado, y los tres errores que devuelven una tabla a ser texto.",
+      ],
+      tool: "markdown-to-html",
+      sections: [
+        {
+          heading: "Qué necesita una tabla para ser una tabla",
+          body: [
+            "Las tablas de barras no son parte de CommonMark. Vienen de GitHub Flavoured Markdown, lo que significa que el conversor tiene que decidir soportarlas — y algunos no lo hacen. Este sí.",
+            "Hacen falta tres cosas. Una fila de encabezado. Una fila de guiones debajo. Y al menos una fila de contenido. Si falta cualquiera de las tres, te salen párrafos.",
+          ],
+          steps: [
+            "Escribe la fila de encabezado con una barra entre celdas. Las barras de los extremos son opcionales, pero hacen mucho más fácil ver una tabla desalineada.",
+            "Escribe la fila de guiones justo debajo, sin ninguna línea vacía en medio. Tres guiones por columna es el mínimo seguro.",
+            "Escribe las filas de contenido. No hace falta que cuadren en el código: las celdas se separan por las barras, no por las columnas.",
+          ],
+          sample: {
+            beforeLabel: "Markdown",
+            before: "| Part | Qty |\n| ---- | --- |\n| Bolt | 12 |\n| Nut  | 12 |",
+            afterLabel: "HTML",
+            after: '<table>\n  <thead>\n    <tr>\n      <th scope="col">Part</th>\n      <th scope="col">Qty</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Bolt</td>\n      <td>12</td>\n    </tr>\n  </tbody>\n</table>',
+          },
+        },
+        {
+          heading: "El atributo scope, y por qué está ahí",
+          body: [
+            'Las celdas de encabezado salen como <th scope="col">, no como <td> en negrita. Ese atributo es la única razón por la que un lector de pantalla puede anunciar «Qty, 12» en lugar de leer un número suelto sin saber a qué columna pertenece.',
+            "No cuesta nada y es la diferencia entre una tabla y una cuadrícula de números. Un diseño falseado con divs no puede expresarlo, y ese es el argumento más fuerte para no construir uno nunca.",
+          ],
+        },
+        {
+          heading: "Alineación: la fila de los dos puntos",
+          body: [
+            "Los dos puntos en la fila de guiones fijan la alineación por columna. A la izquierda alinea a la izquierda, en ambos lados centra, a la derecha alinea a la derecha — que es lo que quieres para números.",
+            "En el HTML obtienes una clase, no un estilo en línea: align-left, align-center o align-right. Los estilos en línea se eliminan de todas las salidas de este sitio, porque un atributo style es la puerta por la que entra la inyección de CSS.",
+            "Eso significa que la salida de página completa ya trae la alineación funcionando: la hoja de estilos del <head> define esas tres clases. La salida en fragmento las deja para tu propio CSS, que es justo el sentido del fragmento: tres reglas de una línea y encaja con tu sitio en vez de pelearse con él.",
+          ],
+          sample: {
+            beforeLabel: "Markdown",
+            before: "| Item | Cost |\n| :--- | ---: |\n| Bolt | 0.40 |",
+            afterLabel: "HTML",
+            after: '<th scope="col" class="align-left">Item</th>\n<th scope="col" class="align-right">Cost</th>\n...\n<td class="align-left">Bolt</td>\n<td class="align-right">0.40</td>',
+          },
+        },
+        {
+          heading: "Cuando la tabla sale como un párrafo",
+          body: [
+            "Tres causas, en el orden en que aparecen.",
+          ],
+          steps: [
+            "Una línea vacía entre el encabezado y la fila de guiones. Eso lo parte en dos párrafos antes de que el analizador de tablas llegue a verlo.",
+            "Una barra dentro del texto de una celda. Escápala como \\| o la celda se parte en dos y la fila acaba con más celdas que el encabezado.",
+            "Guiones de menos. Un solo guión por columna funciona en algunos analizadores y en otros no; tres es la versión en la que todos están de acuerdo.",
+          ],
+        },
+        {
+          heading: "Celdas con algo más que texto",
+          body: [
+            "El Markdown en línea funciona dentro de las celdas: negrita, cursiva, código en línea, enlaces. El contenido de bloque no — ni listas, ni párrafos, ni bloques de código cercados. Es un límite de la propia sintaxis de tablas, no de este conversor.",
+            "Un salto de línea dentro de una celda necesita un <br> literal, escrito a mano. Aquí el HTML crudo dentro de Markdown se pasa tal cual en lugar de escaparse, así que funciona, y se sanea a la salida como todo lo demás.",
+          ],
+        },
+      ],
+      outro:
+        "Eso es todo lo que en una tabla de barras se comporta distinto una vez es HTML. El conversor acepta Markdown pegado o un archivo .md soltado encima, y nada sale de tu navegador.",
+    },
+    "word-to-html-keep-formatting": {
+      short: "Formato de Word",
+      eyebrow: "Guía · DOCX → HTML",
+      title: "Convertir Word a HTML: qué formato sobrevive y qué no",
+      description:
+        "Qué partes de un .docx llegan como HTML y cuáles se descartan a propósito. Encabezados, tablas, listas e imágenes sobreviven como estructura; tipografías, colores y maquetación no. Aquí está cómo distinguirlos antes de convertir.",
+      keywords: [
+        "word a html manteniendo formato",
+        "docx a html formato",
+        "convertir word a html sin perder formato",
+        "documento word a html",
+        "docx a html limpio",
+      ],
+      h1: "Qué sobrevive cuando Word se vuelve HTML",
+      lede: [
+        "«Mantener el formato» significa dos cosas distintas, y cuál de las dos quieras decide si el resultado te va a gustar.",
+        "La estructura — encabezados, listas, tablas, énfasis — llega. La apariencia — tipografías, colores, márgenes, saltos de página — no, y eso es una decisión deliberada, no una función que falte.",
+      ],
+      tool: "docx-to-html",
+      sections: [
+        {
+          heading: "La estructura sobrevive, la apariencia no",
+          body: [
+            "Un .docx guarda dos cosas separadas de cada párrafo: qué es, y cómo se ve. «Título 2» es qué es. Calibri 16 pt en negrita con 6 pt de espacio después es cómo se ve.",
+            "El conversor lee lo primero y tira lo segundo. Un Título 2 se convierte en un <h2>, no en un <p> con un tamaño de letra encima. En tu sitio recoge entonces tu propio estilo de encabezado, que es casi con seguridad lo que querías.",
+            "La alternativa es lo que hace el propio Guardar como página web de Word: unos miles de líneas de estilos mso- que reproducen la página exactamente y que después no se pueden editar ni reestilar.",
+          ],
+        },
+        {
+          heading: "Dale estilo a tus encabezados, no solo negrita",
+          body: [
+            "Esto es lo único que vale la pena hacer en Word antes de convertir, y es la diferencia entre una salida buena y una salida plana.",
+            "El texto que solo parece un encabezado — más grande, en negrita, con el tamaño puesto a mano — se guarda como un párrafo normal. Se convierte en <p>, porque eso es realmente lo que es. Nada puede recuperar la intención a partir del tamaño de letra.",
+          ],
+          steps: [
+            "En Word, pon el cursor en un encabezado y mira la galería de estilos. Si dice Normal, ahí está el problema.",
+            "Aplica Título 1, 2 o 3 en su lugar. Cambiará cómo se ve; si no te gusta, cambia el estilo de título en sí.",
+            "Haz lo mismo con las listas: usa los botones de lista en vez de escribir «1.» y un tabulador. Los números escritos a mano se convierten en texto literal, no en un <ol>.",
+            "Convierte y luego busca <h2> y <ul> en la salida. Si ves un muro de <p>, el documento nunca tuvo estructura.",
+          ],
+        },
+        {
+          heading: "Qué llega",
+          body: [
+            "Los niveles de encabezado como <h1> hasta <h6>, tomados de los estilos de Word. Negrita, cursiva y tachado como <strong>, <em> y <s>. Superíndices y subíndices. Enlaces, con los parámetros de seguimiento de Google y Office quitados.",
+            "Las listas como <ul> y <ol> de verdad, anidadas hasta cinco niveles. Las tablas como <table>, incluidas las celdas combinadas: las combinaciones horizontales llegan como colspan y las verticales como rowspan.",
+            "Las citas del estilo Cita. Los párrafos con estilo Código o Preformateado como <pre><code>. Los epígrafes como <p class=\"caption\">.",
+          ],
+        },
+        {
+          heading: "Qué se descarta, y por qué",
+          body: [
+            "Tipografías, tamaños, colores, resaltados, alineación, sangrías, interlineado, saltos de página, encabezados y pies, márgenes. Todo eso es presentación que pertenece a una página, y HTML no es una página.",
+            "Dos descartes vale la pena conocerlos porque son fáciles de pasar por alto. El texto subrayado pierde el subrayado: en la web un subrayado significa un enlace, así que el subrayado de Word no se asigna a nada en lugar de asignarse a algo engañoso. Y los párrafos vacíos de separación desaparecen, porque son maquetación, no contenido.",
+            "El control de cambios y los comentarios se descartan: recibes el texto final, no el historial de edición. Los cuadros de texto, SmartArt y gráficos no sobreviven — solo su texto, si tienen alguno.",
+          ],
+        },
+        {
+          heading: "Imágenes: tres opciones",
+          steps: [
+            "Incrustadas en base64 te dan un solo archivo .html autocontenido que puedes enviar por correo o abrir con doble clic. Pesa alrededor de un tercio más que las imágenes.",
+            "Archivos separados te dan un zip: el HTML más una carpeta images/, con cada <img> ya apuntando a la ruta correcta. Usa esto para cualquier cosa que vaya a un sitio real.",
+            "Descartadas deja las etiquetas <img> con el src vacío, así que verás marcos de imagen roto. Bórralas, o usa una de las otras dos.",
+          ],
+          body: [
+            "Los archivos .doc antiguos son la excepción: de ese formato las imágenes no se pueden recuperar de ninguna manera, elijas lo que elijas. Todo lo demás — texto, encabezados, tablas, negrita — llega bien.",
+          ],
+        },
+      ],
+      outro:
+        "Ajusta primero tus estilos de encabezado y después convierte. Los archivos se leen en tu navegador y nunca se suben, así que puedes probar con algo confidencial.",
+    },
+    "google-docs-to-html-clean": {
+      short: "Sopa de clases de Docs",
+      eyebrow: "Guía · Google Docs → HTML",
+      title: "HTML limpio desde Google Docs: quitar la sopa de clases c1/c17",
+      description:
+        "Copiar de un documento de Google te da HTML lleno de nombres de clase como c1 y c17, un envoltorio <b> con font-weight:normal y redirecciones google.com/url en cada enlace. Aquí está qué es cada cosa y cómo quitarlas todas.",
+      keywords: [
+        "google docs a html limpio",
+        "quitar clases google docs html",
+        "google docs html clases",
+        "exportar google docs a html",
+        "copiar de google docs html",
+      ],
+      h1: "Sacar HTML limpio de un documento de Google",
+      lede: [
+        "Copias unos párrafos de un documento, los pegas en un CMS, y te sale texto envuelto en nombres de clase como c1 y c17 que apuntan a una hoja de estilos que no tienes.",
+        "Ese marcado tiene tres problemas concretos. Una vez sabes cuáles son, la solución es un pegado.",
+      ],
+      tool: "google-docs-to-html",
+      sections: [
+        {
+          heading: "Copia el contenido, no el enlace",
+          body: [
+            "Esto es lo primero que descoloca a la gente: Descargar → Página web desde el menú del documento te da un zip con un documento HTML completo y una hoja de estilos incrustada — la página entera, estilos incluidos.",
+            "Lo que quieres es el portapapeles. Al seleccionar contenido en un documento y copiarlo se coloca ahí una versión HTML con formato, y esa versión lleva la estructura sin la hoja de estilos.",
+          ],
+          steps: [
+            "Abre el documento y selecciona el contenido que quieras. Ctrl+A si quieres todo.",
+            "Copia con Ctrl+C, no con «Copiar vínculo», que solo te da una URL al documento.",
+            "Pega en el cuadro de la página del conversor, o pulsa Ctrl+V en cualquier parte de esa página. No hay inicio de sesión ni permiso de Drive de por medio; tu navegador entrega el portapapeles, nada más.",
+          ],
+        },
+        {
+          heading: "Problema uno: la sopa de clases",
+          body: [
+            "El HTML del portapapeles de Google pone una clase en casi cada elemento — c0, c1, c17, y nombres lst-kix_ en los elementos de lista. Se generan por documento y se refieren a un CSS que se queda dentro del documento.",
+            "Así que no son solo ruido. Son referencias muertas: no hacen nada en tu página, chocan con nombres de clase tuyos, y vuelven el marcado ilegible cuando vas a editarlo.",
+            "Se quitan por patrón: c seguida de dígitos, cualquier cosa que empiece por lst-kix_, los ids docs-internal-guid. Las clases tuyas que estén en el pegado se dejan en paz.",
+          ],
+          sample: {
+            beforeLabel: "Pegado de Docs",
+            before: '<p class="c3"><span class="c1">A sentence.</span></p>',
+            afterLabel: "Después de limpiar",
+            after: "<p>A sentence.</p>",
+          },
+        },
+        {
+          heading: "Problema dos: el envoltorio de negrita que no es negrita",
+          body: [
+            'Docs envuelve el contenido copiado en un <b style="font-weight:normal">. Es una etiqueta <b> que apaga la negrita explícitamente, una peculiaridad de cómo el editor lleva el formato por dentro.',
+            "Pega eso en cualquier sitio donde se quite el atributo style, que es la mayoría de los CMS, y el bloque entero se pone en negrita. Aquí la etiqueta se desenvuelve en lugar de conservarse, así que el contenido sale al nivel de anidamiento que debía haber tenido desde el principio.",
+            "La misma pasada elimina los <span> vacíos que quedan cuando sus nombres de clase desaparecen. Son los que convierten un pegado de dos párrafos en doce líneas.",
+          ],
+        },
+        {
+          heading: "Problema tres: todos los enlaces son redirecciones",
+          body: [
+            "Los enlaces de un documento salen apuntando a google.com/url?q=https://example.com/… en lugar de al destino. Google lo usa para contar clics dentro del editor.",
+            "Publicado en una página, eso significa que cada enlace externo de tu sitio pasa por Google, muestra la URL equivocada en la barra de estado, y se rompe el día que ese redirector cambie.",
+            "El envoltorio se deshace hasta el destino real, repetidamente si está anidado. Los parámetros de seguimiento también se van: utm_source y compañía, gclid, fbclid, y unos cuantos más.",
+          ],
+          sample: {
+            beforeLabel: "Pegado de Docs",
+            before: '<a href="https://www.google.com/url?q=https://example.com/a%3Futm_source%3Ddoc">link</a>',
+            afterLabel: "Después de limpiar",
+            after: '<a href="https://example.com/a">link</a>',
+          },
+        },
+        {
+          heading: "Qué queda, y qué sigue siendo tu trabajo",
+          body: [
+            "Encabezados, párrafos, listas, tablas, enlaces, negrita y cursiva — el documento, en otras palabras. Los scripts, los manejadores de eventos y los estilos en línea desaparecen, porque el HTML del portapapeles puede venir de cualquier página de la web y se trata como entrada no confiable.",
+            "Dos cosas que el limpiador te deja a ti. Los párrafos vacíos de separación de Google llegan como <p></p>, así que borra los que no quieras. Y las imágenes de Docs están alojadas en servidores de Google con URLs que caducan: descárgalas y alójalas tú, o desaparecerán de tu página más adelante.",
+          ],
+        },
+      ],
+      outro:
+        "Selecciona, copia, pega. El portapapeles se lee en tu navegador y no se envía nada a ninguna parte.",
+    },
+    "plain-text-to-html-paragraphs": {
+      short: "Texto a párrafos",
+      eyebrow: "Guía · Texto → HTML",
+      title: "Texto plano a párrafos HTML: líneas vacías, <br> y enlaces",
+      description:
+        "Una línea vacía empieza un párrafo nuevo, un salto de línea suelto se vuelve un <br> o un espacio según un interruptor, y las URLs sueltas se pueden enlazar automáticamente. Qué puede y qué no puede llegar a ser el texto plano.",
+      keywords: [
+        "texto plano a html",
+        "texto a párrafos html",
+        "convertir texto a etiquetas p html",
+        "archivo de texto a html",
+        "txt a html",
+      ],
+      h1: "De texto plano a párrafos HTML",
+      lede: [
+        "El texto pegado directamente en una página se colapsa en un solo bloque, porque HTML ignora tus saltos de línea. Para un navegador, cualquier racha de espacios en blanco es un espacio.",
+        "Dos reglas deciden todo el resultado: las líneas vacías separan párrafos, y los saltos de línea sueltos los decides tú. Todo lo demás sale de esas dos.",
+      ],
+      tool: "text-to-html",
+      sections: [
+        {
+          heading: "Las líneas vacías hacen párrafos",
+          body: [
+            "Una línea vacía entre dos bloques de texto produce dos elementos <p>. Es la única regla de párrafos que hay, y es la misma convención que han usado los correos en texto plano durante treinta años.",
+            "Una línea con espacios o tabuladores sigue contando como vacía. Varias líneas vacías seguidas siguen haciendo un solo corte, no párrafos vacíos.",
+            "Si tu texto no tiene ninguna línea vacía, sale un párrafo largo — correctamente, porque no había nada por donde partir. El conversor lo dice cuando lo detecta, en lugar de dejar que te enteres después.",
+          ],
+          sample: {
+            beforeLabel: "Texto",
+            before: "First thought.\n\nSecond thought.",
+            afterLabel: "HTML",
+            after: "<p>First thought.</p>\n<p>Second thought.</p>",
+          },
+        },
+        {
+          heading: "Saltos de línea sueltos: <br> o un espacio",
+          body: [
+            "Dentro de un párrafo, un salto de línea suelto puede ir por dos caminos, y la respuesta correcta depende por completo de qué es el texto.",
+            "Consérvalos como <br> para cualquier cosa en la que el final de línea signifique algo: una dirección, un poema, un bloque de firma, la letra de una canción. Deja que el texto fluya — los saltos se vuelven espacios — para prosa que un editor viejo cortó a 72 columnas. Dejar esos como <br> te da un párrafo con el borde derecho irregular que además no se reajusta en un móvil.",
+          ],
+          sample: {
+            beforeLabel: "Texto",
+            before: "12 Bridge Street\nManchester",
+            afterLabel: "HTML, con los saltos",
+            after: "<p>12 Bridge Street<br>\nManchester</p>",
+          },
+        },
+        {
+          heading: "Convertir URLs sueltas en enlaces",
+          body: [
+            "Con el enlazado activado, todo lo que empiece por http://, https:// o www. se vuelve un <a>. Las direcciones de correo se vuelven enlaces mailto:.",
+            "La detección es deliberadamente estrecha. Un example.com suelto no se enlaza, porque no hay manera de distinguirlo de una frase que acaba en un nombre de archivo o de una abreviatura con un punto. Equivocarse ahí produce enlaces a ninguna parte.",
+            "La puntuación final se queda fuera del enlace, así que una URL al final de una frase no se traga el punto. Los enlaces llevan rel=\"noopener nofollow\" y no se abren en una pestaña nueva.",
+          ],
+        },
+        {
+          heading: "Lo que el texto plano no le puede decir al conversor",
+          body: [
+            "Todo lo que hay aquí se vuelve un párrafo. No hay otra salida, y eso es una propiedad de la entrada más que una carencia.",
+            "Una línea que empieza con un guión te parece una lista, pero es un guión y un espacio. Subrayar una línea con signos de igual parece un encabezado, pero es una fila de signos de igual. Adivinar se equivocaría lo bastante a menudo como para ser peor que no adivinar.",
+            "Así que: ni listas, ni encabezados, ni bloques de código. La sangría se conserva como caracteres pero se colapsa en el navegador, lo que significa que las tablas ASCII y el código sangrado salen como prosa pegada. Si tu texto es en realidad Markdown, usa la página de Markdown: allí esas convenciones significan algo.",
+          ],
+        },
+        {
+          heading: "Una cosa por la que no te tienes que preocupar",
+          body: [
+            "Los signos de menor y mayor, los ampersands y las comillas se escapan, todos y cada uno. Un texto que contenga <b>bold</b> muestra esos caracteres en la página en lugar de ponerse en negrita.",
+            "Esa es la definición de la herramienta, no una medida de seguridad añadida encima. El texto plano es texto plano: si pudiera contener marcado, no lo sería.",
+          ],
+        },
+      ],
+      outro:
+        "Pega el texto o suelta un archivo .txt, elige cómo deben comportarse los saltos sueltos, y copia el HTML. Todo corre en tu navegador.",
+    },
+    "csv-to-html-table-large-files": {
+      short: "Archivos CSV grandes",
+      eyebrow: "Guía · CSV → tabla",
+      title: "CSV a tabla HTML: delimitadores, campos entrecomillados y archivos grandes",
+      description:
+        "Cómo se detecta el delimitador, qué pasa con los campos entrecomillados y los saltos de línea dentro de ellos, por qué un archivo de una columna avisa de un problema de delimitador, y qué significa en la práctica el límite de 100.000 celdas.",
+      keywords: [
+        "csv a tabla html",
+        "convertir csv a tabla html",
+        "csv grande a html",
+        "csv con punto y coma a tabla html",
+        "tsv a tabla html",
+      ],
+      h1: "De CSV a una tabla HTML, incluidos los grandes",
+      lede: [
+        "Un CSV es un archivo de texto con una convención de puntuación, y hay varias convenciones. La mayoría de los problemas de conversión son en realidad desacuerdos sobre cuál está usando un archivo.",
+        "Esto cubre cómo se elige el delimitador, qué hacen las comillas, y dónde están de verdad los límites de tamaño.",
+      ],
+      tool: "csv-to-html-table",
+      sections: [
+        {
+          heading: "El delimitador se detecta, no se supone",
+          body: [
+            "Comas, puntos y comas, tabuladores y barras verticales: todos se usan. Los puntos y comas sobre todo: exporta una hoja de cálculo en una región donde la coma es el separador decimal y te salen puntos y comas, porque la coma ya está ocupada.",
+            "La detección lee las diez primeras filas, prueba cada candidato, y elige el que da un número de columnas consistente. Un archivo cuyas primeras filas sean raras — una línea de título encima del encabezado, por ejemplo — puede leerse mal, así que el delimitador detectado se indica en la salida. Si está mal, cámbialo a mano.",
+          ],
+          steps: [
+            "Suelta el archivo y mira la nota que hay encima de la tabla diciendo qué delimitador se usó.",
+            "Si la tabla tiene una columna cuando debería tener seis, fija el delimitador a mano desde el desplegable.",
+            "Comprueba que la primera fila cayó en el encabezado. Si el archivo no tiene encabezado, desactiva esa opción y todas las filas pasan al cuerpo.",
+          ],
+        },
+        {
+          heading: "Campos entrecomillados, y la coma dentro de una celda",
+          body: [
+            "Un campo entre comillas dobles puede contener el delimitador, y una comilla duplicada dentro significa una comilla literal. Eso es RFC 4180 y está bien resuelto.",
+            "Un campo entrecomillado también puede contener un salto de línea. En el HTML esos se vuelven <br> dentro de la celda, así que una dirección de dos líneas se queda en dos líneas en vez de romper la fila.",
+          ],
+          sample: {
+            beforeLabel: "CSV",
+            before: 'name,note\nBolt,"M6, 40mm"\n',
+            afterLabel: "HTML",
+            after: '<tr>\n  <td>Bolt</td>\n  <td>M6, 40mm</td>\n</tr>',
+          },
+        },
+        {
+          heading: "El aviso del archivo de una columna",
+          body: [
+            "Un CSV de una sola columna avisa de un problema de delimitador. Vale la pena explicarlo porque el archivo suele estar bien.",
+            "La detección funciona buscando qué carácter parte las filas de forma consistente. Con una columna no hay nada por donde partir, así que nada parece un delimitador y lo dice. La salida sigue siendo correcta: una columna, todas las filas presentes.",
+            "Si prefieres no verlo, fija el delimitador explícitamente en lugar de dejarlo en automático.",
+          ],
+        },
+        {
+          heading: "Qué significa «grande» aquí",
+          body: [
+            "Dos techos distintos. 25 MB por archivo, y 100.000 celdas — o sea filas por columnas, así que un archivo de seis columnas te llega hasta unas 16.000 filas y uno de cien columnas se detiene alrededor de mil.",
+            "El límite de celdas es el que vas a alcanzar primero, y es cosa del navegador más que del analizador. Cada celda se vuelve nodos del DOM en la vista previa, y una tabla de unos cientos de miles de celdas bloquea la pestaña. Negarse es mejor que congelarse.",
+            "Para algo realmente más grande, pártelo por filas y convierte cada trozo — la fila de encabezado puede repetirse en cada uno. Las filas vacías se descartan automáticamente, incluidas las que son solo delimitadores, que es lo que suele ser un bloque final de «,,,».",
+          ],
+        },
+        {
+          heading: "Cómo queda la tabla",
+          body: [
+            'La fila de encabezado se vuelve un <thead> con celdas <th scope="col">; todo lo demás va en <tbody>. Las filas desiguales se rellenan hasta la más ancha para que la tabla siga siendo rectangular, y la salida dice cuántas filas lo necesitaron — normalmente señal de que algo está roto más arriba.',
+            "No se convierte ningún tipo. 007 se queda en 007, y un valor como 1-2 no se vuelve una fecha. Excel te hace eso; esto no.",
+            'Con la opción responsiva activada, la tabla se envuelve en un <div class="table-wrap"> que se desplaza de lado. Una tabla de doce columnas no cabe en un móvil, y dejarla desbordarse estira la página entera en vez de solo a ella.',
+          ],
+        },
+      ],
+      outro:
+        "Suelta el CSV o pega las filas directamente. Los archivos se analizan en tu navegador, así que los datos de clientes nunca salen de la máquina.",
+    },
+    "excel-to-html-table-formulas": {
+      short: "Fórmulas de Excel",
+      eyebrow: "Guía · Excel → tabla",
+      title: "Excel a tabla HTML: qué pasa con las fórmulas y el formato",
+      description:
+        "Las fórmulas se convierten en su valor calculado, no en la fórmula — y hay un caso en el que salen vacías. Además, qué pasa con los formatos de moneda, las fechas, las celdas combinadas y varias hojas.",
+      keywords: [
+        "excel a tabla html",
+        "xlsx a tabla html",
+        "convertir excel a html",
+        "fórmulas de excel a html",
+        "hoja de cálculo a tabla html",
+      ],
+      h1: "Excel a HTML: fórmulas y formato",
+      lede: [
+        "Una hoja de cálculo contiene más que su contenido: fórmulas detrás de los números, formatos de número por encima, combinaciones que los cruzan. HTML no tiene nada de eso.",
+        "Así que la pregunta no es si se pierde algo, sino qué se pierde, y si alguna de esas cosas era la que necesitabas.",
+      ],
+      tool: "excel-to-html-table",
+      sections: [
+        {
+          heading: "Las fórmulas se vuelven sus respuestas",
+          body: [
+            "Una celda con =SUM(B2:B9) sale como 4211. Eso es casi siempre lo que quieres en una página web: una fórmula en una página es una cadena de texto, y una cadena que parece una fórmula es peor que el número.",
+            "Funciona porque Excel guarda el valor calculado junto a la fórmula cada vez que guarda. El conversor lee ese valor en caché, y por eso no necesita un motor de fórmulas propio.",
+          ],
+          sample: {
+            beforeLabel: "Celda en Excel",
+            before: "B10:  =SUM(B2:B9)",
+            afterLabel: "HTML",
+            after: "<td>4211</td>",
+          },
+        },
+        {
+          heading: "El único caso en que salen vacías",
+          body: [
+            "Si el libro lo generó un script — una exportación de Python, un proceso de informes, algo que usa una biblioteca de hojas de cálculo — y nunca se abrió en Excel, no hay valor en caché. Nadie escribió uno. Esas celdas se convierten en vacías.",
+            "La solución es abrir el archivo en Excel o LibreOffice y guardarlo una vez. Eso calcula todo y escribe los valores. El conversor te avisa cuando las celdas con fórmula de una hoja se leen vacías, así que no te quedas adivinando.",
+            "Los errores de fórmula también salen vacíos en lugar de como #DIV/0! o #REF!. Una hoja con una búsqueda rota en una columna produce una columna de blancos, así que vale la pena revisar el origen cuando una columna sale vacía sin razón aparente.",
+          ],
+        },
+        {
+          heading: "Los formatos de número no sobreviven",
+          body: [
+            "Esta es la sorpresa que más vale conocer de antemano. Un formato de número es una máscara que Excel pinta sobre un valor; el valor de debajo va desnudo.",
+            "Así que 1.234,50 € se convierte en 1234.5 — el símbolo de moneda, el separador de miles y los decimales fijos desaparecen. Una celda que muestra 12,50 % se convierte en 0.125, porque ese es el número que siempre estuvo ahí.",
+            "Si el formato importa en la salida, añade en la hoja una columna con la cadena formateada construida con una fórmula TEXT(), y usa esa columna. Entonces es texto, y el texto llega exactamente igual.",
+            "Las fechas son la excepción: se detectan por su formato de número y salen como 2026-03-14, con la hora detrás si la hay. Se leen en UTC a propósito — la versión ingenua atrasa un día todas las fechas para cualquiera al oeste de Greenwich.",
+          ],
+        },
+        {
+          heading: "Las celdas combinadas se separan",
+          body: [
+            "Un título combinado en A1:C1 se vuelve una celda con el texto y dos celdas vacías al lado. Excel guarda el valor en la celda de arriba a la izquierda y deja las demás realmente vacías; sin la información de la combinación, eso es lo que hay para leer.",
+            "HTML puede expresar una combinación con colspan y rowspan, así que la solución es una edición de una línea después. O descombina en Excel primero — muchas veces las combinaciones solo estaban ahí para centrar un título.",
+          ],
+        },
+        {
+          heading: "Hojas, y los techos de tamaño",
+          steps: [
+            "Por defecto se convierte la primera hoja. Las demás se listan por nombre, así que marca las que quieras.",
+            "Si eliges varias, cada una sale como su propio <table> con un <h2> encima con el nombre de la hoja. Si eliges una, el nombre va en el <caption> de la tabla.",
+            "Una hoja que queda vacía después de recortar las filas finales en blanco lo dice, en lugar de producir una tabla vacía.",
+          ],
+          body: [
+            "Dos límites. 10 MB por libro — más bajo que los 25 MB de los otros formatos, porque un .xlsx es un zip y descomprimirlo en una pestaña cuesta mucha más memoria de lo que sugiere su tamaño. Y 100.000 celdas entre todo lo que hayas seleccionado, que es la razón por la que elegir menos hojas puede hacer pasar un libro grande.",
+            "Los libros protegidos con contraseña se rechazan en lugar de leerse a medias, igual que los .xls binarios antiguos. Para esos, guarda antes como .xlsx.",
+          ],
+        },
+      ],
+      outro:
+        "Suelta el libro, elige tus hojas, y copia la tabla. Todo se lee en tu navegador — un modelo financiero nunca sale de tu máquina.",
     },
   },
 };
