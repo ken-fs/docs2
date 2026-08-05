@@ -33,6 +33,19 @@
   --pine-deep: oklch(0.396 0.078 154);
   --marker: oklch(0.902 0.142 118);
 
+  /* 唯一的失败色：校对红。
+   *
+   * 补这个是因为失败状态本来借的是 --pine —— 那是这个站的成功色。转换失败的
+   * 卡片底色 bg-pine/8、边框 pine/45、连 ✗ 图标都是 text-pine，跟成功的 ✓
+   * 只差一个字形。绿栏纸上一整列绿框，第一眼看过去全像跑通了，得读到文字才
+   * 知道哪条炸了。状态是这个界面最要紧的一位信息，不能只靠字形传。
+   *
+   * H=22（#b12b35）是校对笔的红，跟松绿差 130 度，一眼分得开。刻意避开
+   * H≈45 那一带的陶土色 —— 那是这个站换掉的旧主色（#be420f），绕回去等于
+   * 把否掉的方向又请回来。L=0.505 在纸上 5.86，深纸上 5.27，白字压上去 6.42，
+   * 三处都过正文门槛（迟早会配文字标签，不能只按图形的 3:1 算）。 */
+  --redline: oklch(0.505 0.17 22);
+
   --rule: oklch(0.205 0.011 150 / 0.14);
   --rule-firm: oklch(0.205 0.011 150 / 0.28);
 
@@ -52,6 +65,7 @@
   --color-pine: var(--pine);
   --color-pine-deep: var(--pine-deep);
   --color-marker: var(--marker);
+  --color-redline: var(--redline);
   --color-rule: var(--rule);
   --color-rule-firm: var(--rule-firm);
 
@@ -241,6 +255,9 @@
  *   white      on pine          6.06
  *   white      on pine-deep     9.02
  *   ink        on marker       13.68
+ *   redline    on paper         5.86   （失败色，见上面 --redline 那段）
+ *   redline    on paper-deep    5.27
+ *   white      on redline       6.42
  *
  * pine 的明度被两头夹住：既要在纸上当正文色，又要当填充块配白字。
  * L=0.487 是两边都过 4.5 的位置，往上调任何一档 white-on-pine 就掉下来。

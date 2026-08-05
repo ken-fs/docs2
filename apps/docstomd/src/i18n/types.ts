@@ -136,6 +136,16 @@ export type Dictionary = {
     failed: string;
     tooBig: string;
     readFail: string;
+    /**
+     * 拖错文件类型：{ext} 换成扩展名。目标页名不写在这里 —— 它由紧跟着的
+     * 那个链接承担，文案里再点一次名就是同一件事说两遍。
+     */
+    wrongType: string;
+    /**
+     * 全站都不收（.zip、.epub…）。这条后面没有链接 —— 无处可去时给一个链接
+     * 就是骗人跑一趟。所以它得自己把话说完整：不收，以及这个站收什么。
+     */
+    wrongTypeNowhere: string;
     /** 粘贴富文本时给这份内容起的名字，没有文件名可用 */
     pastedName: string;
     /** 直接在文本框里贴内容时用的名字（HTML 源码 / CSV） */

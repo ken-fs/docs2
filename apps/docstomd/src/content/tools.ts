@@ -85,6 +85,40 @@ const DOCX_INPUT: ToolInput = {
   paste: "none",
 };
 
+/**
+ * 从 accept 里抠出扩展名，给拖拽区的说明文案用（".docx,.doc,application/…"
+ * → ".docx .doc"）。
+ *
+ * 为什么派生而不另写文案：格式列表一旦手写，就会跟 accept 走散 —— 文案说
+ * 收 PDF 而选择器其实不收，比不写更糟。而且这句话要出现在六种语言里，
+ * 手写就是六份要同步维护的清单。扩展名本身不用翻译。
+ *
+ * 起因是有人看着首页那句「Drop a file here / 25 MB per file」问「只能传
+ * txt 吗，不能 pdf、docx 吗」。当时那行字只说了大小和隐私，没说本页收什么，
+ * 唯一的知情途径是点开系统文件选择器看过滤器 —— 那就太晚了。
+ */
+export function acceptExtensions(accept: string): string[] {
+  return accept
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s.startsWith("."));
+}
+
+/**
+ * 同上，但截到三个 —— 这行字是给人读的，不是 accept 的完整回显。Markdown 页
+ * 收四个扩展名，全列出来一行太挤。多出来的用「+N」收掉，选择器仍然全收。
+ *
+ * 所以 accept 里扩展名的先后是有语义的：按用户熟悉度排，别名放最后。
+ * 加扩展名时别往前插。第一版把 .mdown 排在 .txt 前面，结果 Markdown 页显示
+ * 「.md .markdown .mdown +1」，正好把最该露出来的 .txt 藏进了那个 +1。
+ */
+export function acceptSummary(accept: string): string {
+  const all = acceptExtensions(accept);
+  return all.length > 3
+    ? `${all.slice(0, 3).join(" ")} +${all.length - 3}`
+    : all.join(" ");
+}
+
 export const TOOL_INPUT: Record<PageKey, ToolInput> = {
   home: DOCX_INPUT,
   "docx-to-markdown": DOCX_INPUT,
@@ -118,6 +152,43 @@ export const TOOL_INPUT: Record<PageKey, ToolInput> = {
 export type AnyKey = PageKey | LegalKey;
 
 /** 全站页面，页脚和 sitemap 按这个顺序列。 */
+/**
+ * 一个扩展名该去哪一页。
+ *
+ * 派生自 TOOL_INPUT，不是另抄一份清单 —— 加工具页时自动就有，不会漏。
+ * 同一个扩展名可能有多页收（.docx 有四页），取第一个匹配的：PAGE_KEYS 的
+ * 声明顺序就是优先级，最专门的那页排前面。
+ *
+ * 跳过 home —— 它跟 docx-to-markdown 是同一个转换器，但报错里说「去首页」
+ * 没有信息量，用户要的是那个专门页的名字。
+ *
+ * 用在「拖错文件」的报错里：以前拖一个 PDF 进 CSV 页，转换器会把二进制
+ * 当文本硬解，输出一张全是乱码的表格然后标成「成功」—— 用户拿到的是看着
+ * 像成功的垃圾。docx / pdf / xlsx 三个引擎会自己嗅文件头拒掉，但 csv 和
+ * html 走的是纯文本，什么都吃得下，那两页正是漏的地方。
+ */
+export function pageForExtension(ext: string): PageKey | undefined {
+  const want = ext.toLowerCase();
+  return TOOL_KEYS.find((k) =>
+    acceptExtensions(TOOL_INPUT[k].accept).includes(want),
+  );
+}
+
+/**
+ * 全站任何一页收的扩展名，去重。ToolShell 拿它摊成「扩展名 → 去哪页」的
+ * 表传给 Converter —— 传表而不传函数，因为 ToolShell 是 Server Component，
+ * 函数过不了那道边界。
+ */
+export const ELSEWHERE_EXTENSIONS: string[] = [
+  ...new Set(TOOL_KEYS.flatMap((k) => acceptExtensions(TOOL_INPUT[k].accept))),
+];
+
+/** 文件名里的扩展名，含点，小写。没有扩展名返回空串。 */
+export function extensionOf(name: string): string {
+  const i = name.lastIndexOf(".");
+  return i > 0 ? name.slice(i).toLowerCase() : "";
+}
+
 export const ALL_KEYS: AnyKey[] = [...PAGE_KEYS, ...LEGAL_KEYS];
 
 /** home 的 slug 是空串，其余的 slug 就是 key 本身。 */

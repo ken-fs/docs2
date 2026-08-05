@@ -8,7 +8,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { pathOf, TOOL_INPUT, TOOL_KEYS } from "@/content/tools";
+import {
+  ELSEWHERE_EXTENSIONS,
+  pageForExtension,
+  pathOf,
+  TOOL_INPUT,
+  TOOL_KEYS,
+} from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
 import type { Dictionary, PageKey } from "@/i18n/types";
 
@@ -94,7 +100,24 @@ export function ToolShell({
           </aside>
         </section>
 
-        <Converter t={dict.converter} input={input} />
+        <Converter
+          t={dict.converter}
+          input={input}
+          /* 拖错文件时报错要能说出「去哪一页」。这里预先把「本站其他页收的
+             扩展名 → 页名和链接」摊成一张表传下去。
+             不传函数：ToolShell 是 Server Component，函数过不了那道边界
+             （Next 会报 "Functions cannot be passed directly to Client
+             Components"）。表是纯数据，能序列化。 */
+          elsewhere={ELSEWHERE_EXTENSIONS.reduce<
+            Record<string, { label: string; href: string }>
+          >((acc, ext) => {
+            const key = pageForExtension(ext);
+            if (key && key !== pageKey) {
+              acc[ext] = { label: dict.pages[key].short, href: pathOf(locale, key) };
+            }
+            return acc;
+          }, {})}
+        />
 
         {/* 方案 §8.7 要求的正文：怎么用、支持什么、限制是什么。
             这三段不是给爬虫凑字数的 —— 每个转换器的限制都是真的（PDF 不认扫描件、

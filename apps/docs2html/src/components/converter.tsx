@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,13 @@ import {
   type HtmlResult,
   type Workbook,
 } from "@document-tools/converters/types";
-import type { ToolInput } from "@/content/tools";
+import {
+  acceptExtensions,
+  acceptSummary,
+  extensionOf,
+  SIBLING_EXTENSIONS,
+  type ToolInput,
+} from "@/content/tools";
 import { cn } from "@/lib/utils";
 
 type Job = {
@@ -28,6 +35,8 @@ type Job = {
   result?: HtmlResult;
   error?: string;
   legacy?: boolean;
+  /** 拖错文件时「去这一页」的链接，跟着 error 一起显示。 */
+  hint?: { label: string; href: string };
   /** XLSX：解析出来的工作簿留着，用户换选表时不用重读文件。 */
   book?: Workbook;
   /**
@@ -82,6 +91,10 @@ function save(blob: Blob, filename: string) {
 
 type T = Dictionary["converter"];
 
+/** 失败卡片里那条「去这一页」链接的样式，站内站外共用。 */
+const HINT_LINK =
+  "mt-1.5 inline-block font-mono text-[11px] text-prussian underline decoration-dotted underline-offset-4 transition-colors hover:text-prussian-deep";
+
 /**
  * 哪个引擎露哪些旋钮。
  *
@@ -110,11 +123,24 @@ export function Converter({
   t,
   input,
   lang,
+  elsewhere,
+  sibling,
 }: {
   t: T;
   input: ToolInput;
   /** 整页模式产物的 <html lang>，跟着当前站点语言走。 */
   lang: string;
+  /**
+   * 扩展名 → 本站哪一页收它（页名 + 链接）。查不到 = 全站都不收。
+   * 由 ToolShell 算好传进来，因为路由和页名都在那一层；而且它是
+   * Server Component，只能传数据不能传函数。
+   */
+  elsewhere: Record<string, { label: string; href: string }>;
+  /**
+   * 全站都不收时链到哪儿 —— 兄弟站 docstomd。文案取 chrome.siblingCta
+   * （"docstomd.com"），因为那是站外链接，不属于 converter 的词汇表。
+   */
+  sibling: { label: string; href: string };
 }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -213,6 +239,45 @@ export function Converter({
         const job = fresh[i];
         const file = files[i];
 
+        /*
+         * 扩展名预检。放在大小检查前面 —— 格式不对就没必要谈大小。
+         *
+         * 以前没有这一步：拖一个 PDF 进 Markdown 页，转换器会把二进制当文本
+         * 转出 <p>%PDF-1.7<br>… 然后标成「成功」，还生成 report.pdf.html 让人
+         * 下载。用户拿到的是看着像成功的垃圾，比报错糟得多。
+         *
+         * 只有扩展名对不上才挡。没有扩展名的一律放过去让转换器试 —— 用户
+         * 可能真的有个没后缀的 Markdown，而这一页的转换器本来就能读它。
+         * accept 只管系统选择器的过滤器，挡不住从 Finder 拖进来的文件，
+         * 所以这道检查必须在 JS 这边再做一遍。
+         *
+         * 三种去处，按「离用户最近」排：本站有专门页 → 只有兄弟站收 →
+         * 谁都不收。最后那种不给链接 —— 无处可去时递一个链接是骗人白跑一趟。
+         */
+        const ext = extensionOf(file.name);
+        if (ext && !acceptExtensions(input.accept).includes(ext)) {
+          const other = elsewhere[ext];
+          const onSibling = SIBLING_EXTENSIONS.includes(ext);
+          setJobs((prev) =>
+            prev.map((j) =>
+              j.id === job.id
+                ? {
+                    ...j,
+                    status: "failed",
+                    error: (other
+                      ? t.wrongType
+                      : onSibling
+                        ? t.wrongTypeElsewhere
+                        : t.wrongTypeNowhere
+                    ).replaceAll("{ext}", ext),
+                    hint: other ?? (onSibling ? sibling : undefined),
+                  }
+                : j,
+            ),
+          );
+          continue;
+        }
+
         if (file.size > MAX_BYTES) {
           setJobs((prev) =>
             prev.map((j) =>
@@ -252,7 +317,7 @@ export function Converter({
         }
       }
     },
-    [convert, jobs.length],
+    [convert, jobs.length, input.accept, elsewhere, sibling],
   );
 
   /**
@@ -502,7 +567,9 @@ export function Converter({
               {dragging ? t.dropActive : t.dropTitle}
             </p>
             <p className="mt-2 text-sm text-graphite-soft">{t.dropHint}</p>
-            <p className="mt-1 font-mono text-xs text-graphite-faint">{t.dropMeta}</p>
+            <p className="mt-1 font-mono text-xs text-graphite-faint">
+              {acceptSummary(input.accept)} / {t.dropMeta}
+            </p>
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">
@@ -779,11 +846,38 @@ export function Converter({
                                 ? t.failed
                                 : fmtBytes(j.size)}
                         </p>
+                        {/* 报错正文用中性的石墨色，不用蓝 —— 加了「去这一页」
+                            的链接之后，同一张卡片里蓝色得只有一个意思：能点。
+                            原来这条是 prussian-deep，和紧跟着的链接差一档明度，
+                            看着像两句都能点，实际只有下面那句能。 */}
                         {j.error && (
-                          <p className="mt-1.5 text-[12px] leading-snug text-prussian-deep">
+                          <p className="mt-1.5 text-[12px] leading-snug text-graphite-soft">
                             {j.error}
                           </p>
                         )}
+                        {/* 报错说了「去 X」就得能点过去 —— 只说不给路是把
+                            找路的活推给用户。整个卡片是个 <button>，所以要
+                            拦住冒泡，否则点链接会先触发选中这个任务。
+                            站外（兄弟站）用 <a rel="noopener">，站内用 Link。 */}
+                        {j.hint &&
+                          (j.hint.href.startsWith("http") ? (
+                            <a
+                              href={j.hint.href}
+                              rel="noopener"
+                              onClick={(e) => e.stopPropagation()}
+                              className={HINT_LINK}
+                            >
+                              {j.hint.label} ↗
+                            </a>
+                          ) : (
+                            <Link
+                              href={j.hint.href}
+                              onClick={(e) => e.stopPropagation()}
+                              className={HINT_LINK}
+                            >
+                              {j.hint.label} →
+                            </Link>
+                          ))}
                       </div>
                     </div>
                     {j.status === "chewing" && (

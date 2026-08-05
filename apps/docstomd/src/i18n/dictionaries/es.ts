@@ -98,6 +98,9 @@ const es: Dictionary = {
     tooBig: "Más de 25 MB. Demasiado grande.",
     readFail:
       "No se pudo leer. El archivo puede estar dañado o protegido con contraseña.",
+    wrongType: "Esta página no acepta archivos {ext}. Esta sí:",
+    wrongTypeNowhere:
+      "Esta página no acepta archivos {ext}. Este sitio convierte Word, PDF, Excel, CSV y HTML — no {ext}.",
     pastedName: "contenido pegado",
     typedName: "texto pegado",
     pasteHeading: "O pégalo aquí",

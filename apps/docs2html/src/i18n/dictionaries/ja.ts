@@ -120,6 +120,11 @@ const ja: Dictionary = {
     tooBig: "25 MB を超えています。大きすぎます。",
     readFail:
       "読み込めませんでした。ファイルが壊れているか、パスワードで保護されている可能性があります。",
+    wrongType: "このページは {ext} ファイルを受け取りません。こちらへ：",
+    wrongTypeElsewhere:
+      "このページは {ext} ファイルを受け取りません。このサイト全体でも扱いません。DocsToMD が対応します。",
+    wrongTypeNowhere:
+      "このページは {ext} ファイルを受け取りません。このサイトが扱うのは文書・表・テキストで、{ext} は対象外です。",
     pastedName: "貼り付けた内容",
     typedName: "貼り付けたテキスト",
     pasteHeading: "ここに貼り付けても構いません",

@@ -117,6 +117,10 @@ const zhCN: Dictionary = {
     failed: "失败",
     tooBig: "超过 25 MB，太大了。",
     readFail: "读不出来。文件可能损坏了，或者设了密码。",
+    wrongType: "这一页不收 {ext} 文件。这一页收：",
+    wrongTypeElsewhere: "这一页不收 {ext} 文件，整个站都不收。DocsToMD 收。",
+    wrongTypeNowhere:
+      "这一页不收 {ext} 文件。本站只转文档、表格和纯文本，不收 {ext}。",
     pastedName: "粘贴的内容",
     typedName: "粘贴的文本",
     pasteHeading: "或者粘贴到这里",

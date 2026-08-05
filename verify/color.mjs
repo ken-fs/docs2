@@ -67,6 +67,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       pine: [0.487, 0.094, 152],
       "pine-deep": [0.396, 0.078, 154],
       marker: [0.902, 0.142, 118],
+      redline: [0.505, 0.17, 22],
     },
     docs2html: {
       sheet: [0.972, 0.006, 232],

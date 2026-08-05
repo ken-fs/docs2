@@ -13,7 +13,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { pathOf, TOOL_INPUT, TOOL_KEYS } from "@/content/tools";
+import { SIBLING_SITE } from "@/content/site";
+import {
+  ELSEWHERE_EXTENSIONS,
+  pageForExtension,
+  pathOf,
+  TOOL_INPUT,
+  TOOL_KEYS,
+} from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
 import type { Dictionary, PageKey } from "@/i18n/types";
 
@@ -115,7 +122,28 @@ export function ToolShell({
 
         {/* lang 传下去是给「整页模式」产物的 <html lang> 用的：日语用户
             转出来的整页文件，lang 该是 ja，不该硬写 en */}
-        <Converter t={dict.converter} input={input} lang={dict.htmlLang} />
+        <Converter
+          t={dict.converter}
+          input={input}
+          lang={dict.htmlLang}
+          /* 拖错文件时报错要能说出「去哪一页」。这里预先把「本站其他页收的
+             扩展名 → 页名和链接」摊成一张表传下去。
+             不传函数：ToolShell 是 Server Component，函数过不了那道边界
+             （Next 会报 "Functions cannot be passed directly to Client
+             Components"）。表是纯数据，能序列化。 */
+          elsewhere={ELSEWHERE_EXTENSIONS.reduce<
+            Record<string, { label: string; href: string }>
+          >((acc, ext) => {
+            const key = pageForExtension(ext);
+            if (key && key !== pageKey) {
+              acc[ext] = { label: dict.pages[key].short, href: pathOf(locale, key) };
+            }
+            return acc;
+          }, {})}
+          /* 全站都不收的扩展名（.pdf）指向兄弟站。不给链接的话那条报错就是
+             死路：说了「DocsToMD 收」却要用户自己去找。 */
+          sibling={{ label: c.siblingCta, href: SIBLING_SITE }}
+        />
 
         {/* 方案 §8.7 要求的正文：怎么用、支持什么、限制是什么。
             这三段不是给爬虫凑字数的 —— 每个转换器的限制都是真的（Excel 不还原

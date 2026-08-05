@@ -120,6 +120,11 @@ const pt: Dictionary = {
     tooBig: "Acima de 25 MB. Grande demais.",
     readFail:
       "Não foi possível ler. O arquivo pode estar corrompido ou protegido por senha.",
+    wrongType: "Esta página não aceita arquivos {ext}. Esta sim:",
+    wrongTypeElsewhere:
+      "Esta página não aceita arquivos {ext}, e nem este site. O DocsToMD converte.",
+    wrongTypeNowhere:
+      "Esta página não aceita arquivos {ext}. Este site converte documentos, planilhas e texto — não {ext}.",
     pastedName: "conteúdo colado",
     typedName: "texto colado",
     pasteHeading: "Ou cole aqui",

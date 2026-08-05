@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ import {
   type ConvertResult,
   type Workbook,
 } from "@document-tools/converters/types";
-import type { ToolInput } from "@/content/tools";
+import { acceptExtensions, acceptSummary, extensionOf, type ToolInput } from "@/content/tools";
 import {
   PDFJS_ASSET_VERSION,
   PDFJS_CMAP_URL,
@@ -40,6 +41,8 @@ type Job = {
   result?: ConvertResult;
   error?: string;
   legacy?: boolean;
+  /** 「去这一页」的链接。只有拖错文件类型时才有。 */
+  hint?: { label: string; href: string };
   /** XLSX：解析出来的工作簿留着，用户换选表时不用重读文件。 */
   book?: Workbook;
   /**
@@ -129,7 +132,20 @@ const KNOBS = {
   >
 >;
 
-export function Converter({ t, input }: { t: T; input: ToolInput }) {
+export function Converter({
+  t,
+  input,
+  elsewhere,
+}: {
+  t: T;
+  input: ToolInput;
+  /**
+   * 扩展名 → 本站哪一页收它（页名 + 链接）。查不到 = 全站都不收。
+   * 由 ToolShell 算好传进来，因为路由和页名都在那一层；而且它是
+   * Server Component，只能传数据不能传函数。
+   */
+  elsewhere: Record<string, { label: string; href: string }>;
+}) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [opts, setOpts] = useState<ConvertOptions>(DEFAULT_OPTIONS);
@@ -222,6 +238,41 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
         const job = fresh[i];
         const file = files[i];
 
+        /*
+         * 扩展名预检。放在大小检查前面 —— 格式不对就没必要谈大小。
+         *
+         * docx / pdf / xlsx 三个引擎会自己嗅文件头拒掉，但 csv 和 html 走的
+         * 是纯文本，什么都吃得下：以前拖一个 PDF 进 CSV 页，转换器把二进制
+         * 当文本硬解，输出一张全是乱码的表格然后标成「成功」，还给下载。
+         * 用户拿到的是看着像成功的垃圾，比报错糟得多。
+         *
+         * 只有扩展名对不上才挡。没有扩展名的一律放过去让转换器试。
+         * accept 只管系统选择器的过滤器，挡不住从 Finder 拖进来的文件，
+         * 所以这道检查必须在 JS 这边再做一遍。
+         *
+         * 全站都不收时不给链接 —— 无处可去时递一个链接是骗人白跑一趟。
+         */
+        const ext = extensionOf(file.name);
+        if (ext && !acceptExtensions(input.accept).includes(ext)) {
+          const other = elsewhere[ext];
+          setJobs((prev) =>
+            prev.map((j) =>
+              j.id === job.id
+                ? {
+                    ...j,
+                    status: "failed",
+                    error: (other ? t.wrongType : t.wrongTypeNowhere).replaceAll(
+                      "{ext}",
+                      ext,
+                    ),
+                    hint: other,
+                  }
+                : j,
+            ),
+          );
+          continue;
+        }
+
         if (file.size > MAX_BYTES) {
           setJobs((prev) =>
             prev.map((j) =>
@@ -265,7 +316,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
         }
       }
     },
-    [convert, jobs.length],
+    [convert, jobs.length, input.accept, elsewhere],
   );
 
   /**
@@ -519,7 +570,9 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
               {dragging ? t.dropActive : t.dropTitle}
             </p>
             <p className="mt-2 text-sm text-ink-soft">{t.dropHint}</p>
-            <p className="mt-1 font-mono text-xs text-ink-faint">{t.dropMeta}</p>
+            <p className="mt-1 font-mono text-xs text-ink-faint">
+              {acceptSummary(input.accept)} / {t.dropMeta}
+            </p>
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">
@@ -774,7 +827,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                         j.id !== activeId &&
                         "border-rule-firm bg-paper/55 hover:border-ink hover:bg-paper",
                       j.status === "failed" &&
-                        "cursor-default border-pine/45 bg-pine/8",
+                        "cursor-default border-redline/45 bg-redline/8",
                       (j.status === "waiting" || j.status === "chewing") &&
                         "cursor-default border-rule-firm bg-paper/40",
                     )}
@@ -794,10 +847,24 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                                 ? t.failed
                                 : kb(j.size)}
                         </p>
+                        {/* 报错正文用中性的墨色，不用绿 —— 加了「去这一页」
+                            的链接之后，同一张卡片里绿色得只有一个意思：能点。 */}
                         {j.error && (
-                          <p className="mt-1.5 text-[12px] leading-snug text-pine-deep">
+                          <p className="mt-1.5 text-[12px] leading-snug text-ink-soft">
                             {j.error}
                           </p>
+                        )}
+                        {/* 报错说了「去 X」就得能点过去 —— 只说不给路是把找路的
+                            活推给用户。整个卡片是个 <button>，所以要拦住冒泡，
+                            否则点链接会先触发选中这个任务。 */}
+                        {j.hint && (
+                          <Link
+                            href={j.hint.href}
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-1.5 inline-block font-mono text-[11px] text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
+                          >
+                            {j.hint.label} →
+                          </Link>
                         )}
                       </div>
                     </div>
@@ -1012,7 +1079,7 @@ function StatusMark({ status }: { status: Job["status"] }) {
     return (
       <Icon
         icon="ph:x-square-bold"
-        className="mt-0.5 h-4 w-4 shrink-0 text-pine"
+        className="mt-0.5 h-4 w-4 shrink-0 text-redline"
       />
     );
   if (status === "chewing")

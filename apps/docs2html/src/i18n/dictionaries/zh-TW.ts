@@ -117,6 +117,10 @@ const zhTW: Dictionary = {
     failed: "失敗",
     tooBig: "超過 25 MB，太大了。",
     readFail: "讀不出來。檔案可能損壞了，或者設了密碼。",
+    wrongType: "這一頁不收 {ext} 檔案。這一頁收：",
+    wrongTypeElsewhere: "這一頁不收 {ext} 檔案，整個站都不收。DocsToMD 收。",
+    wrongTypeNowhere:
+      "這一頁不收 {ext} 檔案。本站只轉文件、表格和純文字，不收 {ext}。",
     pastedName: "貼上的內容",
     typedName: "貼上的文字",
     pasteHeading: "或者貼到這裡",

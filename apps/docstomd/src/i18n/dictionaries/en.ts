@@ -96,6 +96,9 @@ const en: Dictionary = {
     failed: "failed",
     tooBig: "Over 25 MB. Too big.",
     readFail: "Couldn't read it. The file may be damaged or password-protected.",
+    wrongType: "This page doesn't take {ext} files. This one does:",
+    wrongTypeNowhere:
+      "This page doesn't take {ext} files. This site converts Word, PDF, Excel, CSV and HTML — not {ext}.",
     pastedName: "pasted content",
     typedName: "pasted text",
     pasteHeading: "Or paste it here",
