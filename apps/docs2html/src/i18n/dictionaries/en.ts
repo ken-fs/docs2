@@ -126,6 +126,8 @@ const en: Dictionary = {
     tooBig: "Over 25 MB. Too big.",
     readFail: "Couldn't read it. The file may be damaged or password-protected.",
     wrongType: "This page doesn't take {ext} files. This one does:",
+    wrongTypeAmbiguous:
+      "This page doesn't take {ext} files. A {ext} could be any of these — pick the one that matches yours:",
     wrongTypeElsewhere:
       "This page doesn't take {ext} files, and neither does this site. DocsToMD handles them.",
     wrongTypeNowhere:

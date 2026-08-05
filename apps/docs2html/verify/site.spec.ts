@@ -880,6 +880,74 @@ test("the picker offers every format the site can handle, not just this page's",
 });
 
 /*
+ * 一个扩展名可能有好几个都对的去处，报错要把它们全列出来。
+ *
+ * `.txt` 是这个站唯一的真歧义：三页收，而且是三个不同的引擎（Markdown /
+ * 纯文本 / CSV）。里面装的是哪一种，光看扩展名分不出来 —— 所以只指一个页
+ * 有三分之二的概率是错的。原来就是只指第一个：拿着逗号分隔的 .txt 被指到
+ * Markdown 页，转出来是一坨没有表格的段落，而 CSV 页就在旁边。
+ *
+ * 顺带盯住「不止一个去处时换一句文案」：「This one does:」后面跟三个链接
+ * 读起来是错的（this one 指哪个？），而且它没告诉用户为什么有三个。
+ *
+ * 反面用例在下一条：同一个引擎的几个入口不能列成几条，那是三个同义词。
+ */
+test("a .txt lists every page that could take it, not just the first", async ({
+  page,
+}) => {
+  await page.goto("/excel-to-html-table/");
+  await page.locator("input[type=file]").setInputFiles({
+    name: "notes.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("Part,Qty\nbolt,12\n"),
+  });
+
+  /* 必须锁到那张失败的任务卡上，不能用整个 #convert —— 拖放区上方那行
+     前置指路文案里也有这三个链接，用 #convert 的话报错里一个链接都没有
+     这条也会绿。 */
+  const card = page.locator("#convert li").filter({ hasText: "notes.txt" });
+  // 换过的那句文案：说清「哪个都可能，你自己认」，而不是「那一页收」
+  await expect(card.getByText(/could be any of these/i)).toBeVisible({
+    timeout: 15000,
+  });
+
+  // 三个引擎三条链接，一个都不能少 —— 少哪个，拿着那种 .txt 的人就没路
+  for (const slug of ["markdown-to-html", "text-to-html", "csv-to-html-table"]) {
+    await expect(
+      card.locator(`a[href$='/${slug}/']`),
+      `报错里该有去 ${slug} 的链接`,
+    ).toHaveCount(1);
+  }
+
+  await expect(page.locator("pre")).toHaveCount(0);
+});
+
+/*
+ * 同引擎的别名页不能列成几条。
+ *
+ * `.html` 这个站只有 Google Docs 页收（引擎 richhtml），所以指路只该有一条。
+ * 判据是引擎不是页数 —— 要是哪天再开一个走 richhtml 的页，这条会红，
+ * 而它应该红：两页转出来的东西一字不差，列两个链接是拿同义词烦用户。
+ */
+test("pages sharing one engine collapse to a single link", async ({ page }) => {
+  await page.goto("/csv-to-html-table/");
+  await page.locator("input[type=file]").setInputFiles({
+    name: "page.html",
+    mimeType: "text/html",
+    buffer: Buffer.from("<p>hi</p>"),
+  });
+
+  // 同上，锁到失败的那张卡 —— #convert 里还有前置指路那行的同名链接
+  const card = page.locator("#convert li").filter({ hasText: "page.html" });
+  await expect(card.getByText(/doesn't take \.html/i)).toBeVisible({
+    timeout: 15000,
+  });
+  // 一条，而且是那句确定的文案 —— 只有一个去处时不该说「哪个都可能」
+  await expect(card.getByText(/could be any of these/i)).toHaveCount(0);
+  await expect(card.locator("a[href$='/google-docs-to-html/']")).toHaveCount(1);
+});
+
+/*
  * `accept` 把不收的格式在系统选择器里变灰 —— 灰掉的文件永远进不了 pick()，
  * 所以「这一页不收 .docx，去 DOCX → HTML」那套报错对走按钮的用户一句都不会
  * 触发。实际发生过：有人在 Markdown 页打开选择器，Word 文档是灰的，没有任何

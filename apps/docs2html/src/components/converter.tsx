@@ -37,8 +37,14 @@ type Job = {
   result?: HtmlResult;
   error?: string;
   legacy?: boolean;
-  /** 拖错文件时「去这一页」的链接，跟着 error 一起显示。 */
-  hint?: { label: string; href: string };
+  /**
+   * 拖错文件时「去这一页」的链接，跟着 error 一起显示。
+   *
+   * 数组而不是单个：`.txt` 有三页收，且是三个不同的引擎（Markdown / 纯文本 /
+   * CSV）。光看扩展名分不出里面装的是哪一种，只给一个链接就有三分之二的概率
+   * 指错 —— 拿着逗号分隔的 .txt 被指到 Markdown 页，转出来是一坨没表格的段落。
+   */
+  hints?: { label: string; href: string }[];
   /** XLSX：解析出来的工作簿留着，用户换选表时不用重读文件。 */
   book?: Workbook;
   /**
@@ -137,7 +143,7 @@ export function Converter({
    * 由 ToolShell 算好传进来，因为路由和页名都在那一层；而且它是
    * Server Component，只能传数据不能传函数。
    */
-  elsewhere: Record<string, { label: string; href: string }>;
+  elsewhere: Record<string, { label: string; href: string }[]>;
   /**
    * 全站都不收时链到哪儿 —— 兄弟站 docstomd。文案取 chrome.siblingCta
    * （"docstomd.com"），因为那是站外链接，不属于 converter 的词汇表。
@@ -259,21 +265,27 @@ export function Converter({
          */
         const ext = extensionOf(file.name);
         if (ext && !acceptExtensions(input.accept).includes(ext)) {
-          const other = elsewhere[ext];
+          const others = elsewhere[ext];
           const onSibling = SIBLING_EXTENSIONS.includes(ext);
+          /* 去处不止一个时换一句话。「This one does:」后面跟三个链接读起来
+             是错的（this one 指哪个？），而且它没告诉用户为什么有三个 ——
+             .txt 里可能装着 Markdown、纯文本或 CSV，得他自己认。 */
+          const copy =
+            others && others.length > 1
+              ? t.wrongTypeAmbiguous
+              : others
+                ? t.wrongType
+                : onSibling
+                  ? t.wrongTypeElsewhere
+                  : t.wrongTypeNowhere;
           setJobs((prev) =>
             prev.map((j) =>
               j.id === job.id
                 ? {
                     ...j,
                     status: "failed",
-                    error: (other
-                      ? t.wrongType
-                      : onSibling
-                        ? t.wrongTypeElsewhere
-                        : t.wrongTypeNowhere
-                    ).replaceAll("{ext}", ext),
-                    hint: other ?? (onSibling ? sibling : undefined),
+                    error: copy.replaceAll("{ext}", ext),
+                    hints: others ?? (onSibling ? [sibling] : undefined),
                   }
                 : j,
             ),
@@ -889,25 +901,32 @@ export function Converter({
                             找路的活推给用户。整个卡片是个 <button>，所以要
                             拦住冒泡，否则点链接会先触发选中这个任务。
                             站外（兄弟站）用 <a rel="noopener">，站内用 Link。 */}
-                        {j.hint &&
-                          (j.hint.href.startsWith("http") ? (
-                            <a
-                              href={j.hint.href}
-                              rel="noopener"
-                              onClick={(e) => e.stopPropagation()}
-                              className={HINT_LINK}
-                            >
-                              {j.hint.label} ↗
-                            </a>
-                          ) : (
-                            <Link
-                              href={j.hint.href}
-                              onClick={(e) => e.stopPropagation()}
-                              className={HINT_LINK}
-                            >
-                              {j.hint.label} →
-                            </Link>
-                          ))}
+                        {j.hints && (
+                          <span className="flex flex-col items-start">
+                            {j.hints.map((h) =>
+                              h.href.startsWith("http") ? (
+                                <a
+                                  key={h.href}
+                                  href={h.href}
+                                  rel="noopener"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className={HINT_LINK}
+                                >
+                                  {h.label} ↗
+                                </a>
+                              ) : (
+                                <Link
+                                  key={h.href}
+                                  href={h.href}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className={HINT_LINK}
+                                >
+                                  {h.label} →
+                                </Link>
+                              ),
+                            )}
+                          </span>
+                        )}
                       </div>
                     </div>
                     {j.status === "chewing" && (

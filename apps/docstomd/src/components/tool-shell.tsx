@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   ELSEWHERE_EXTENSIONS,
-  pageForExtension,
+  pagesForExtension,
   pathOf,
   TOOL_INPUT,
   TOOL_KEYS,
@@ -110,12 +110,19 @@ export function ToolShell({
              （Next 会报 "Functions cannot be passed directly to Client
              Components"）。表是纯数据，能序列化。 */
           elsewhere={ELSEWHERE_EXTENSIONS.reduce<
-            Record<string, { label: string; href: string }>
+            Record<string, { label: string; href: string }[]>
           >((acc, ext) => {
-            const key = pageForExtension(ext);
-            if (key && key !== pageKey) {
-              acc[ext] = { label: dict.pages[key].short, href: pathOf(locale, key) };
-            }
+            /* 数组而不是单个：一个扩展名可能有几个都对的去处（不同引擎都
+               可能是它装的东西）。同引擎的别名页已经在 pagesForExtension
+               里去掉了 —— 这个站今天每个扩展名都只剩一页，但机制跟
+               docs2html 保持一样，加页面时不会退回到「只指第一个」。 */
+            const targets = pagesForExtension(ext)
+              .filter((key) => key !== pageKey)
+              .map((key) => ({
+                label: dict.pages[key].short,
+                href: pathOf(locale, key),
+              }));
+            if (targets.length) acc[ext] = targets;
             return acc;
           }, {})}
         />

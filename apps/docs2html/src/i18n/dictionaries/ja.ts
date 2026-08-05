@@ -127,6 +127,8 @@ const ja: Dictionary = {
     readFail:
       "読み込めませんでした。ファイルが壊れているか、パスワードで保護されている可能性があります。",
     wrongType: "このページは {ext} ファイルを受け取りません。こちらへ：",
+    wrongTypeAmbiguous:
+      "このページは {ext} ファイルを受け取りません。{ext} の中身はこのどれでもありえます。あなたのファイルに合うものを選んでください：",
     wrongTypeElsewhere:
       "このページは {ext} ファイルを受け取りません。このサイト全体でも扱いません。DocsToMD が対応します。",
     wrongTypeNowhere:

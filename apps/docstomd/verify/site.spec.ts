@@ -731,6 +731,39 @@ test("the picker offers every format the site can handle, not just this page's",
 });
 
 /*
+ * 同一个引擎的几个入口不能列成几条链接。
+ *
+ * `.docx` 这个站有三页收（docx-to-markdown、word-to-markdown、
+ * google-docs-to-markdown），但三页是同一个转换器，转出来的东西一字不差 ——
+ * 列三个链接就是拿三个同义词烦用户。判据是引擎不是页数，去重在
+ * `pagesForExtension` 里。
+ *
+ * 顺带盯住那句文案：只有一个去处时说的是「这一页收：」这个确定的答案，
+ * 不能用「哪个都可能，你自己认」那句 —— 后者是给真歧义的（docs2html 的
+ * `.txt` 三个引擎都收）。这个站今天没有真歧义的扩展名，加页面时很容易造出
+ * 一个，那时候这条会红。
+ */
+test("pages sharing one engine collapse to a single link", async ({ page }) => {
+  await page.goto("/csv-to-markdown/");
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/rich.docx`);
+
+  /* 必须锁到那张失败的任务卡上，不能用整个 #convert —— 拖放区上方那行前置
+     指路文案里也有去 DOCX 页的链接，用 #convert 的话报错里一个链接都没有
+     这条照样绿。 */
+  const card = page.locator("#convert li").filter({ hasText: "rich.docx" });
+  await expect(card.getByText(/\.docx/i).first()).toBeVisible({ timeout: 15000 });
+
+  // 一条，不是三条
+  await expect(card.locator("a[href$='/docx-to-markdown/']")).toHaveCount(1);
+  await expect(card.locator("a[href$='/word-to-markdown/']")).toHaveCount(0);
+  await expect(card.locator("a[href$='/google-docs-to-markdown/']")).toHaveCount(0);
+
+  // 去处唯一时用确定的那句，不用「哪个都可能」
+  await expect(card.getByText(/could be any of these/i)).toHaveCount(0);
+  await expect(page.locator("pre")).toHaveCount(0);
+});
+
+/*
  * `accept` 把不收的格式在系统选择器里变灰 —— 灰掉的文件永远进不了 run()，
  * 所以「这一页不收 .docx，去 DOCX → Markdown」那套报错对走按钮的用户一句都
  * 不会触发，用户看到的只是「Word 文档点不动」，没有任何解释。拖进来的人反而

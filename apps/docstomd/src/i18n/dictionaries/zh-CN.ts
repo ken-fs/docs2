@@ -101,6 +101,8 @@ const zhHans: Dictionary = {
     tooBig: "超过 25 MB，太大了。",
     readFail: "读不动。文件可能损坏了，或者设了密码。",
     wrongType: "这一页不收 {ext} 文件。这一页收：",
+    wrongTypeAmbiguous:
+      "这一页不收 {ext} 文件。{ext} 里装的东西这几种都可能，挑跟你的文件对得上的那个：",
     wrongTypeNowhere:
       "这一页不收 {ext} 文件。本站转 Word、PDF、Excel、CSV 和 HTML，不收 {ext}。",
     pastedName: "粘贴的内容",

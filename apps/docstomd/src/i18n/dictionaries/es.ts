@@ -105,6 +105,8 @@ const es: Dictionary = {
     readFail:
       "No se pudo leer. El archivo puede estar dañado o protegido con contraseña.",
     wrongType: "Esta página no acepta archivos {ext}. Esta sí:",
+    wrongTypeAmbiguous:
+      "Esta página no acepta archivos {ext}. Un {ext} puede ser cualquiera de estos: elige el que coincida con el tuyo:",
     wrongTypeNowhere:
       "Esta página no acepta archivos {ext}. Este sitio convierte Word, PDF, Excel, CSV y HTML — no {ext}.",
     pastedName: "contenido pegado",

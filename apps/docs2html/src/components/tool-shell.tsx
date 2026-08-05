@@ -16,7 +16,7 @@ import {
 import { SIBLING_SITE } from "@/content/site";
 import {
   ELSEWHERE_EXTENSIONS,
-  pageForExtension,
+  pagesForExtension,
   pathOf,
   TOOL_INPUT,
   TOOL_KEYS,
@@ -133,12 +133,19 @@ export function ToolShell({
              （Next 会报 "Functions cannot be passed directly to Client
              Components"）。表是纯数据，能序列化。 */
           elsewhere={ELSEWHERE_EXTENSIONS.reduce<
-            Record<string, { label: string; href: string }>
+            Record<string, { label: string; href: string }[]>
           >((acc, ext) => {
-            const key = pageForExtension(ext);
-            if (key && key !== pageKey) {
-              acc[ext] = { label: dict.pages[key].short, href: pathOf(locale, key) };
-            }
+            /* 一个扩展名可能有好几个去处，而且都对：.txt 里装的东西
+               Markdown / 纯文本 / CSV 三个引擎都可能是。只给第一个的话，
+               三分之二的用户被指到错的页 —— 所以是数组，不是单个。
+               同引擎的别名页已经在 pagesForExtension 里去掉了。 */
+            const targets = pagesForExtension(ext)
+              .filter((key) => key !== pageKey)
+              .map((key) => ({
+                label: dict.pages[key].short,
+                href: pathOf(locale, key),
+              }));
+            if (targets.length) acc[ext] = targets;
             return acc;
           }, {})}
           /* 全站都不收的扩展名（.pdf）指向兄弟站。不给链接的话那条报错就是

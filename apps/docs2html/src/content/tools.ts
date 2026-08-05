@@ -183,18 +183,22 @@ export function pickerAccept(): string {
  */
 export function elsewhereHints(
   accept: string,
-  elsewhere: Record<string, { label: string; href: string }>,
+  elsewhere: Record<string, { label: string; href: string }[]>,
   sibling?: { label: string; href: string },
 ): { label: string; href: string; extensions: string[] }[] {
   const mine = acceptExtensions(accept);
   const byHref = new Map<string, { label: string; href: string; extensions: string[] }>();
-  for (const [ext, target] of Object.entries(elsewhere)) {
+  for (const [ext, targets] of Object.entries(elsewhere)) {
     // 本页自己收的扩展名不算「别处」—— Markdown 页收 .txt，不该把用户
     // 推去纯文本页转一个这里就能转的文件
     if (mine.includes(ext)) continue;
-    const hit = byHref.get(target.href);
-    if (hit) hit.extensions.push(ext);
-    else byHref.set(target.href, { ...target, extensions: [ext] });
+    // 一个扩展名可能有几个都对的去处（.txt → Markdown / 纯文本 / CSV），
+    // 每个都要在这行字里露出来，否则用户看到的选项少于实际存在的
+    for (const target of targets) {
+      const hit = byHref.get(target.href);
+      if (hit) hit.extensions.push(ext);
+      else byHref.set(target.href, { ...target, extensions: [ext] });
+    }
   }
   // .pdf 全站一页都不收，所以它根本不在 elsewhere 里 —— 而「不能传 PDF 吗」
   // 恰恰是被问过两次的那个问题。只列站内去处等于把唯一真有答案的格式漏掉。
@@ -321,10 +325,35 @@ export function guidePath(locale: Locale, key?: GuideKey) {
  * 说去哪一页。
  */
 export function pageForExtension(ext: string): PageKey | undefined {
+  return pagesForExtension(ext)[0];
+}
+
+/**
+ * 一个扩展名该去哪些页 —— 按引擎去重，PAGE_KEYS 的顺序就是优先级。
+ *
+ * 为什么不能只返回第一个（`pageForExtension` 干的事）：`.txt` 有三页收，而且
+ * 是**三个不同的引擎** —— Markdown、纯文本、CSV。一个 .txt 里装的可能是这三样
+ * 中的任何一样，光看扩展名分不出来，所以「去 Markdown → HTML」这个唯一答案
+ * 有三分之二的概率是错的。用户拿着一个逗号分隔的 .txt，被指到 Markdown 页，
+ * 转出来是一坨没有表格的段落 —— 而 CSV 页就在旁边。
+ *
+ * 反过来 `.docx` 在 docstomd 上也有三页收，但那三页是**同一个引擎**（docx）的
+ * 三个入口，转出来的东西一字不差。那种情况列三个链接是拿三个同义词烦用户，
+ * 取第一个就对了。
+ *
+ * 所以判据是引擎，不是页数：同引擎 = 别名，只留最专门的那页；不同引擎 = 真歧义，
+ * 全列出来让用户自己认哪个是他的文件。
+ */
+export function pagesForExtension(ext: string): PageKey[] {
   const want = ext.toLowerCase();
-  return TOOL_KEYS.find((k) =>
-    acceptExtensions(TOOL_INPUT[k].accept).includes(want),
-  );
+  const seen = new Set<ToolInput["engine"]>();
+  return TOOL_KEYS.filter((k) => {
+    if (!acceptExtensions(TOOL_INPUT[k].accept).includes(want)) return false;
+    const { engine } = TOOL_INPUT[k];
+    if (seen.has(engine)) return false;
+    seen.add(engine);
+    return true;
+  });
 }
 
 /**

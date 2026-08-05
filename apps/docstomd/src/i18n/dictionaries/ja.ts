@@ -105,6 +105,8 @@ const ja: Dictionary = {
     readFail:
       "読み取れませんでした。壊れているか、パスワードがかかっている可能性があります。",
     wrongType: "このページは {ext} ファイルを受け取りません。こちらへ：",
+    wrongTypeAmbiguous:
+      "このページは {ext} ファイルを受け取りません。{ext} の中身はこのどれでもありえます。あなたのファイルに合うものを選んでください：",
     wrongTypeNowhere:
       "このページは {ext} ファイルを受け取りません。このサイトが扱うのは Word・PDF・Excel・CSV・HTML で、{ext} は対象外です。",
     pastedName: "貼り付けた内容",

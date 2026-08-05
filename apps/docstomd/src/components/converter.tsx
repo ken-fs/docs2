@@ -48,8 +48,15 @@ type Job = {
   result?: ConvertResult;
   error?: string;
   legacy?: boolean;
-  /** 「去这一页」的链接。只有拖错文件类型时才有。 */
-  hint?: { label: string; href: string };
+  /**
+   * 「去这一页」的链接。只有拖错文件类型时才有。
+   *
+   * 数组而不是单个：一个扩展名可能有几个都对的去处（见 pagesForExtension）。
+   * 这个站今天每个扩展名只对应一个引擎，所以实际只会有一个元素 —— 但形状
+   * 跟 docs2html 保持一样，那边 `.txt` 三个引擎都收，只给一个链接就有
+   * 三分之二的概率指错。
+   */
+  hints?: { label: string; href: string }[];
   /** XLSX：解析出来的工作簿留着，用户换选表时不用重读文件。 */
   book?: Workbook;
   /**
@@ -147,11 +154,11 @@ export function Converter({
   t: T;
   input: ToolInput;
   /**
-   * 扩展名 → 本站哪一页收它（页名 + 链接）。查不到 = 全站都不收。
+   * 扩展名 → 本站哪些页收它（页名 + 链接）。查不到 = 全站都不收。
    * 由 ToolShell 算好传进来，因为路由和页名都在那一层；而且它是
    * Server Component，只能传数据不能传函数。
    */
-  elsewhere: Record<string, { label: string; href: string }>;
+  elsewhere: Record<string, { label: string; href: string }[]>;
 }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -262,18 +269,24 @@ export function Converter({
          */
         const ext = extensionOf(file.name);
         if (ext && !acceptExtensions(input.accept).includes(ext)) {
-          const other = elsewhere[ext];
+          const others = elsewhere[ext];
+          /* 去处不止一个时换一句话。「这一页收：」后面跟好几个链接读起来
+             是错的（哪一页？），而且它没说清为什么有好几个 —— 得让用户
+             知道这是要他自己认哪个是他的文件。 */
+          const copy =
+            others && others.length > 1
+              ? t.wrongTypeAmbiguous
+              : others
+                ? t.wrongType
+                : t.wrongTypeNowhere;
           setJobs((prev) =>
             prev.map((j) =>
               j.id === job.id
                 ? {
                     ...j,
                     status: "failed",
-                    error: (other ? t.wrongType : t.wrongTypeNowhere).replaceAll(
-                      "{ext}",
-                      ext,
-                    ),
-                    hint: other,
+                    error: copy.replaceAll("{ext}", ext),
+                    hints: others,
                   }
                 : j,
             ),
@@ -892,14 +905,19 @@ export function Converter({
                         {/* 报错说了「去 X」就得能点过去 —— 只说不给路是把找路的
                             活推给用户。整个卡片是个 <button>，所以要拦住冒泡，
                             否则点链接会先触发选中这个任务。 */}
-                        {j.hint && (
-                          <Link
-                            href={j.hint.href}
-                            onClick={(e) => e.stopPropagation()}
-                            className="mt-1.5 inline-block font-mono text-[11px] text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
-                          >
-                            {j.hint.label} →
-                          </Link>
+                        {j.hints && (
+                          <span className="mt-1.5 flex flex-col items-start">
+                            {j.hints.map((h) => (
+                              <Link
+                                key={h.href}
+                                href={h.href}
+                                onClick={(e) => e.stopPropagation()}
+                                className="font-mono text-[11px] text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
+                              >
+                                {h.label} →
+                              </Link>
+                            ))}
+                          </span>
                         )}
                       </div>
                     </div>

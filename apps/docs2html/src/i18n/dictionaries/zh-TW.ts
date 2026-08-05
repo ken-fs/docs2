@@ -124,6 +124,8 @@ const zhTW: Dictionary = {
     tooBig: "超過 25 MB，太大了。",
     readFail: "讀不出來。檔案可能損壞了，或者設了密碼。",
     wrongType: "這一頁不收 {ext} 檔案。這一頁收：",
+    wrongTypeAmbiguous:
+      "這一頁不收 {ext} 檔案。{ext} 裡裝的東西這幾種都可能，挑跟你的檔案對得上的那個：",
     wrongTypeElsewhere: "這一頁不收 {ext} 檔案，整個站都不收。DocsToMD 收。",
     wrongTypeNowhere:
       "這一頁不收 {ext} 檔案。本站只轉文件、表格和純文字，不收 {ext}。",

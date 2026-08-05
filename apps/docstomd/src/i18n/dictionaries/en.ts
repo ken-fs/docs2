@@ -103,6 +103,8 @@ const en: Dictionary = {
     tooBig: "Over 25 MB. Too big.",
     readFail: "Couldn't read it. The file may be damaged or password-protected.",
     wrongType: "This page doesn't take {ext} files. This one does:",
+    wrongTypeAmbiguous:
+      "This page doesn't take {ext} files. A {ext} could be any of these — pick the one that matches yours:",
     wrongTypeNowhere:
       "This page doesn't take {ext} files. This site converts Word, PDF, Excel, CSV and HTML — not {ext}.",
     pastedName: "pasted content",

@@ -202,16 +202,20 @@ export function pickerAccept(): string {
  */
 export function elsewhereHints(
   accept: string,
-  elsewhere: Record<string, { label: string; href: string }>,
+  elsewhere: Record<string, { label: string; href: string }[]>,
 ): { label: string; href: string; extensions: string[] }[] {
   const mine = acceptExtensions(accept);
   const byHref = new Map<string, { label: string; href: string; extensions: string[] }>();
-  for (const [ext, target] of Object.entries(elsewhere)) {
+  for (const [ext, targets] of Object.entries(elsewhere)) {
     // 本页自己收的扩展名不算「别处」
     if (mine.includes(ext)) continue;
-    const hit = byHref.get(target.href);
-    if (hit) hit.extensions.push(ext);
-    else byHref.set(target.href, { ...target, extensions: [ext] });
+    // 一个扩展名可能有几个都对的去处（见 pagesForExtension），每个都要在
+    // 这行字里露出来，否则用户看到的选项少于实际存在的
+    for (const target of targets) {
+      const hit = byHref.get(target.href);
+      if (hit) hit.extensions.push(ext);
+      else byHref.set(target.href, { ...target, extensions: [ext] });
+    }
   }
   return [...byHref.values()];
 }
@@ -265,10 +269,35 @@ export type AnyKey = PageKey | LegalKey;
  * html 走的是纯文本，什么都吃得下，那两页正是漏的地方。
  */
 export function pageForExtension(ext: string): PageKey | undefined {
+  return pagesForExtension(ext)[0];
+}
+
+/**
+ * 一个扩展名该去哪些页 —— 按引擎去重，PAGE_KEYS 的顺序就是优先级。
+ *
+ * 判据是引擎，不是页数。这个站上 `.docx` 有三页收（docx-to-markdown、
+ * word-to-markdown、google-docs-to-markdown），但那三页是**同一个引擎**的
+ * 三个入口，转出来的东西一字不差 —— 列三个链接就是拿三个同义词烦用户，
+ * 所以按引擎去重之后只剩最专门的那一页。今天这个站每个扩展名都只对应
+ * 一个引擎，所以它返回的永远是一个元素，跟旧的 `pageForExtension` 等价。
+ *
+ * 那为什么还要返回数组：docs2html 上 `.txt` 有三页收，而且是**三个不同的
+ * 引擎**（Markdown / 纯文本 / CSV）—— 一个 .txt 里装的可能是这三样中的任何
+ * 一样，光看扩展名分不出来，只给一个答案有三分之二的概率指错。那边已经因此
+ * 出过事。这个站现在没有这种扩展名，但加页面的时候很容易造出来（比如再开一个
+ * 收 .txt 的纯文本页），而那时候会出问题的地方不是这里，是报错文案 ——
+ * 所以两个站的这套机制保持一样，别让下一个人重踩一遍。
+ */
+export function pagesForExtension(ext: string): PageKey[] {
   const want = ext.toLowerCase();
-  return TOOL_KEYS.find((k) =>
-    acceptExtensions(TOOL_INPUT[k].accept).includes(want),
-  );
+  const seen = new Set<ToolInput["engine"]>();
+  return TOOL_KEYS.filter((k) => {
+    if (!acceptExtensions(TOOL_INPUT[k].accept).includes(want)) return false;
+    const { engine } = TOOL_INPUT[k];
+    if (seen.has(engine)) return false;
+    seen.add(engine);
+    return true;
+  });
 }
 
 /**
