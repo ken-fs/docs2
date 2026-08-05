@@ -27,7 +27,7 @@ export function SiteHeader({
         <div className="flex items-end justify-between gap-4">
           <Link href={pathOf(locale, "home")} className="flex items-baseline gap-2">
             <span className="font-display text-[22px] font-semibold tracking-tight text-ink">
-              docs<span className="text-rust">to</span>md
+              docs<span className="text-pine">to</span>md
             </span>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint sm:inline">
               .com
@@ -44,8 +44,8 @@ export function SiteHeader({
               href={pathOf(locale, k)}
               className={
                 k === current
-                  ? "whitespace-nowrap text-rust"
-                  : "whitespace-nowrap transition-colors duration-150 hover:text-rust"
+                  ? "whitespace-nowrap text-pine"
+                  : "whitespace-nowrap transition-colors duration-150 hover:text-pine"
               }
             >
               {dict.pages[k].short}
@@ -81,8 +81,8 @@ export function SiteFooter({
               href={pathOf(locale, k)}
               className={
                 k === current
-                  ? "text-[12px] text-rust"
-                  : "text-[12px] text-ink-soft transition-colors duration-150 hover:text-rust"
+                  ? "text-[12px] text-pine"
+                  : "text-[12px] text-ink-soft transition-colors duration-150 hover:text-pine"
               }
             >
               {dict.legal[k].short}
@@ -110,7 +110,7 @@ export function Breadcrumb({
 }) {
   return (
     <nav className="pt-4 font-mono text-[11px] text-ink-faint">
-      <Link href={pathOf(locale, "home")} className="hover:text-rust">
+      <Link href={pathOf(locale, "home")} className="hover:text-pine">
         {homeLabel}
       </Link>
       <span className="px-1.5">/</span>
@@ -134,7 +134,7 @@ export function ContactCue({
       <Icon icon="ph:envelope-simple-bold" className="mt-[3px] h-3.5 w-3.5 shrink-0 text-ink-faint" />
       <span>
         {cue}{" "}
-        <Link href={pathOf(locale, "contact")} className="text-rust underline decoration-rust/40 underline-offset-2 hover:decoration-rust">
+        <Link href={pathOf(locale, "contact")} className="text-pine underline decoration-pine/40 underline-offset-2 hover:decoration-pine">
           {label}
         </Link>
       </span>

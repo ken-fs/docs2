@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  IBM_Plex_Mono,
+  IBM_Plex_Sans,
+} from "next/font/google";
 import { parseSegments, SITE } from "@/content/tools";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { DEFAULT_LOCALE } from "@/i18n/locales";
@@ -12,12 +16,13 @@ import "../globals.css";
  * 定版。这里的字重是数出来的，不是估的 —— 把全部 78 个页面走一遍，收集每个
  * 有文字的元素的 computed fontWeight，得到的只有五种组合：
  *
- *   IBM Plex Sans  400 / 500
- *   IBM Plex Mono  400
- *   Fraunces       400 / 600
+ *   IBM Plex Sans        400 / 500
+ *   IBM Plex Mono        400
+ *   Bricolage Grotesque  400 / 600
  *
- * 原先多声明的 sans 600、mono 500、Fraunces 700 一次都没用上。Fraunces 是可变
- * 字体，多写几个字重不会多下载文件；IBM Plex 不是，每个字重一个文件，所以
+ * 原先多声明的 sans 600、mono 500、display 700 一次都没用上。Bricolage 跟换掉的
+ * Fraunces 一样是可变字体（400..600 全在一个文件里，实测 Google Fonts 只返回一个
+ * woff2），多写几个字重不会多下载文件；IBM Plex 不是，每个字重一个文件，所以
  * mono 500 是实打实白下载的 10KB。
  *
  * 别拿 Lighthouse 默认的分数来验证这类改动。它默认 throttling-method=simulate
@@ -30,8 +35,18 @@ import "../globals.css";
  * 改样式时如果要用新的字重，记得在这儿加上，否则浏览器会拿现有字重去合成
  * （伪粗体），看起来比真字重脏。
  */
-const display = Fraunces({
-  variable: "--font-fraunces",
+/**
+ * Bricolage Grotesque —— 刻意画歪的 grotesque，字怀不对称、末端有切角。
+ * 换掉原来的 Fraunces（高对比衬线）是因为「奶油底 + 高对比衬线 + 陶土色」
+ * 是当前 AI 生成设计最常见的那副长相，跟题材无关地到处出现。
+ *
+ * 宽度也是挑出来的，不是随手换的：H1 容器 618px、字号 54.4px，用真实标题
+ * 逐个量过单行自然宽度 —— Fraunces 853px，Bricolage 856px，几乎重合，所以
+ * 换完行数不变（2/3/2）。Zilla Slab 789px 和 Newsreader 800px 也好看，但会
+ * 把首页标题从 3 行压成 2 行 —— 那是变相改布局，这轮不动布局。
+ */
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
   weight: ["400", "600"],
 });

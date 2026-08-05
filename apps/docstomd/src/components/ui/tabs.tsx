@@ -65,7 +65,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
       className={cn(
         "relative inline-flex items-center justify-center gap-1.5 bg-transparent px-3 py-1.5 font-mono text-[11px] whitespace-nowrap select-none",
         "text-ink-soft transition-colors duration-150 hover:text-ink",
-        "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-rust",
+        "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-pine",
         "data-disabled:pointer-events-none data-disabled:opacity-45",
         // Indicator 是墨块，所以选中态的字要反白
         "group-data-[variant=slab]/tabs-list:data-active:text-paper",
@@ -83,7 +83,7 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
     <TabsPrimitive.Panel
       data-slot="tabs-content"
       className={cn(
-        "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-rust",
+        "outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-pine",
         className,
       )}
       {...props}

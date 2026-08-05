@@ -58,8 +58,8 @@ export function ToolShell({
           }`}
         >
           <div className="lg:col-span-7">
-            <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-rust">
-              <span className="inline-block h-[7px] w-[7px] bg-rust" />
+            <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-pine">
+              <span className="inline-block h-[7px] w-[7px] bg-pine" />
               {page.eyebrow}
             </p>
             <h1 className="font-display text-[2.5rem] leading-[1.05] tracking-tight text-ink sm:text-[3.4rem]">
@@ -75,7 +75,7 @@ export function ToolShell({
           </div>
 
           <aside className="lg:col-span-5 lg:pt-14">
-            <div className="rotate-[-0.8deg] border border-ink bg-ochre/22 px-5 py-4 press">
+            <div className="rotate-[-0.8deg] border border-ink bg-marker/22 px-5 py-4 press">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft">
                 {page.note.heading}
               </p>
@@ -84,7 +84,7 @@ export function ToolShell({
                   <li key={item} className="flex gap-2">
                     <Icon
                       icon="ph:check-bold"
-                      className="mt-[3px] h-3.5 w-3.5 shrink-0 text-moss"
+                      className="mt-[3px] h-3.5 w-3.5 shrink-0 text-pine"
                     />
                     {item}
                   </li>
@@ -110,7 +110,7 @@ export function ToolShell({
             <ol className="mt-3 space-y-2.5 text-[13px] leading-relaxed text-ink-soft">
               {page.body.steps.map((step, i) => (
                 <li key={step} className="flex gap-2.5">
-                  <span className="mt-[1px] shrink-0 font-mono text-[11px] text-rust">
+                  <span className="mt-[1px] shrink-0 font-mono text-[11px] text-pine">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {step}
@@ -128,7 +128,7 @@ export function ToolShell({
                 <li key={item} className="flex gap-2.5">
                   <Icon
                     icon="ph:check-bold"
-                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-moss"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-pine"
                   />
                   {item}
                 </li>
@@ -145,7 +145,7 @@ export function ToolShell({
                 <li key={item} className="flex gap-2.5">
                   <Icon
                     icon="ph:minus-bold"
-                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-rust"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-pine"
                   />
                   {item}
                 </li>

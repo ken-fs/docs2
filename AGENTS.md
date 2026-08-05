@@ -54,10 +54,23 @@
 两个站刻意长得不一样 —— 同一个人做的两个工具站，放一起要能一眼分出来，
 不能让人以为点错了返回键。
 
-**docstomd（letterpress，凸版印刷）**：纸/墨/铁锈色。`--paper` `--ink`
-`--rust` `--ochre` `--moss`，定义在 `apps/docstomd/src/app/globals.css`。
-背景压了一层 SVG `feTurbulence` 分形噪点（opacity 0.052）+ 一层横向纸纹。
-便签条是歪着贴的（`rotate(-0.8deg)`），按钮有 `press` 的下沉手感。
+**docstomd（greenbar，行式打印机连页纸）**：白纸 / 墨 / 松绿。`--paper`
+`--ink` `--pine` `--marker`，定义在 `apps/docstomd/src/app/globals.css`。
+签名元素是横向绿条纹 —— 每条带 72px（正文行高众数 24px × 3 行），跟真的
+绿栏纸一样每三行换一次底色。噪点层钉在视口上（纸面纤维），条纹跟着内容滚
+（纸动条纹才动）。便签条歪贴（`rotate(-0.8deg)`），按钮有 `press` 下沉手感。
+
+锚点选绿栏纸的理由：这个站的产物是纯文本（Markdown、等宽字、进 git），
+绿栏纸就是「机器印出来的纯文本」的物证。原来那套 letterpress（奶油底 +
+Fraunces 高对比衬线 + 陶土色）浪漫化的是输入端的 Word 文档，而用户来这儿
+是为了输出端 —— 而且它正好撞在当前 AI 生成设计三种典型默认长相的第一种上
+（奶油底 ≈ #F4F1EA + 高对比衬线 + 陶土色）。撞的不是规则，是同质化。
+
+**字体**：display 从 Fraunces 换成 Bricolage Grotesque（刻意画歪的
+grotesque，字怀不对称、末端切角），正文仍是 IBM Plex Sans / Mono。宽度是
+量出来的：H1 容器 618px、字号 54.4px 下，Fraunces 单行自然宽 853px、
+Bricolage 856px，几乎重合，所以换完标题行数不变。Zilla Slab（789px）和
+Newsreader（800px）也好看，但会把首页标题从 3 行压成 2 行 —— 那是变相改布局。
 
 **docs2html（engineering paper，工程纸）**：石墨/靛/青。背景是 24px 的
 网格线加一层冷光晕，卡片是正交的图纸片（`plate corners`），不歪。
@@ -67,6 +80,16 @@
 `#4F46E5` 也是 H=277；这里用的是 `oklch(0.494 0.166 268)`（≈ `#3a57be`），
 色相 268、彩度也低一档，是偏冷的钢蓝而不是紫调靛蓝。方案里那个 `#4F46E5`
 已经被否掉了，没有采用。
+
+**对比度是硬约束，改色板前先跑 `pnpm verify:contrast`。**它把两个站 25 个
+页面里 header/main/footer 所有含文字的元素按 WCAG AA 判一遍（正文 4.5:1，
+大字 3:1）。写它的时候就抓到两个既存缺陷：docstomd 的 `--ink-faint` 在纸上
+只有 3.98、docs2html 的 `--graphite-faint` 只有 3.87，两个都不达标，而 112+115
+条 Playwright 和 Lighthouse 都没报 —— 前者不查颜色，后者只抽查首屏。都修了。
+
+主色的明度会被两头夹住：既要在纸上当正文色，又要当填充块配白字。docstomd 的
+`--pine` 取 L=0.487 就是两边都过 4.5 的位置，往上调一档 white-on-pine 就掉下来。
+两个 `globals.css` 末尾各有一张实测对比度表，改值时一并更新。
 
 **缓动**：三条曲线全部带过冲或急停，`ease-in-out` 只出现在禁止它的那句注释里。
 - `--snap: cubic-bezier(0.16, 1.06, 0.24, 1.04)`

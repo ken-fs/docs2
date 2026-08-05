@@ -16,7 +16,10 @@
   --sheet-edge: oklch(0.898 0.014 228);
   --graphite: oklch(0.226 0.021 254);
   --graphite-soft: oklch(0.406 0.024 252);
-  --graphite-faint: oklch(0.586 0.022 250);
+  /* L 是压过的：0.586 时在 sheet 上只有 3.87:1，不到 WCAG AA 的 4.5 ——
+   * 页脚、面包屑、eyebrow 全用这个色，等于每页十几处不达标。0.526 在 sheet
+   * 和 sheet-deep 上分别是 4.97 和 4.60，两处都过。改前跑 pnpm verify:contrast。 */
+  --graphite-faint: oklch(0.526 0.022 250);
 
   /* 强调：靛蓝 + 青 + 琥珀（琥珀只用在警告上） */
   --indigo: oklch(0.494 0.166 268);

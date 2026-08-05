@@ -113,7 +113,7 @@ function DropdownMenuRadioItem({
     >
       <span className="pointer-events-none absolute left-2 flex items-center">
         <MenuPrimitive.RadioItemIndicator>
-          <Icon icon="ph:check-bold" className="h-3 w-3 text-rust" />
+          <Icon icon="ph:check-bold" className="h-3 w-3 text-pine" />
         </MenuPrimitive.RadioItemIndicator>
       </span>
       {children}

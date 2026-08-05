@@ -2,25 +2,39 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── 活字排版车间：暖纸 / 墨 / 铁锈 ────────────────────────────── */
+/* ── 绿栏纸：行式打印机的连页纸 / 墨 / 松绿 ──────────────────────
+ *
+ * 锚点是 greenbar fanfold —— 行式打印机那种横向淡绿条纹的折叠连页纸。
+ * 选它是因为这个站的产物是纯文本：Markdown、等宽字、进 git。绿栏纸是
+ * 「机器印出来的纯文本」这件事本身的物证，比暖纸+衬线那套更贴题 ——
+ * 后者浪漫化的是输入端（Word 文档），而用户来这儿是为了输出端。
+ *
+ * 另外两个理由：一是兄弟站 docs2html 是钢蓝，两站放一起要能一眼分开；
+ * 二是「奶油底 + 高对比衬线 + 陶土色」是当前 AI 生成设计的三种典型
+ * 默认长相之一，原来那套正好落在上面 —— 撞的不是规则，是同质化。
+ *
+ * 每个值都过了 WCAG：见文件末尾那张表。
+ */
 :root {
-  /* 纸与墨 */
-  --paper: oklch(0.962 0.016 84);
-  --paper-deep: oklch(0.932 0.024 80);
-  --paper-edge: oklch(0.886 0.03 78);
-  --ink: oklch(0.208 0.019 52);
-  --ink-soft: oklch(0.392 0.021 56);
-  --ink-faint: oklch(0.572 0.021 62);
+  /* 纸与墨。纸几乎是白的 —— 真的绿栏纸就是白纸印绿条，纸自己不带色。
+   * 第一版把纸也调成淡绿，结果整页从纸到按钮到荧光笔全是绿的，条纹反而
+   * 看不出是「印上去的」。绿留给条纹和主色，纸只留一丝偏冷。 */
+  --paper: oklch(0.968 0.004 120);
+  --paper-deep: oklch(0.932 0.008 124);
+  --paper-edge: oklch(0.878 0.012 128);
+  --ink: oklch(0.205 0.011 150);
+  --ink-soft: oklch(0.398 0.014 152);
+  --ink-faint: oklch(0.498 0.015 154);
 
-  /* 强调：铁锈红 + 赭石黄 + 苔绿 */
-  --rust: oklch(0.548 0.168 39);
-  --rust-deep: oklch(0.442 0.148 36);
-  --ochre: oklch(0.838 0.152 86);
-  --moss: oklch(0.514 0.106 138);
-  --moss-soft: oklch(0.742 0.088 140);
+  /* 强调：松绿 + 荧光笔黄绿。只有两个 ——
+   * 主色本身就是「跑通了、拿到干净输出」的颜色，不需要再单设一个成功色，
+   * 所以原来专管勾选标记的 moss 并进了 pine。 */
+  --pine: oklch(0.487 0.094 152);
+  --pine-deep: oklch(0.396 0.078 154);
+  --marker: oklch(0.902 0.142 118);
 
-  --rule: oklch(0.208 0.019 52 / 0.14);
-  --rule-firm: oklch(0.208 0.019 52 / 0.28);
+  --rule: oklch(0.205 0.011 150 / 0.14);
+  --rule-firm: oklch(0.205 0.011 150 / 0.28);
 
   /* 缓动：全部带过冲或急停，禁 ease-in-out */
   --snap: cubic-bezier(0.16, 1.06, 0.24, 1.04);
@@ -35,15 +49,13 @@
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-ink-faint: var(--ink-faint);
-  --color-rust: var(--rust);
-  --color-rust-deep: var(--rust-deep);
-  --color-ochre: var(--ochre);
-  --color-moss: var(--moss);
-  --color-moss-soft: var(--moss-soft);
+  --color-pine: var(--pine);
+  --color-pine-deep: var(--pine-deep);
+  --color-marker: var(--marker);
   --color-rule: var(--rule);
   --color-rule-firm: var(--rule-firm);
 
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-bricolage);
   --font-sans: var(--font-plex-sans);
   --font-mono: var(--font-plex-mono);
 
@@ -65,30 +77,35 @@
   body {
     color: var(--ink);
     background-color: var(--paper);
-    /* 纸张不平：噪点 + 两处暖光晕，禁纯平背景 */
+    /*
+     * 签名元素：绿栏纸的横向条纹。
+     *
+     * 每条带 72px、一组 144px —— 实测正文行高的众数是 24px（量了 main 里所有
+     * p/li 的 computed lineHeight），所以一条带正好压三行，跟真的绿栏纸一样是
+     * 「每三行换一次底色」。改正文行高的话这个数要跟着改，否则条纹会开始骑在
+     * 行中间，比没有条纹更难读。
+     *
+     * 透明度调过三轮：0.5 时条纹抢在标题前面成了页面主角，0.34 又太淡认不出
+     * 是印刷品。0.4 是能一眼看出「白纸印了绿条」而又不跟标题争的位置 ——
+     * 它的职责是让人认出这是绿栏纸，不是让人盯着看。
+     *
+     * 不用 attachment: fixed —— 条纹必须跟着内容滚，纸动条纹才动；
+     * 钉在视口上就变成了屏幕上的滤镜，那层意思就没了。噪点仍然钉住，
+     * 它模拟的是纸面纤维，跟滚动无关。
+     */
     background-image:
-      radial-gradient(
-        62rem 42rem at 12% -8%,
-        oklch(0.878 0.084 84 / 0.5),
-        transparent 62%
-      ),
-      radial-gradient(
-        48rem 38rem at 96% 8%,
-        oklch(0.812 0.072 44 / 0.28),
-        transparent 58%
-      ),
-      radial-gradient(
-        70rem 50rem at 50% 118%,
-        oklch(0.848 0.036 128 / 0.3),
-        transparent 66%
-      ),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.052'/%3E%3C/svg%3E");
-    background-attachment: fixed, fixed, fixed, fixed;
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(
+        180deg,
+        oklch(0.876 0.042 134 / 0.4) 0 72px,
+        transparent 72px 144px
+      );
+    background-attachment: fixed, scroll;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background: var(--ochre);
+    background: var(--marker);
     color: var(--ink);
   }
 
@@ -101,12 +118,12 @@
     background: var(--paper-deep);
   }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.208 0.019 52 / 0.32);
+    background: oklch(0.205 0.011 150 / 0.32);
     border: 3px solid var(--paper-deep);
     border-radius: 99px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--rust);
+    background: var(--pine);
   }
 }
 
@@ -118,8 +135,8 @@
   .press-sm {
     box-shadow: 2px 2px 0 0 var(--ink);
   }
-  .press-rust {
-    box-shadow: 3px 3px 0 0 var(--rust-deep);
+  .press-pine {
+    box-shadow: 3px 3px 0 0 var(--pine-deep);
   }
   .press-lift {
     transition:
@@ -139,8 +156,8 @@
   .scribble {
     background-image: linear-gradient(
       transparent 62%,
-      var(--ochre) 62%,
-      var(--ochre) 92%,
+      var(--marker) 62%,
+      var(--marker) 92%,
       transparent 92%
     );
   }
@@ -210,3 +227,22 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * WCAG 对比度，全部实测（verify/_color.mjs 算的，不是估的）。
+ * 4.5 是正文门槛，3.0 是大字/图形门槛。
+ *
+ *   ink        on paper        16.30
+ *   ink-soft   on paper         8.42
+ *   ink-faint  on paper         5.48   （改版前是 3.98，不达标）
+ *   ink-faint  on paper-deep    4.93   （converter.tsx 的文件名徽标用到）
+ *   pine       on paper         5.53
+ *   pine       on paper-deep    4.97   （改版前 4.32，不达标）
+ *   white      on pine          6.06
+ *   white      on pine-deep     9.02
+ *   ink        on marker       13.68
+ *
+ * pine 的明度被两头夹住：既要在纸上当正文色，又要当填充块配白字。
+ * L=0.487 是两边都过 4.5 的位置，往上调任何一档 white-on-pine 就掉下来。
+ * 改这个值之前先把两项都算一遍。
+ */

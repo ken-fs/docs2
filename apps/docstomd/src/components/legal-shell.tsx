@@ -29,7 +29,7 @@ function withMailto(text: string, key: string) {
       {text.slice(0, at)}
       <a
         href={`mailto:${CONTACT_EMAIL}`}
-        className="text-rust underline decoration-rust/40 underline-offset-2 hover:decoration-rust"
+        className="text-pine underline decoration-pine/40 underline-offset-2 hover:decoration-pine"
         key={key}
       >
         {CONTACT_EMAIL}
@@ -64,8 +64,8 @@ export function LegalShell({
         />
 
         <article className="max-w-[44rem] pb-16 pt-7 lg:pt-9">
-          <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-rust">
-            <span className="inline-block h-[7px] w-[7px] bg-rust" />
+          <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-pine">
+            <span className="inline-block h-[7px] w-[7px] bg-pine" />
             {page.eyebrow}
           </p>
           <h1 className="font-display text-[2.1rem] leading-[1.1] tracking-tight text-ink sm:text-[2.6rem]">
@@ -96,7 +96,7 @@ export function LegalShell({
                 <ul className="mt-3.5 space-y-2 text-[14px] leading-relaxed text-ink-soft">
                   {section.items.map((item) => (
                     <li key={item} className="flex gap-2.5">
-                      <span className="mt-[9px] h-[3px] w-[3px] shrink-0 bg-rust" />
+                      <span className="mt-[9px] h-[3px] w-[3px] shrink-0 bg-pine" />
                       {withMailto(item, item)}
                     </li>
                   ))}
@@ -123,7 +123,7 @@ export function LegalShell({
                 <li key={k}>
                   <Link
                     href={pathOf(locale, k)}
-                    className="text-[13px] text-ink-soft transition-colors duration-150 hover:text-rust"
+                    className="text-[13px] text-ink-soft transition-colors duration-150 hover:text-pine"
                   >
                     {dict.legal[k].short}
                   </Link>

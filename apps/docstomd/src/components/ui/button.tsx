@@ -14,18 +14,18 @@ const buttonVariants = cva(
   [
     "relative inline-flex shrink-0 items-center justify-center gap-2 border font-medium tracking-tight whitespace-nowrap select-none",
     "transition-[transform,box-shadow,background-color,color] duration-150 ease-snap",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust",
+    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pine",
     "disabled:pointer-events-none disabled:opacity-45 data-disabled:pointer-events-none data-disabled:opacity-45",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
   ],
   {
     variants: {
       tone: {
-        ink: "border-ink bg-ink text-paper shadow-[3px_3px_0_0_var(--rust-deep)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--rust-deep)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--rust-deep)]",
-        rust: "border-rust-deep bg-rust text-paper shadow-[3px_3px_0_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--ink)]",
+        ink: "border-ink bg-ink text-paper shadow-[3px_3px_0_0_var(--pine-deep)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--pine-deep)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--pine-deep)]",
+        pine: "border-pine-deep bg-pine text-paper shadow-[3px_3px_0_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0_0_var(--ink)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0_0_var(--ink)]",
         ghost:
           "border-rule-firm bg-paper/70 text-ink-soft hover:border-ink hover:bg-paper hover:text-ink active:translate-x-[1px] active:translate-y-[1px]",
-        bare: "border-transparent bg-transparent text-ink-soft hover:text-rust",
+        bare: "border-transparent bg-transparent text-ink-soft hover:text-pine",
       },
       size: {
         sm: "px-3 py-1.5 text-[13px] [&_svg]:h-3.5 [&_svg]:w-3.5",

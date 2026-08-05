@@ -491,7 +491,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
         className={cn(
           "relative border-2 border-dashed bg-paper-deep/50 px-6 py-10 transition-all duration-200 ease-snap sm:px-10 sm:py-12",
           dragging
-            ? "-rotate-[0.5deg] border-rust bg-ochre/25 shadow-[6px_6px_0_0_var(--rust-deep)]"
+            ? "-rotate-[0.5deg] border-pine bg-marker/25 shadow-[6px_6px_0_0_var(--pine-deep)]"
             : "border-rule-firm hover:border-ink/45",
         )}
       >
@@ -509,7 +509,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
               icon="ph:tray-arrow-down-duotone"
               className={cn(
                 "h-14 w-14 transition-transform duration-200 ease-spring",
-                dragging ? "scale-110 text-rust" : "text-ink-soft",
+                dragging ? "scale-110 text-pine" : "text-ink-soft",
               )}
             />
           </div>
@@ -523,7 +523,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">
-            <Button tone="rust" onClick={() => inputRef.current?.click()}>
+            <Button tone="pine" onClick={() => inputRef.current?.click()}>
               <Icon icon="ph:folder-open-bold" />
               {t.pick}
             </Button>
@@ -579,7 +579,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
           />
           <div className="mt-2 flex items-center gap-2">
             <Button
-              tone="rust"
+              tone="pine"
               size="sm"
               disabled={!typed.trim()}
               onClick={() =>
@@ -734,7 +734,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
       </div>
 
       {stale && (
-        <p className="anim-drift mt-3 flex items-center gap-2 border-l-2 border-rust bg-ochre/20 py-2 pl-3 text-sm text-ink-soft">
+        <p className="anim-drift mt-3 flex items-center gap-2 border-l-2 border-pine bg-marker/20 py-2 pl-3 text-sm text-ink-soft">
           <Icon icon="ph:arrow-counter-clockwise-bold" className="h-4 w-4" />
           {t.stale}
         </p>
@@ -752,7 +752,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
               {done.length > 1 && (
                 <button
                   onClick={downloadZip}
-                  className="font-mono text-[11px] text-rust underline decoration-dotted underline-offset-4 transition-colors hover:text-rust-deep"
+                  className="font-mono text-[11px] text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
                 >
                   {count(done.length, t.zip)}
                 </button>
@@ -769,12 +769,12 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                       "group relative w-full border px-3 py-2.5 text-left transition-all duration-150 ease-snap",
                       j.status === "done" &&
                         j.id === activeId &&
-                        "-translate-x-[2px] -translate-y-[2px] border-ink bg-paper shadow-[4px_4px_0_0_var(--rust-deep)]",
+                        "-translate-x-[2px] -translate-y-[2px] border-ink bg-paper shadow-[4px_4px_0_0_var(--pine-deep)]",
                       j.status === "done" &&
                         j.id !== activeId &&
                         "border-rule-firm bg-paper/55 hover:border-ink hover:bg-paper",
                       j.status === "failed" &&
-                        "cursor-default border-rust/45 bg-rust/8",
+                        "cursor-default border-pine/45 bg-pine/8",
                       (j.status === "waiting" || j.status === "chewing") &&
                         "cursor-default border-rule-firm bg-paper/40",
                     )}
@@ -795,7 +795,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                                 : kb(j.size)}
                         </p>
                         {j.error && (
-                          <p className="mt-1.5 text-[12px] leading-snug text-rust-deep">
+                          <p className="mt-1.5 text-[12px] leading-snug text-pine-deep">
                             {j.error}
                           </p>
                         )}
@@ -803,7 +803,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                     </div>
                     {j.status === "chewing" && (
                       <span className="absolute inset-x-0 bottom-0 h-[2px] overflow-hidden bg-rule">
-                        <span className="anim-chew block h-full w-1/3 bg-rust" />
+                        <span className="anim-chew block h-full w-1/3 bg-pine" />
                       </span>
                     )}
                   </button>
@@ -856,7 +856,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                     <Button tone="ghost" size="sm" onClick={copy}>
                       <Icon
                         icon={copied ? "ph:check-bold" : "ph:copy-bold"}
-                        className={cn(copied && "text-moss")}
+                        className={cn(copied && "text-pine")}
                       />
                       {copied ? t.copied : t.copy}
                     </Button>
@@ -907,7 +907,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                           t,
                         )
                       }
-                      className="font-mono text-[11px] text-rust underline decoration-dotted underline-offset-4 transition-colors hover:text-rust-deep"
+                      className="font-mono text-[11px] text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
                     >
                       {t.sheetsAll}
                     </button>
@@ -915,7 +915,7 @@ export function Converter({ t, input }: { t: T; input: ToolInput }) {
                 )}
 
                 {active.result.warnings.length > 0 && (
-                  <details className="mb-3 border-l-2 border-ochre bg-ochre/14 py-2 pl-3 pr-3">
+                  <details className="mb-3 border-l-2 border-marker bg-marker/14 py-2 pl-3 pr-3">
                     <summary className="cursor-pointer text-[13px] text-ink-soft">
                       {active.result.legacy
                         ? t.legacyWarn
@@ -1005,21 +1005,21 @@ function StatusMark({ status }: { status: Job["status"] }) {
     return (
       <Icon
         icon="ph:check-square-bold"
-        className="anim-stamp mt-0.5 h-4 w-4 shrink-0 text-moss"
+        className="anim-stamp mt-0.5 h-4 w-4 shrink-0 text-pine"
       />
     );
   if (status === "failed")
     return (
       <Icon
         icon="ph:x-square-bold"
-        className="mt-0.5 h-4 w-4 shrink-0 text-rust"
+        className="mt-0.5 h-4 w-4 shrink-0 text-pine"
       />
     );
   if (status === "chewing")
     return (
       <Icon
         icon="ph:circle-notch-bold"
-        className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-rust"
+        className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-pine"
       />
     );
   return (
@@ -1078,7 +1078,7 @@ function Preview({ md }: { md: string }) {
       } else {
         const label = t.slice(1, t.indexOf("]"));
         parts.push(
-          <span key={k++} className="text-rust underline underline-offset-2">
+          <span key={k++} className="text-pine underline underline-offset-2">
             {label}
           </span>,
         );
@@ -1219,7 +1219,7 @@ function Preview({ md }: { md: string }) {
       out.push(
         <blockquote
           key={key++}
-          className="my-3 border-l-2 border-rust pl-3 text-ink-soft italic"
+          className="my-3 border-l-2 border-pine pl-3 text-ink-soft italic"
         >
           {inline(body.join(" "))}
         </blockquote>,

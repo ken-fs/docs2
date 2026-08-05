@@ -50,7 +50,7 @@ export function LangSwitch({
     <details ref={box} data-slot="lang-switch" className="group/lang relative">
       <summary
         aria-label={label}
-        className="flex cursor-pointer list-none items-center gap-1.5 border border-rule-firm bg-paper/70 px-2 py-1 font-mono text-[11px] text-ink-soft transition-all duration-150 ease-snap select-none hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rust group-open/lang:border-ink group-open/lang:bg-paper group-open/lang:text-ink [&::-webkit-details-marker]:hidden"
+        className="flex cursor-pointer list-none items-center gap-1.5 border border-rule-firm bg-paper/70 px-2 py-1 font-mono text-[11px] text-ink-soft transition-all duration-150 ease-snap select-none hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pine group-open/lang:border-ink group-open/lang:bg-paper group-open/lang:text-ink [&::-webkit-details-marker]:hidden"
       >
         <Icon icon="ph:translate-bold" className="h-3.5 w-3.5" />
         {LOCALE_SHORT[locale]}
@@ -83,7 +83,7 @@ export function LangSwitch({
                   {current && (
                     <Icon
                       icon="ph:check-bold"
-                      className="pointer-events-none absolute left-2 h-3 w-3 text-rust"
+                      className="pointer-events-none absolute left-2 h-3 w-3 text-pine"
                     />
                   )}
                   {LOCALE_NAMES[l]}
