@@ -845,6 +845,41 @@ test("an xlsx dropped on the docx page is named, not just refused", async ({ pag
 });
 
 /*
+ * 系统选择器必须放行全站能处理的所有格式，不只本页的。
+ *
+ * 这个坑踩了两次：先是 Markdown 页选不了 Word，再是 CSV 页选不了 Excel。
+ * 根因是把 `input.accept`（这一页转什么）当成了选择器的过滤器（这个站能拿
+ * 这个文件做什么）—— 灰掉的文件进不了 pick()，那套「这一页不收，去那一页」
+ * 的路由一句都不会触发，用户看到的只是文件点不动。
+ *
+ * 下面那条测的是「打开选择器之前的指路文案」，不够 —— 人是先点按钮再读字的。
+ * 这条测的是选择器本身别撒谎，两条一起才覆盖完整。
+ */
+test("the picker offers every format the site can handle, not just this page's", async ({
+  page,
+}) => {
+  await page.goto("/csv-to-html-table/");
+  const accept = (await page.locator("input[type=file]").getAttribute("accept")) ?? "";
+  const offered = accept.split(",").map((s) => s.trim());
+
+  // 别处收的格式也要能选中 —— 选完由 pick() 解释该去哪一页
+  for (const ext of [".xlsx", ".docx", ".md", ".html"]) {
+    expect(offered, `选择器该放行 ${ext}`).toContain(ext);
+  }
+
+  // 但「本页收什么」那行字不能跟着放宽：它说的是这一页的真实边界
+  await expect(page.locator("#convert").getByText(/^\.csv \.tsv \.txt \//)).toBeVisible();
+
+  // 选中一个本页不收的，要有解释和链接，而不是静默或硬解出垃圾
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/sample.xlsx`);
+  await expect(page.getByText(/doesn't take \.xlsx/i)).toBeVisible({ timeout: 15000 });
+  await expect(
+    page.locator("#convert").locator("a[href*='excel-to-html-table']").first(),
+  ).toBeVisible();
+  await expect(page.locator("pre")).toHaveCount(0);
+});
+
+/*
  * `accept` 把不收的格式在系统选择器里变灰 —— 灰掉的文件永远进不了 pick()，
  * 所以「这一页不收 .docx，去 DOCX → HTML」那套报错对走按钮的用户一句都不会
  * 触发。实际发生过：有人在 Markdown 页打开选择器，Word 文档是灰的，没有任何

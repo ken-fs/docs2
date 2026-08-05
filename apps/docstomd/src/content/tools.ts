@@ -160,6 +160,34 @@ export function acceptSummary(accept: string): string {
 }
 
 /**
+ * 交给系统文件选择器的过滤器 —— 全站任何一页能处理的格式，不只是本页的。
+ *
+ * 为什么不能直接用 `input.accept`：那是「这一页转什么」，而选择器问的是
+ * 「这个站能拿这个文件做什么」，两件事不一样。用前者当过滤器，.xlsx 在 CSV 页
+ * 是灰的、.docx 在 HTML 页是灰的 —— 灰掉的文件进不了 run()，那套「这一页不收，
+ * 去那一页」的路由一句都不会触发。用户看到的只是文件点不动。
+ *
+ * 这个坑在 docs2html 上踩了两次（先是 Word，再是 Excel）。第一次的修法是在
+ * 拖放区上方加一行指路文案，不够 —— 人是先点按钮再读字的。真正的修法是让
+ * 选择器别撒谎：能选，选完了再解释这个文件该去哪一页。
+ *
+ * 仍然保留 MIME 类型：Finder 里有些文件没有扩展名，靠 MIME 才认得出。
+ * 而 `input.accept` 继续是本页的真实边界，`acceptSummary` 和 run() 里的
+ * 扩展名预检都还用它 —— 放宽的只是选择器。
+ */
+export function pickerAccept(): string {
+  const mimes = TOOL_KEYS.flatMap((k) =>
+    TOOL_INPUT[k].accept
+      .split(",")
+      .map((x) => x.trim())
+      .filter((x) => x.includes("/")),
+  );
+  return [...ELSEWHERE_EXTENSIONS, ...mimes].filter(
+    (v, i, a) => a.indexOf(v) === i,
+  ).join(",");
+}
+
+/**
  * 本页不收、但站内有地方收的格式，按目标页归并成「.csv .tsv → CSV → Markdown」
  * 这样的指路条目。
  *

@@ -29,6 +29,7 @@ import {
   acceptSummary,
   elsewhereHints,
   extensionOf,
+  pickerAccept,
   type ToolInput,
 } from "@/content/tools";
 import {
@@ -630,7 +631,11 @@ export function Converter({
           ref={inputRef}
           type="file"
           multiple
-          accept={input.accept}
+          /* 全站能处理的格式都放行，不只本页的 —— input.accept 当过滤器会把
+             .xlsx 在 CSV 页变灰，而灰掉的文件进不了 run()，那套「这一页不收，
+             去那一页」的路由就永远不触发，用户看到的只是文件点不动。
+             能选，选完再由 run() 解释该去哪一页。 */
+          accept={pickerAccept()}
           className="hidden"
           onChange={(e) => {
             pick(e.target.files);
