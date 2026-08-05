@@ -82,6 +82,7 @@ const ja: Dictionary = {
     dropHint:
       "ボタンから選んでも、Ctrl+V で貼り付けてもかまいません。何十個でも大丈夫です。",
     dropMeta: "1 ファイル 25 MB まで / ブラウザ内で動作、送信はしません",
+    elsewhereLead: "ほかの形式は:",
     pick: "ファイルを選ぶ",
     clear: "消す",
     knobs: "つまみ",

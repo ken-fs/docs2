@@ -80,6 +80,7 @@ const zhHans: Dictionary = {
     dropActive: "松手。",
     dropHint: "也可以点按钮选，或者直接 Ctrl+V 粘。几十个一起来都行。",
     dropMeta: "单个 25 MB / 在浏览器里跑，不上传",
+    elsewhereLead: "别的格式：",
     pick: "选个文件",
     clear: "清空",
     knobs: "旋钮",

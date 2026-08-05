@@ -194,6 +194,8 @@ export type Dictionary = {
     dropActive: string;
     dropHint: string;
     dropMeta: string;
+    /** 「别的格式：」—— 后面跟本页不收但别处收的扩展名和链接，见 elsewhereHints */
+    elsewhereLead: string;
     pick: string;
     clear: string;
     knobs: string;

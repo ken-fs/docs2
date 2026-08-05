@@ -80,6 +80,7 @@ const pt: Dictionary = {
     dropHint:
       "Ou escolha pelo botão. Ou simplesmente cole com Ctrl+V. Dezenas de uma vez não é problema.",
     dropMeta: "25 MB por arquivo / roda no seu navegador, nada é enviado",
+    elsewhereLead: "Outros formatos:",
     pick: "Escolher arquivo",
     clear: "Limpar",
     knobs: "Saída",

@@ -140,6 +140,46 @@ export function acceptSummary(accept: string): string {
     : all.join(" ");
 }
 
+/**
+ * 本页不收、但站内（或兄弟站）有地方收的格式，按目标页归并成
+ * 「.docx .doc → DOCX → HTML」这样的指路条目。
+ *
+ * 为什么必须在拖放区就说：`accept` 会把 .docx 在系统选择器里变灰，用户点不动
+ * 它，而灰掉的文件永远进不了 pick()，那套「本站有专门页 → 只有兄弟站收 →
+ * 谁都不收」的三段报错一句也不会出现。也就是说走按钮的人得到的是彻底的静默 ——
+ * 实际发生过：有人在 Markdown 页打开选择器，Word 文档是灰的，没有任何解释，
+ * 结论是「这站坏了」。拖进来的人反而有指路，两条入口的待遇正好反了。
+ *
+ * 按目标页归并而不是按扩展名逐条列：.docx 和 .doc 去的是同一页，列两条等于
+ * 让人读两遍同一个结论。
+ */
+export function elsewhereHints(
+  accept: string,
+  elsewhere: Record<string, { label: string; href: string }>,
+  sibling?: { label: string; href: string },
+): { label: string; href: string; extensions: string[] }[] {
+  const mine = acceptExtensions(accept);
+  const byHref = new Map<string, { label: string; href: string; extensions: string[] }>();
+  for (const [ext, target] of Object.entries(elsewhere)) {
+    // 本页自己收的扩展名不算「别处」—— Markdown 页收 .txt，不该把用户
+    // 推去纯文本页转一个这里就能转的文件
+    if (mine.includes(ext)) continue;
+    const hit = byHref.get(target.href);
+    if (hit) hit.extensions.push(ext);
+    else byHref.set(target.href, { ...target, extensions: [ext] });
+  }
+  // .pdf 全站一页都不收，所以它根本不在 elsewhere 里 —— 而「不能传 PDF 吗」
+  // 恰恰是被问过两次的那个问题。只列站内去处等于把唯一真有答案的格式漏掉。
+  if (sibling) {
+    const here = new Set(ELSEWHERE_EXTENSIONS);
+    const onlyThere = SIBLING_EXTENSIONS.filter((e) => !here.has(e) && !mine.includes(e));
+    if (onlyThere.length) {
+      byHref.set(sibling.href, { ...sibling, extensions: onlyThere });
+    }
+  }
+  return [...byHref.values()];
+}
+
 export const TOOL_INPUT: Record<PageKey, ToolInput> = {
   // 首页放 Markdown → HTML：六个里它是最常被搜的，也是唯一一个不需要文件、
   // 打开就能贴进去试的 —— 首屏能立刻用比先介绍自己有说服力

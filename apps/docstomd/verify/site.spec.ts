@@ -697,6 +697,36 @@ test("password-protected files say so instead of failing vaguely", async ({ page
   }
 });
 
+/*
+ * `accept` 把不收的格式在系统选择器里变灰 —— 灰掉的文件永远进不了 run()，
+ * 所以「这一页不收 .docx，去 DOCX → Markdown」那套报错对走按钮的用户一句都
+ * 不会触发，用户看到的只是「Word 文档点不动」，没有任何解释。拖进来的人反而
+ * 有指路，两条入口的待遇正好反了。
+ *
+ * 所以指路必须在打开选择器之前就摆在页面上。这条盯的是那个前置说明，
+ * 不是报错。
+ */
+test("the dropzone names the formats it doesn't take, before the picker opens", async ({
+  page,
+}) => {
+  await page.goto("/csv-to-markdown/");
+  const zone = page.locator("#convert");
+
+  await expect(zone.getByText(".docx", { exact: false }).first()).toBeVisible();
+  await expect(zone.getByRole("link", { name: /docx/i }).first()).toHaveAttribute(
+    "href",
+    /\/docx-to-markdown\/$/,
+  );
+  await expect(zone.getByRole("link", { name: /pdf/i }).first()).toHaveAttribute(
+    "href",
+    /\/pdf-to-markdown\/$/,
+  );
+
+  // 本页自己收的格式不能出现在指路行里 —— CSV 页收 .txt，
+  // 不该把用户推去别处转一个这里就能转的文件
+  await expect(zone.getByText(/Other formats:/)).not.toContainText(/\.tsv(\s|$)/);
+});
+
 test("csv detects the delimiter and keeps values verbatim", async ({ page }) => {
   const { external, errors } = watchNetwork(page);
   await page.goto("/csv-to-markdown/");

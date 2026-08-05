@@ -159,6 +159,35 @@ export function acceptSummary(accept: string): string {
     : all.join(" ");
 }
 
+/**
+ * 本页不收、但站内有地方收的格式，按目标页归并成「.csv .tsv → CSV → Markdown」
+ * 这样的指路条目。
+ *
+ * 为什么必须在拖放区就说：`accept` 会把这些文件在系统选择器里变灰，用户点不动
+ * 它们，而灰掉的文件永远进不了 run()，那套「本站有专门页 → 谁都不收」的报错
+ * 一句也不会出现。走按钮的人得到的是彻底的静默 —— 实际发生过：有人在
+ * Markdown 页打开选择器，Word 文档是灰的，没有任何解释，结论是「这站坏了」。
+ * 拖进来的人反而有指路，两条入口的待遇正好反了。
+ *
+ * 按目标页归并而不是按扩展名逐条列：.docx 和 .doc 去的是同一页，列两条等于
+ * 让人读两遍同一个结论。
+ */
+export function elsewhereHints(
+  accept: string,
+  elsewhere: Record<string, { label: string; href: string }>,
+): { label: string; href: string; extensions: string[] }[] {
+  const mine = acceptExtensions(accept);
+  const byHref = new Map<string, { label: string; href: string; extensions: string[] }>();
+  for (const [ext, target] of Object.entries(elsewhere)) {
+    // 本页自己收的扩展名不算「别处」
+    if (mine.includes(ext)) continue;
+    const hit = byHref.get(target.href);
+    if (hit) hit.extensions.push(ext);
+    else byHref.set(target.href, { ...target, extensions: [ext] });
+  }
+  return [...byHref.values()];
+}
+
 export const TOOL_INPUT: Record<PageKey, ToolInput> = {
   home: DOCX_INPUT,
   "docx-to-markdown": DOCX_INPUT,

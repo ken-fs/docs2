@@ -21,6 +21,7 @@ import {
 import {
   acceptExtensions,
   acceptSummary,
+  elsewhereHints,
   extensionOf,
   SIBLING_EXTENSIONS,
   type ToolInput,
@@ -158,6 +159,7 @@ export function Converter({
   const active = jobs.find((j) => j.id === activeId) ?? null;
   const done = jobs.filter((j) => j.status === "done");
   const knobs: Partial<Record<string, true>> = KNOBS[input.engine];
+  const hints = elsewhereHints(input.accept, elsewhere, sibling);
 
   /**
    * 一段输入 → 一段 HTML。按页面配置的 engine 分派。
@@ -570,6 +572,29 @@ export function Converter({
             <p className="mt-1 font-mono text-xs text-graphite-faint">
               {acceptSummary(input.accept)} / {t.dropMeta}
             </p>
+            {/* 本页不收但别处收的格式，在打开选择器之前就说。
+                `accept` 会把这些文件在系统选择器里变灰 —— 灰掉的文件进不了
+                pick()，所以那套三段报错对走按钮的人一句都不会触发，用户看到的
+                只是「Word 文档点不动」。指路必须在这儿，不能只在报错里。 */}
+            {hints.length > 0 && (
+              <p className="mt-2 text-xs leading-relaxed text-graphite-soft">
+                {t.elsewhereLead}{" "}
+                {hints.map((h, i) => (
+                  <span key={h.href}>
+                    {i > 0 && <span className="text-graphite-faint"> · </span>}
+                    <span className="font-mono text-graphite-faint">
+                      {h.extensions.join(" ")}
+                    </span>{" "}
+                    <Link
+                      href={h.href}
+                      className="text-prussian underline decoration-dotted underline-offset-4 transition-colors hover:text-prussian-deep"
+                    >
+                      {h.label}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">

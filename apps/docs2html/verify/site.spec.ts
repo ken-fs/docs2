@@ -844,6 +844,43 @@ test("an xlsx dropped on the docx page is named, not just refused", async ({ pag
   await expect(page.locator("pre")).toHaveCount(0);
 });
 
+/*
+ * `accept` 把不收的格式在系统选择器里变灰 —— 灰掉的文件永远进不了 pick()，
+ * 所以「这一页不收 .docx，去 DOCX → HTML」那套报错对走按钮的用户一句都不会
+ * 触发。实际发生过：有人在 Markdown 页打开选择器，Word 文档是灰的，没有任何
+ * 解释，结论是「这站坏了」。拖进来的人反而有指路，两条入口的待遇正好反了。
+ *
+ * 所以指路必须在打开选择器之前就摆在页面上。这条盯的是那个前置说明，
+ * 不是报错 —— 底下那条 wrong-type 的用例测的是另一条入口。
+ */
+test("the dropzone names the formats it doesn't take, before the picker opens", async ({
+  page,
+}) => {
+  await page.goto("/markdown-to-html/");
+  const zone = page.locator("#convert");
+
+  // 被问过两次的两个格式：Word 去站内的页，PDF 全站都不收、只有兄弟站收
+  await expect(zone.getByText(".docx", { exact: false }).first()).toBeVisible();
+  await expect(zone.getByRole("link", { name: /docx/i }).first()).toHaveAttribute(
+    "href",
+    /\/docx-to-html\/$/,
+  );
+  await expect(zone.getByText(".pdf", { exact: false }).first()).toBeVisible();
+  await expect(zone.getByRole("link", { name: /docstomd/i }).first()).toHaveAttribute(
+    "href",
+    /docstomd\.com/,
+  );
+
+  // 不能把本页自己收的格式也说成「去别处」：Markdown 页收 .txt，
+  // 不该把用户推去纯文本页转一个这里就能转的文件。
+  //
+  // 查的是 .txt 这个扩展名有没有出现在指路行里，不是「有没有链到纯文本页」——
+  // 纯文本页确实该出现，因为它收 .text 而本页不收。断言写成「没有 Text → HTML
+  // 这个链接」会把一条正确的指路判成错。
+  const lead = zone.getByText(/Other formats:/);
+  await expect(lead).not.toContainText(/\.txt(\s|$)/);
+});
+
 test("pasting a file from the clipboard converts it", async ({ page }) => {
   await page.goto("/docx-to-html/");
   const b64 = readFileSync(`${FIXTURES}/rich.docx`).toString("base64");

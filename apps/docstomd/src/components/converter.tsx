@@ -24,7 +24,13 @@ import {
   type ConvertResult,
   type Workbook,
 } from "@document-tools/converters/types";
-import { acceptExtensions, acceptSummary, extensionOf, type ToolInput } from "@/content/tools";
+import {
+  acceptExtensions,
+  acceptSummary,
+  elsewhereHints,
+  extensionOf,
+  type ToolInput,
+} from "@/content/tools";
 import {
   PDFJS_ASSET_VERSION,
   PDFJS_CMAP_URL,
@@ -159,6 +165,7 @@ export function Converter({
   const active = jobs.find((j) => j.id === activeId) ?? null;
   const done = jobs.filter((j) => j.status === "done");
   const knobs: Partial<Record<string, true>> = KNOBS[input.engine];
+  const hints = elsewhereHints(input.accept, elsewhere);
 
   /**
    * 一个文件 → 一段 markdown。按页面配置的 engine 分派。
@@ -573,6 +580,29 @@ export function Converter({
             <p className="mt-1 font-mono text-xs text-ink-faint">
               {acceptSummary(input.accept)} / {t.dropMeta}
             </p>
+            {/* 本页不收但别处收的格式，在打开选择器之前就说。
+                `accept` 会把这些文件在系统选择器里变灰 —— 灰掉的文件进不了
+                run()，所以那套报错对走按钮的人一句都不会触发，用户看到的只是
+                「文件点不动」。指路必须在这儿，不能只在报错里。 */}
+            {hints.length > 0 && (
+              <p className="mt-2 text-xs leading-relaxed text-ink-soft">
+                {t.elsewhereLead}{" "}
+                {hints.map((h, i) => (
+                  <span key={h.href}>
+                    {i > 0 && <span className="text-ink-faint"> · </span>}
+                    <span className="font-mono text-ink-faint">
+                      {h.extensions.join(" ")}
+                    </span>{" "}
+                    <Link
+                      href={h.href}
+                      className="text-pine underline decoration-dotted underline-offset-4 transition-colors hover:text-pine-deep"
+                    >
+                      {h.label}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
 
           <div className="flex shrink-0 flex-col gap-2">

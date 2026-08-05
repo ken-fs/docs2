@@ -79,6 +79,7 @@ const zhCN: Dictionary = {
     dropActive: "松手。",
     dropHint: "也可以点按钮选，或者直接 Ctrl+V 粘贴。一次几十个都行。",
     dropMeta: "单个文件 25 MB / 在你浏览器里跑，不上传",
+    elsewhereLead: "别的格式：",
     pick: "选择文件",
     clear: "清空",
     knobs: "输出设置",

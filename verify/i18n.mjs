@@ -104,11 +104,25 @@ function isFormatPair(t) {
 /** 邮箱地址没有语言。整条就是一个邮箱时放过，句子里带邮箱不放过。 */
 const EMAIL_ONLY = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * 整条就是一串扩展名：`.md .markdown .txt .mdown`。
+ *
+ * 拖放区那行「本页收什么」和它下面的「别的格式」指路都是从 `accept` 派生的
+ * （`acceptSummary` / `elsewhereHints`），扩展名本身六种语言必须逐字相同 ——
+ * 日语用户的 Word 文档后缀也还是 `.docx`，翻成「.文書」是错的。
+ *
+ * 为什么不能靠 MIN_LETTERS 兜住：`.md .markdown .txt .mdown` 有 18 个拉丁
+ * 字母，比门槛高得多，会被当成一整句漏翻的散文报出来。而门槛不能往上调 ——
+ * 真正短的句子会跟着被放过。
+ */
+const EXTENSIONS_ONLY = /^\.[a-z0-9]+(?:\s+\.[a-z0-9]+)*$/i;
+
 function isProse(s) {
   const t = s.trim();
   if (PROPER.has(t.toLowerCase())) return false;
   if (isFormatPair(t)) return false;
   if (EMAIL_ONLY.test(t)) return false;
+  if (EXTENSIONS_ONLY.test(t)) return false;
   // 数一下拉丁字母。少于 MIN_LETTERS 的当成标签、数字、符号
   const letters = (t.match(/[A-Za-z]/g) ?? []).length;
   return letters >= MIN_LETTERS;

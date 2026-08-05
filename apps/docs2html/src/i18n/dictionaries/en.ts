@@ -80,6 +80,7 @@ const en: Dictionary = {
     dropHint:
       "Or pick one with the button. Or just paste with Ctrl+V. Dozens at a time is fine.",
     dropMeta: "25 MB per file / runs in your browser, nothing uploaded",
+    elsewhereLead: "Other formats:",
     pick: "Pick a file",
     clear: "Clear",
     knobs: "Output",

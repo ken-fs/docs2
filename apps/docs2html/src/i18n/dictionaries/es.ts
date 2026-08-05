@@ -80,6 +80,7 @@ const es: Dictionary = {
     dropHint:
       "O elígelo con el botón. O simplemente pega con Ctrl+V. Decenas a la vez no es problema.",
     dropMeta: "25 MB por archivo / corre en tu navegador, nada se sube",
+    elsewhereLead: "Otros formatos:",
     pick: "Elegir archivo",
     clear: "Limpiar",
     knobs: "Salida",

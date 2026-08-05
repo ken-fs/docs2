@@ -79,6 +79,7 @@ const zhTW: Dictionary = {
     dropActive: "放手。",
     dropHint: "也可以按按鈕選，或者直接 Ctrl+V 貼上。一次幾十個都行。",
     dropMeta: "單一檔案 25 MB / 在你瀏覽器裡跑，不上傳",
+    elsewhereLead: "別的格式：",
     pick: "選擇檔案",
     clear: "清空",
     knobs: "輸出設定",
