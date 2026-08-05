@@ -1,0 +1,29 @@
+import { chromium } from "@playwright/test";
+const browser = await chromium.launch();
+const page = await browser.newPage();
+const got = [];
+page.on("response", async (r) => {
+  if (/\.woff2/.test(r.url())) {
+    try { got.push([(await r.body()).length, r.url().split("/").pop()]); } catch {}
+  }
+});
+await page.goto("http://localhost:3311/privacy/", { waitUntil: "load" });
+await page.waitForTimeout(1500);
+// 从 CSS 里把 @font-face 的 family/weight 和文件对上
+const faces = await page.evaluate(() =>
+  [...document.styleSheets].flatMap((ss) => {
+    try { return [...ss.cssRules]; } catch { return []; }
+  })
+   .filter((r) => r.constructor.name === "CSSFontFaceRule" || r.type === 5)
+   .map((r) => ({
+     family: r.style.fontFamily,
+     weight: r.style.fontWeight,
+     src: (r.style.src.match(/[\w.-]+\.woff2/) ?? [""])[0],
+     range: (r.style.unicodeRange || "").slice(0, 40),
+   })));
+console.log("下载的 woff2:");
+for (const [n, f] of got) console.log(`  ${(n/1024).toFixed(1)} KB  ${f}`);
+console.log(`  合计 ${(got.reduce((a,b)=>a+b[0],0)/1024).toFixed(1)} KB`);
+console.log("\n@font-face 声明:");
+for (const f of faces) console.log(`  ${f.family} w=${f.weight} ${f.src} ${f.range}`);
+await browser.close();

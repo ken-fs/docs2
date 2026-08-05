@@ -9,15 +9,30 @@
   "exports": {
     "./types": "./src/types.ts",
     "./docx-to-markdown": "./src/docx-to-markdown.ts",
-    "./html-to-markdown": "./src/html-to-markdown.ts"
+    "./html-to-markdown": "./src/html-to-markdown.ts",
+    "./csv-to-markdown": "./src/csv-to-markdown.ts",
+    "./excel-to-markdown": "./src/excel-to-markdown.ts",
+    "./pdf-to-markdown": "./src/pdf-to-markdown.ts",
+    "./html-out": "./src/html-out.ts",
+    "./markdown-to-html": "./src/markdown-to-html.ts",
+    "./docx-to-html": "./src/docx-to-html.ts",
+    "./clean-html": "./src/clean-html.ts",
+    "./text-to-html": "./src/text-to-html.ts",
+    "./csv-to-html": "./src/csv-to-html.ts",
+    "./excel-to-html": "./src/excel-to-html.ts"
   },
   "dependencies": {
     "cfb": "^1.2.2",
     "dompurify": "^3.4.13",
     "mammoth": "^1.12.0",
+    "markdown-it": "15.0.0",
+    "papaparse": "^5.5.4",
+    "pdfjs-dist": "6.2.108",
+    "read-excel-file": "^9.3.5",
     "turndown": "^7.2.4"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.5.2",
     "@types/turndown": "^5.0.6",
     "typescript": "^5"
   }

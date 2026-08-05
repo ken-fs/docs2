@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Converter } from "@/components/converter";
 import { Icon } from "@/components/icon";
-import { LangSwitch } from "@/components/lang-switch";
+import { Breadcrumb, SiteFooter, SiteHeader } from "@/components/site-chrome";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { pathOf, TOOL_KEYS } from "@/content/tools";
+import { pathOf, TOOL_INPUT, TOOL_KEYS } from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
 import type { Dictionary, PageKey } from "@/i18n/types";
 
@@ -37,65 +37,19 @@ export function ToolShell({
   const c = dict.chrome;
   const isHome = pageKey === "home";
   const others = TOOL_KEYS.filter((k) => k !== pageKey);
+  const input = TOOL_INPUT[pageKey];
 
   return (
     <>
-      <header className="border-b border-rule-firm">
-        {/* 窄屏放不下 logo + 三个入口 + 语言，所以导航自己占一行、横向滚动 */}
-        <div className="mx-auto max-w-6xl px-5 pb-3 pt-5 sm:px-8">
-          <div className="flex items-end justify-between gap-4">
-            <Link href={pathOf(locale, "home")} className="flex items-baseline gap-2">
-              <span className="font-display text-[22px] font-semibold tracking-tight text-ink">
-                docs<span className="text-rust">to</span>md
-              </span>
-              <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-ink-faint sm:inline">
-                .com
-              </span>
-            </Link>
-            <nav className="hidden items-center gap-5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint sm:flex">
-              {TOOL_KEYS.map((k) => (
-                <Link
-                  key={k}
-                  href={pathOf(locale, k)}
-                  className={
-                    k === pageKey
-                      ? "whitespace-nowrap text-rust"
-                      : "whitespace-nowrap transition-colors duration-150 hover:text-rust"
-                  }
-                >
-                  {dict.pages[k].short}
-                </Link>
-              ))}
-            </nav>
-            <LangSwitch locale={locale} pageKey={pageKey} label={c.langLabel} />
-          </div>
-          <nav className="-mx-5 mt-3 flex items-center gap-5 overflow-x-auto px-5 pb-0.5 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-faint [scrollbar-width:none] sm:hidden [&::-webkit-scrollbar]:hidden">
-            {TOOL_KEYS.map((k) => (
-              <Link
-                key={k}
-                href={pathOf(locale, k)}
-                className={
-                  k === pageKey
-                    ? "whitespace-nowrap text-rust"
-                    : "whitespace-nowrap transition-colors duration-150 hover:text-rust"
-                }
-              >
-                {dict.pages[k].short}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </header>
+      <SiteHeader locale={locale} current={pageKey} dict={dict} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 sm:px-8">
         {!isHome && (
-          <nav className="pt-4 font-mono text-[11px] text-ink-faint">
-            <Link href={pathOf(locale, "home")} className="hover:text-rust">
-              {c.breadcrumbHome}
-            </Link>
-            <span className="px-1.5">/</span>
-            <span className="text-ink-soft">{pageKey}</span>
-          </nav>
+          <Breadcrumb
+            locale={locale}
+            label={page.short}
+            homeLabel={c.breadcrumbHome}
+          />
         )}
 
         <section
@@ -106,7 +60,7 @@ export function ToolShell({
           <div className="lg:col-span-7">
             <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-rust">
               <span className="inline-block h-[7px] w-[7px] bg-rust" />
-              {c.eyebrow}
+              {page.eyebrow}
             </p>
             <h1 className="font-display text-[2.5rem] leading-[1.05] tracking-tight text-ink sm:text-[3.4rem]">
               {page.h1[0]}
@@ -140,8 +94,67 @@ export function ToolShell({
           </aside>
         </section>
 
-        <Converter t={dict.converter} />
+        <Converter t={dict.converter} input={input} />
 
+        {/* 方案 §8.7 要求的正文：怎么用、支持什么、限制是什么。
+            这三段不是给爬虫凑字数的 —— 每个转换器的限制都是真的（PDF 不认扫描件、
+            Excel 读的是显示值），说在前面比让用户试出来强。 */}
+        <section
+          id="how"
+          className="mt-20 grid gap-8 border-t border-rule-firm pt-10 md:grid-cols-3 md:gap-10"
+        >
+          <div>
+            <h2 className="font-display text-xl leading-tight text-ink">
+              {page.body.stepsHeading}
+            </h2>
+            <ol className="mt-3 space-y-2.5 text-[13px] leading-relaxed text-ink-soft">
+              {page.body.steps.map((step, i) => (
+                <li key={step} className="flex gap-2.5">
+                  <span className="mt-[1px] shrink-0 font-mono text-[11px] text-rust">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div>
+            <h2 className="font-display text-xl leading-tight text-ink">
+              {page.body.supportedHeading}
+            </h2>
+            <ul className="mt-3 space-y-2.5 text-[13px] leading-relaxed text-ink-soft">
+              {page.body.supported.map((item) => (
+                <li key={item} className="flex gap-2.5">
+                  <Icon
+                    icon="ph:check-bold"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-moss"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="font-display text-xl leading-tight text-ink">
+              {page.body.limitsHeading}
+            </h2>
+            <ul className="mt-3 space-y-2.5 text-[13px] leading-relaxed text-ink-soft">
+              {page.body.limits.map((item) => (
+                <li key={item} className="flex gap-2.5">
+                  <Icon
+                    icon="ph:minus-bold"
+                    className="mt-[3px] h-3.5 w-3.5 shrink-0 text-rust"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {(input.engine === "docx" || input.engine === "html") && (
         <section
           id="keeps"
           className="mt-20 grid gap-7 border-t border-rule-firm pt-10 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12"
@@ -174,6 +187,7 @@ export function ToolShell({
             ))}
           </ul>
         </section>
+        )}
 
         <section id="faq" className="mt-16 border-t border-rule-firm pt-10">
           <h2 className="font-display text-2xl leading-tight text-ink">
@@ -185,8 +199,11 @@ export function ToolShell({
             defaultValue={[0]}
             className="mt-4 max-w-[46rem] border-t border-rule"
           >
+            {/* data-shared 标出「每页都一样而且就该一样」的那几条（文件会不会
+                上传之类）。verify/cross-site.mjs 靠它把这些条目从原创性比对里
+                排掉 —— 它们的重合是设计的一部分。 */}
             {page.faq.map((item, i) => (
-              <AccordionItem key={item.q} value={i}>
+              <AccordionItem key={item.q} value={i} data-shared={item.shared}>
                 <AccordionTrigger>{item.q}</AccordionTrigger>
                 <AccordionContent>{item.a}</AccordionContent>
               </AccordionItem>
@@ -194,8 +211,11 @@ export function ToolShell({
           </Accordion>
         </section>
 
-        {/* 交叉链接：把权重在几个 slug 页之间传起来 */}
-        <section className="mt-14 border-t border-rule-firm pb-20 pt-8">
+        {/* 交叉链接：把权重在几个 slug 页之间传起来。
+            id 是给 verify/cross-site.mjs 用的：这一段每页都一样（就是同一份
+            工具清单），比原创性的时候必须排除，否则六个工具页互相之间会凭
+            这几张卡片刷出三成重合率。 */}
+        <section id="related" className="mt-14 border-t border-rule-firm pb-20 pt-8">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
             {c.crossHeading}
           </h2>
@@ -234,12 +254,7 @@ export function ToolShell({
         </section>
       </main>
 
-      <footer className="border-t border-rule-firm">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-3 px-5 py-6 sm:px-8">
-          <p className="font-mono text-[11px] text-ink-faint">{c.footerLeft}</p>
-          <p className="font-mono text-[11px] text-ink-faint">{c.footerRight}</p>
-        </div>
-      </footer>
+      <SiteFooter locale={locale} current={pageKey} dict={dict} />
     </>
   );
 }

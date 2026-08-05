@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── 蓝图工作台：冷白纸 / 石墨 / 靛蓝 ──────────────────────────────
+   和 docstomd 的暖纸活字车间刻意不同。两站是同一个人做的，但用户不该
+   走错门都不知道 —— 一眼看得出是两个站，才不会以为自己点错了返回键。
+
+   为什么是蓝图：这站的产物是 HTML 源码，是给人接着改的图纸，不是印好的
+   成品。冷色、细网格、等宽字号更重，都是往"技术图纸"那个方向靠。
+   方案里写的 #4F46E5 太像 SaaS 模板，这里用靛蓝但压低彩度、往青里偏一点。 */
+:root {
+  /* 纸与石墨 */
+  --sheet: oklch(0.972 0.006 232);
+  --sheet-deep: oklch(0.944 0.01 230);
+  --sheet-edge: oklch(0.898 0.014 228);
+  --graphite: oklch(0.226 0.021 254);
+  --graphite-soft: oklch(0.406 0.024 252);
+  --graphite-faint: oklch(0.586 0.022 250);
+
+  /* 强调：靛蓝 + 青 + 琥珀（琥珀只用在警告上） */
+  --indigo: oklch(0.494 0.166 268);
+  --indigo-deep: oklch(0.398 0.152 270);
+  --cyan: oklch(0.712 0.118 218);
+  --cyan-soft: oklch(0.882 0.052 216);
+  --amber: oklch(0.766 0.148 74);
+
+  --grid: oklch(0.226 0.021 254 / 0.1);
+  --grid-firm: oklch(0.226 0.021 254 / 0.22);
+
+  /* 缓动：技术感偏线性和急停，少用弹跳 */
+  --draft: cubic-bezier(0.2, 0.9, 0.28, 1);
+  --halt: cubic-bezier(0.42, 0, 0.1, 1);
+  --tick: cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+@theme inline {
+  --color-sheet: var(--sheet);
+  --color-sheet-deep: var(--sheet-deep);
+  --color-sheet-edge: var(--sheet-edge);
+  --color-graphite: var(--graphite);
+  --color-graphite-soft: var(--graphite-soft);
+  --color-graphite-faint: var(--graphite-faint);
+  --color-indigo: var(--indigo);
+  --color-indigo-deep: var(--indigo-deep);
+  --color-cyan: var(--cyan);
+  --color-cyan-soft: var(--cyan-soft);
+  --color-amber: var(--amber);
+  --color-grid: var(--grid);
+  --color-grid-firm: var(--grid-firm);
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+
+  --ease-draft: var(--draft);
+  --ease-halt: var(--halt);
+  --ease-tick: var(--tick);
+}
+
+@layer base {
+  * {
+    border-color: var(--grid);
+  }
+
+  html {
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    color: var(--graphite);
+    background-color: var(--sheet);
+    /* 工程纸的网格：24px 主格 + 一层冷光晕。禁纯平背景。 */
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(
+        56rem 40rem at 88% -6%,
+        oklch(0.826 0.072 232 / 0.42),
+        transparent 62%
+      ),
+      radial-gradient(
+        48rem 36rem at 4% 12%,
+        oklch(0.846 0.058 276 / 0.34),
+        transparent 60%
+      );
+    background-size:
+      24px 24px,
+      24px 24px,
+      100% 100%,
+      100% 100%;
+    background-attachment: fixed;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--cyan-soft);
+    color: var(--graphite);
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--sheet-deep);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.226 0.021 254 / 0.28);
+    border: 3px solid var(--sheet-deep);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--indigo);
+  }
+}
+
+@layer utilities {
+  /* 图纸边框：1px 硬线 + 一道细影，不是柔和投影 */
+  .plate {
+    box-shadow: 0 1px 0 0 var(--grid-firm), 0 0 0 1px var(--grid-firm) inset;
+  }
+  .plate-lift {
+    transition:
+      transform 0.16s var(--draft),
+      box-shadow 0.16s var(--draft),
+      border-color 0.16s var(--draft);
+  }
+  .plate-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 0 var(--indigo-deep);
+  }
+  .plate-lift:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 0 0 var(--indigo-deep);
+  }
+
+  /* 标注下划线：技术图纸上的引线，不是荧光笔 */
+  .underscore {
+    background-image: linear-gradient(
+      transparent 88%,
+      var(--cyan) 88%,
+      var(--cyan) 96%,
+      transparent 96%
+    );
+  }
+
+  /* 图纸角标：四角的定位十字 */
+  .corners {
+    background-image:
+      linear-gradient(var(--grid-firm) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-firm) 1px, transparent 1px);
+    background-size: 8px 1px, 1px 8px;
+    background-position: top left, top left;
+    background-repeat: no-repeat;
+  }
+
+  .rule-t {
+    border-top: 1px solid var(--grid-firm);
+  }
+
+  /* 刻度尺 */
+  .ticks {
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--grid-firm) 0 1px,
+      transparent 1px 8px
+    );
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes plot {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+.anim-slide {
+  animation: slide-up 0.34s var(--draft) both;
+}
+.anim-plot {
+  animation: plot 0.26s var(--halt) both;
+  transform-origin: left center;
+}
+.anim-scan {
+  animation: scanline 1.1s var(--halt) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

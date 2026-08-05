@@ -12,12 +12,24 @@ import {
 import { count, type Dictionary } from "@/i18n/types";
 import {
   DEFAULT_OPTIONS,
+  EncryptedError,
   LegacyDocError,
+  NoTextLayerError,
   NotADocxError,
+  TooLargeError,
+  WrongFormatError,
   ZipBombError,
   type ConvertOptions,
   type ConvertResult,
+  type Workbook,
 } from "@document-tools/converters/types";
+import type { ToolInput } from "@/content/tools";
+import {
+  PDFJS_ASSET_VERSION,
+  PDFJS_CMAP_URL,
+  PDFJS_FONT_URL,
+  PDFJS_WORKER_SRC,
+} from "@/lib/pdfjs-assets";
 import { cn } from "@/lib/utils";
 
 type Job = {
@@ -28,9 +40,39 @@ type Job = {
   result?: ConvertResult;
   error?: string;
   legacy?: boolean;
+  /** XLSX：解析出来的工作簿留着，用户换选表时不用重读文件。 */
+  book?: Workbook;
+  /**
+   * 输入留一份，改设置时能就地重跑。
+   *
+   * File 引用在页面生命周期内一直可读（浏览器只是握着一个磁盘偏移），
+   * 所以不需要把文件内容抄进内存。
+   */
+  file?: File;
+  text?: string;
 };
 
 const MAX_BYTES = 25 * 1024 * 1024;
+
+/**
+ * 这些错误类自己的话说得比通用文案清楚 —— 哪种格式、为什么拒绝、下一步该做
+ * 什么。通用的「文件无法读取」会让用户反复重试一个注定失败的文件。
+ */
+const SPEAKS_FOR_ITSELF = [
+  EncryptedError,
+  LegacyDocError,
+  NoTextLayerError,
+  NotADocxError,
+  TooLargeError,
+  WrongFormatError,
+  ZipBombError,
+];
+
+function message(err: unknown, fallback: string) {
+  return SPEAKS_FOR_ITSELF.some((E) => err instanceof E)
+    ? (err as Error).message
+    : fallback;
+}
 
 function kb(n: number) {
   return n < 1024 * 1024
@@ -40,7 +82,9 @@ function kb(n: number) {
 
 function mdName(name: string) {
   // 粘贴的内容没有文件名，t.pastedName 可能带空格甚至 CJK，压成能当文件名的样子
-  const base = name.replace(/\.(docx?|DOCX?)$/, "").replace(/[/\\?%*:|"<>]/g, "-");
+  const base = name
+    .replace(/\.(docx?|pdf|html?|csv|tsv|txt|xlsx)$/i, "")
+    .replace(/[/\\?%*:|"<>]/g, "-");
   return `${base.trim() || "document"}.md`;
 }
 
@@ -55,18 +99,111 @@ function save(blob: Blob, filename: string) {
 
 type T = Dictionary["converter"];
 
-export function Converter({ t }: { t: T }) {
+/**
+ * 哪个引擎露哪些旋钮。
+ *
+ * 每个引擎能受影响的选项本来就不一样：CSV 里没有图片、PDF 里没有代码块围栏、
+ * 表格页没有「表格保留还是拉平」（输出本身就是表格）。全都摆出来会让用户
+ * 以为调了没用的开关。
+ */
+const KNOBS = {
+  docx: { bullet: true, fence: true, images: true, tables: true },
+  html: { bullet: true, fence: true, images: true, tables: true },
+  pdf: { bullet: true, pageMarks: true },
+  csv: { header: true, align: true, delimiter: true },
+  xlsx: { header: true, align: true },
+} as const satisfies Record<
+  ToolInput["engine"],
+  Partial<
+    Record<
+      | "bullet"
+      | "fence"
+      | "images"
+      | "tables"
+      | "header"
+      | "align"
+      | "delimiter"
+      | "pageMarks",
+      true
+    >
+  >
+>;
+
+export function Converter({ t, input }: { t: T; input: ToolInput }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [opts, setOpts] = useState<ConvertOptions>(DEFAULT_OPTIONS);
   const [dragging, setDragging] = useState(false);
   const [copied, setCopied] = useState(false);
   const [view, setView] = useState<"source" | "preview">("source");
+  const [typed, setTyped] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
 
   const active = jobs.find((j) => j.id === activeId) ?? null;
   const done = jobs.filter((j) => j.status === "done");
+  const knobs: Partial<Record<string, true>> = KNOBS[input.engine];
+
+  /**
+   * 一个文件 → 一段 markdown。按页面配置的 engine 分派。
+   *
+   * 每个 engine 都是动态 import：mammoth、pdf.js、read-excel-file 加起来好几
+   * MB，而一次访问只会用到其中一个。首页更是一个都不该加载 —— 方案 §8 明确
+   * 要求首页不得加载全部解析库。
+   */
+  const convert = useCallback(
+    async (file: File, options: ConvertOptions): Promise<ConvertResult> => {
+      switch (input.engine) {
+        case "docx": {
+          const { convertDocx } = await import(
+            "@document-tools/converters/docx-to-markdown"
+          );
+          return convertDocx(file, options);
+        }
+        case "pdf": {
+          const { convertPdf } = await import(
+            "@document-tools/converters/pdf-to-markdown"
+          );
+          // worker 和字体都是自己托管的同源文件，不碰任何 CDN ——
+          // 「文件不出你电脑」这句话得连带请求一起算
+          return convertPdf(
+            file,
+            {
+              workerSrc: PDFJS_WORKER_SRC,
+              cMapUrl: PDFJS_CMAP_URL,
+              standardFontDataUrl: PDFJS_FONT_URL,
+              assetVersion: PDFJS_ASSET_VERSION,
+            },
+            options,
+          );
+        }
+        case "html": {
+          const { convertHtml } = await import(
+            "@document-tools/converters/html-to-markdown"
+          );
+          return convertHtml(await file.text(), options);
+        }
+        case "csv": {
+          const { convertCsv } = await import(
+            "@document-tools/converters/csv-to-markdown"
+          );
+          return convertCsv(await file.text(), options);
+        }
+        case "xlsx": {
+          const { readWorkbook, renderSheets } = await import(
+            "@document-tools/converters/excel-to-markdown"
+          );
+          const book = await readWorkbook(file);
+          // 默认只转第一张表。一个工作簿常有十几张，全转出来没人看得下去，
+          // 而且很容易撞上十万格的上限。
+          return { ...renderSheets(book, [0], options), book } as ConvertResult & {
+            book: Workbook;
+          };
+        }
+      }
+    },
+    [input.engine],
+  );
 
   const run = useCallback(
     async (files: File[], options: ConvertOptions, t: T) => {
@@ -75,6 +212,7 @@ export function Converter({ t }: { t: T }) {
         name: f.name,
         size: f.size,
         status: "waiting",
+        file: f,
       }));
 
       setJobs((prev) => [...prev, ...fresh]);
@@ -100,68 +238,79 @@ export function Converter({ t }: { t: T }) {
         );
 
         try {
-          // mammoth + turndown + cfb 加起来几 MB，只在真的有文件要转时才拉进来
-          const { convertDocx } = await import(
-            "@document-tools/converters/docx-to-markdown"
-          );
-          const result = await convertDocx(file, options);
+          const result = (await convert(file, options)) as ConvertResult & {
+            book?: Workbook;
+          };
           setJobs((prev) =>
             prev.map((j) =>
-              j.id === job.id ? { ...j, status: "done", result } : j,
+              j.id === job.id
+                ? { ...j, status: "done", result, book: result.book }
+                : j,
             ),
           );
           setActiveId((cur) => cur ?? job.id);
         } catch (err) {
-          const legacy = err instanceof LegacyDocError;
-          // 这几类错自己的话说得比通用文案清楚（哪种格式、为什么拒绝），直接透给用户
-          const message =
-            legacy ||
-            err instanceof NotADocxError ||
-            err instanceof ZipBombError
-              ? err.message
-              : t.readFail;
           setJobs((prev) =>
             prev.map((j) =>
               j.id === job.id
-                ? { ...j, status: "failed", error: message, legacy }
+                ? {
+                    ...j,
+                    status: "failed",
+                    error: message(err, t.readFail),
+                    legacy: err instanceof LegacyDocError,
+                  }
                 : j,
             ),
           );
         }
       }
     },
-    [jobs.length],
+    [convert, jobs.length],
   );
 
   /**
-   * 粘贴过来的富文本走这条路：没有文件，只有一段 HTML。
+   * 直接给的一段文本 —— 粘贴的富文本、贴进文本框的 HTML 源码或 CSV。
    *
-   * 剪贴板里的 HTML 来自任意网页，不比上传的文件可信 —— convertHtml 里同样
+   * 剪贴板里的 HTML 来自任意网页，不比上传的文件可信：页面完全可以埋一个
+   * onmouseover 或 javascript: 链接等着被复制走。convertHtml 里同样是
    * 先过 DOMPurify 再进 turndown。
    */
-  const runHtml = useCallback(
-    async (html: string, options: ConvertOptions, t: T) => {
+  const runText = useCallback(
+    async (
+      text: string,
+      kind: "html" | "csv",
+      name: string,
+      options: ConvertOptions,
+      t: T,
+    ) => {
       const job: Job = {
-        id: `paste-${html.length}-${jobs.length}`,
-        name: t.pastedName,
-        size: html.length,
+        id: `text-${kind}-${text.length}-${jobs.length}`,
+        name,
+        size: text.length,
         status: "chewing",
+        text,
       };
       setJobs((prev) => [...prev, job]);
 
       try {
-        const { convertHtml } = await import(
-          "@document-tools/converters/html-to-markdown"
-        );
-        const result = convertHtml(html, options);
+        const result =
+          kind === "html"
+            ? (
+                await import("@document-tools/converters/html-to-markdown")
+              ).convertHtml(text, options)
+            : (
+                await import("@document-tools/converters/csv-to-markdown")
+              ).convertCsv(text, options);
         setJobs((prev) =>
           prev.map((j) => (j.id === job.id ? { ...j, status: "done", result } : j)),
         );
         setActiveId(job.id);
-      } catch {
+      } catch (err) {
         setJobs((prev) =>
           prev.map((j) =>
-            j.id === job.id ? { ...j, status: "failed", error: t.readFail } : j,
+            j.id === job.id
+              ? { ...j, status: "failed", error: message(err, t.readFail) }
+              : j,
           ),
         );
       }
@@ -169,21 +318,99 @@ export function Converter({ t }: { t: T }) {
     [jobs.length],
   );
 
+  /** 换选工作表：拿缓存的 book 重算，不重读文件。 */
+  const repick = useCallback(
+    async (job: Job, picked: number[], options: ConvertOptions, t: T) => {
+      if (!job.book) return;
+      try {
+        const { renderSheets } = await import(
+          "@document-tools/converters/excel-to-markdown"
+        );
+        const result = renderSheets(job.book, picked, options);
+        setJobs((prev) =>
+          prev.map((j) => (j.id === job.id ? { ...j, status: "done", result } : j)),
+        );
+      } catch (err) {
+        setJobs((prev) =>
+          prev.map((j) =>
+            j.id === job.id
+              ? { ...j, status: "failed", error: message(err, t.readFail) }
+              : j,
+          ),
+        );
+      }
+    },
+    [],
+  );
+
+  /**
+   * 改了设置后就地重跑一个任务。
+   *
+   * 有三种来源：缓存的工作簿（换选表最快）、原始文本、原始 File。三种都能
+   * 重跑，所以「改了设置请重新上传」那句话只在真的没有来源时才需要。
+   */
+  const redo = useCallback(
+    async (job: Job, options: ConvertOptions, t: T) => {
+      if (job.book) {
+        void repick(job, job.result?.picked ?? [0], options, t);
+        return;
+      }
+
+      setJobs((prev) =>
+        prev.map((j) => (j.id === job.id ? { ...j, status: "chewing" } : j)),
+      );
+
+      try {
+        let result: ConvertResult;
+        if (job.text !== undefined) {
+          const kind = input.paste === "csv" ? "csv" : "html";
+          result =
+            kind === "csv"
+              ? (
+                  await import("@document-tools/converters/csv-to-markdown")
+                ).convertCsv(job.text, options)
+              : (
+                  await import("@document-tools/converters/html-to-markdown")
+                ).convertHtml(job.text, options);
+        } else if (job.file) {
+          result = await convert(job.file, options);
+        } else {
+          return;
+        }
+        setJobs((prev) =>
+          prev.map((j) =>
+            j.id === job.id ? { ...j, status: "done", result } : j,
+          ),
+        );
+      } catch (err) {
+        setJobs((prev) =>
+          prev.map((j) =>
+            j.id === job.id
+              ? { ...j, status: "failed", error: message(err, t.readFail) }
+              : j,
+          ),
+        );
+      }
+    },
+    [convert, input.paste, repick],
+  );
+
   const pick = useCallback(
     (list: FileList | null) => {
-      if (!list?.length) return;
-      const files = Array.from(list).filter((f) => /\.docx?$/i.test(f.name));
+      const files = Array.from(list ?? []);
       if (files.length) void run(files, opts, t);
     },
     [opts, run, t],
   );
 
-  // 改设置后，把已完成的重新跑一遍不现实（原文件已释放），
-  // 所以只提示需要重新上传，避免给出过期结果。
+  // 改设置后只重跑当前看着的这一个：批量转了二十个文件时，动一下旋钮
+  // 就把二十份重解析一遍会卡住整个页面。其余的用提示说明结果已过期。
   const [stale, setStale] = useState(false);
   const patch = (next: Partial<ConvertOptions>) => {
-    setOpts((o) => ({ ...o, ...next }));
-    if (jobs.some((j) => j.status === "done")) setStale(true);
+    const options = { ...opts, ...next };
+    setOpts(options);
+    if (active?.status === "done") void redo(active, options, t);
+    if (done.some((j) => j.id !== active?.id)) setStale(true);
   };
 
   useEffect(() => {
@@ -195,9 +422,11 @@ export function Converter({ t }: { t: T }) {
   // 支持整站粘贴：优先当文件，其次收剪贴板里的富文本
   useEffect(() => {
     const onPaste = (e: ClipboardEvent) => {
-      const files = Array.from(e.clipboardData?.files ?? []).filter((f) =>
-        /\.docx?$/i.test(f.name),
-      );
+      // 在文本框里粘贴是在填那个框，不该同时触发一次转换
+      const el = e.target as HTMLElement | null;
+      if (el?.tagName === "TEXTAREA" || el?.tagName === "INPUT") return;
+
+      const files = Array.from(e.clipboardData?.files ?? []);
       if (files.length) {
         void run(files, opts, t);
         return;
@@ -206,11 +435,11 @@ export function Converter({ t }: { t: T }) {
       // 从 Google Docs / Word 网页版复制过来的是 text/html，没有文件。
       // 这是 google-docs-to-markdown 那页真正要处理的输入。
       const html = e.clipboardData?.getData("text/html");
-      if (html?.trim()) void runHtml(html, opts, t);
+      if (html?.trim()) void runText(html, "html", t.pastedName, opts, t);
     };
     window.addEventListener("paste", onPaste);
     return () => window.removeEventListener("paste", onPaste);
-  }, [opts, run, runHtml, t]);
+  }, [opts, run, runText, t]);
 
   const copy = async () => {
     if (!active?.result) return;
@@ -318,7 +547,7 @@ export function Converter({ t }: { t: T }) {
           ref={inputRef}
           type="file"
           multiple
-          accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          accept={input.accept}
           className="hidden"
           onChange={(e) => {
             pick(e.target.files);
@@ -327,68 +556,181 @@ export function Converter({ t }: { t: T }) {
         />
       </div>
 
+      {/* ── 文本输入 ─────────────────────────────────────── */}
+      {input.paste !== "none" && (
+        <div className="mt-5 border border-rule-firm bg-paper/60 px-5 py-4">
+          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+              {t.pasteHeading}
+            </h2>
+            <span className="font-mono text-[11px] text-ink-faint">
+              {typed.length > 0 && kb(typed.length)}
+            </span>
+          </div>
+          <textarea
+            value={typed}
+            onChange={(e) => setTyped(e.target.value)}
+            spellCheck={false}
+            rows={6}
+            placeholder={
+              input.paste === "html" ? t.pastePlaceholderHtml : t.pastePlaceholderCsv
+            }
+            className="w-full resize-y border border-rule-firm bg-paper px-3 py-2 font-mono text-[13px] leading-relaxed text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-ink"
+          />
+          <div className="mt-2 flex items-center gap-2">
+            <Button
+              tone="rust"
+              size="sm"
+              disabled={!typed.trim()}
+              onClick={() =>
+                void runText(typed, input.paste as "html" | "csv", t.typedName, opts, t)
+              }
+            >
+              <Icon icon="ph:play-bold" />
+              {t.pasteRun}
+            </Button>
+            {typed.length > 0 && (
+              <Button tone="ghost" size="sm" onClick={() => setTyped("")}>
+                {t.pasteClear}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── 排版旋钮 ─────────────────────────────────────── */}
+      {/* 旋钮按引擎给：CSV 页面上没有「图片怎么处理」这回事，摆一个只会让人
+          以为自己漏了什么。 */}
       <div className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-4 border border-rule-firm bg-paper/60 px-5 py-4">
         <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
           {t.knobs}
         </span>
 
-        <Knob label={t.bullets}>
-          {(["-", "*", "+"] as const).map((b) => (
-            <Chip
-              key={b}
-              on={opts.bullet === b}
-              onClick={() => patch({ bullet: b })}
-            >
-              <span className="font-mono">{b}</span>
-            </Chip>
-          ))}
-        </Knob>
+        {knobs.bullet && (
+          <Knob label={t.bullets}>
+            {(["-", "*", "+"] as const).map((b) => (
+              <Chip
+                key={b}
+                on={opts.bullet === b}
+                onClick={() => patch({ bullet: b })}
+              >
+                <span className="font-mono">{b}</span>
+              </Chip>
+            ))}
+          </Knob>
+        )}
 
-        <Knob label={t.fence}>
-          {(["```", "~~~"] as const).map((f) => (
-            <Chip
-              key={f}
-              on={opts.codeFence === f}
-              onClick={() => patch({ codeFence: f })}
-            >
-              <span className="font-mono">{f}</span>
-            </Chip>
-          ))}
-        </Knob>
+        {knobs.fence && (
+          <Knob label={t.fence}>
+            {(["```", "~~~"] as const).map((f) => (
+              <Chip
+                key={f}
+                on={opts.codeFence === f}
+                onClick={() => patch({ codeFence: f })}
+              >
+                <span className="font-mono">{f}</span>
+              </Chip>
+            ))}
+          </Knob>
+        )}
 
-        <Knob label={t.images}>
-          {(
-            [
-              ["inline", t.imageInline],
-              ["placeholder", t.imagePlaceholder],
-              ["strip", t.imageStrip],
-            ] as const
-          ).map(([v, label]) => (
-            <Chip
-              key={v}
-              on={opts.images === v}
-              onClick={() => patch({ images: v })}
-            >
-              {label}
-            </Chip>
-          ))}
-        </Knob>
+        {knobs.images && (
+          <Knob label={t.images}>
+            {(
+              [
+                ["inline", t.imageInline],
+                ["placeholder", t.imagePlaceholder],
+                ["strip", t.imageStrip],
+              ] as const
+            ).map(([v, label]) => (
+              <Chip
+                key={v}
+                on={opts.images === v}
+                onClick={() => patch({ images: v })}
+              >
+                {label}
+              </Chip>
+            ))}
+          </Knob>
+        )}
 
-        <Knob label={t.tables}>
-          <Chip
-            on={opts.keepTables}
-            onClick={() => patch({ keepTables: true })}
-          >
-            {t.tableKeep}
-          </Chip>
-          <Chip
-            on={!opts.keepTables}
-            onClick={() => patch({ keepTables: false })}
-          >
-            {t.tableFlatten}
-          </Chip>
-        </Knob>
+        {knobs.tables && (
+          <Knob label={t.tables}>
+            <Chip on={opts.keepTables} onClick={() => patch({ keepTables: true })}>
+              {t.tableKeep}
+            </Chip>
+            <Chip on={!opts.keepTables} onClick={() => patch({ keepTables: false })}>
+              {t.tableFlatten}
+            </Chip>
+          </Knob>
+        )}
+
+        {knobs.header && (
+          <Knob label={t.header}>
+            <Chip
+              on={opts.firstRowHeader}
+              onClick={() => patch({ firstRowHeader: true })}
+            >
+              {t.headerFirstRow}
+            </Chip>
+            <Chip
+              on={!opts.firstRowHeader}
+              onClick={() => patch({ firstRowHeader: false })}
+            >
+              {t.headerNone}
+            </Chip>
+          </Knob>
+        )}
+
+        {knobs.align && (
+          <Knob label={t.align}>
+            {(
+              [
+                ["none", t.alignNone],
+                ["left", t.alignLeft],
+                ["center", t.alignCenter],
+                ["right", t.alignRight],
+              ] as const
+            ).map(([v, label]) => (
+              <Chip key={v} on={opts.align === v} onClick={() => patch({ align: v })}>
+                {label}
+              </Chip>
+            ))}
+          </Knob>
+        )}
+
+        {knobs.delimiter && (
+          <Knob label={t.delimiter}>
+            {(
+              [
+                ["", t.delimiterAuto],
+                [",", t.delimiterComma],
+                [";", t.delimiterSemicolon],
+                ["\t", t.delimiterTab],
+                ["|", t.delimiterPipe],
+              ] as const
+            ).map(([v, label]) => (
+              <Chip
+                key={v || "auto"}
+                on={opts.delimiter === v}
+                onClick={() => patch({ delimiter: v })}
+              >
+                {label}
+              </Chip>
+            ))}
+          </Knob>
+        )}
+
+        {knobs.pageMarks && (
+          <Knob label={t.pageMarks}>
+            <Chip on={opts.pageMarks} onClick={() => patch({ pageMarks: true })}>
+              {t.pageMarksOn}
+            </Chip>
+            <Chip on={!opts.pageMarks} onClick={() => patch({ pageMarks: false })}>
+              {t.pageMarksOff}
+            </Chip>
+          </Knob>
+        )}
       </div>
 
       {stale && (
@@ -524,6 +866,53 @@ export function Converter({ t }: { t: T }) {
                     </Button>
                   </div>
                 </div>
+
+                {/* 工作表选择。只在真有多张表时出现 —— 单表工作簿摆一排
+                    只能选一个的按钮没有意义。 */}
+                {active.book && active.book.sheets.length > 1 && (
+                  <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-2 border border-rule-firm bg-paper/60 px-4 py-3">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+                      {t.sheets}
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {active.book.sheets.map((sheet, i) => {
+                        const on = active.result?.picked?.includes(i) ?? false;
+                        return (
+                          <Chip
+                            key={`${sheet.name}-${i}`}
+                            on={on}
+                            onClick={() => {
+                              const cur = active.result?.picked ?? [];
+                              // 至少留一张 —— 全取消掉的话没有东西可渲染
+                              const next = on
+                                ? cur.filter((n) => n !== i)
+                                : [...cur, i].sort((a, b) => a - b);
+                              if (next.length) void repick(active, next, opts, t);
+                            }}
+                          >
+                            {sheet.name}
+                            <span className="ml-1.5 font-mono text-[10px] opacity-60">
+                              {count(sheet.rows, t.sheetMeta)}
+                            </span>
+                          </Chip>
+                        );
+                      })}
+                    </div>
+                    <button
+                      onClick={() =>
+                        void repick(
+                          active,
+                          active.book!.sheets.map((_, i) => i),
+                          opts,
+                          t,
+                        )
+                      }
+                      className="font-mono text-[11px] text-rust underline decoration-dotted underline-offset-4 transition-colors hover:text-rust-deep"
+                    >
+                      {t.sheetsAll}
+                    </button>
+                  </div>
+                )}
 
                 {active.result.warnings.length > 0 && (
                   <details className="mb-3 border-l-2 border-ochre bg-ochre/14 py-2 pl-3 pr-3">

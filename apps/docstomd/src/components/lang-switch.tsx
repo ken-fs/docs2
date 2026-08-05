@@ -3,9 +3,8 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/icon";
-import { pathOf } from "@/content/tools";
+import { pathOf, type AnyKey } from "@/content/tools";
 import { LOCALES, LOCALE_NAMES, LOCALE_SHORT, type Locale } from "@/i18n/locales";
-import type { PageKey } from "@/i18n/types";
 
 /**
  * 语言切换器：真 <a href>，而且一直在 DOM 里。
@@ -23,7 +22,7 @@ export function LangSwitch({
   label,
 }: {
   locale: Locale;
-  pageKey: PageKey;
+  pageKey: AnyKey;
   label: string;
 }) {
   const box = useRef<HTMLDetailsElement>(null);

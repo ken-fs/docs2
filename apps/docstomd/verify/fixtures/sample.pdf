@@ -1,0 +1,68 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [4 0 R 6 0 R 8 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 803 >>
+stream
+BT /F1 24 Tf 1 0 0 1 72 720 Tm (Quarterly Report) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 690 Tm (This paragraph is split across several lines to) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 676 Tm (test that soft line breaks inside a paragraph get) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 662 Tm (merged back into one line by the conver-) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 648 Tm (sion step, hyphen included.) Tj ET
+BT /F1 16 Tf 1 0 0 1 72 610 Tm (Findings) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 584 Tm (• first bullet item) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 568 Tm (• second bullet item) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 552 Tm (1. first numbered item) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 536 Tm (2. second numbered item) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 500 Tm (A separate paragraph, set apart by a wider gap.) Tj ET
+BT /F1 8 Tf 1 0 0 1 300 60 Tm (page 1) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 110 >>
+stream
+BT /F1 16 Tf 1 0 0 1 72 720 Tm (Appendix) Tj ET
+BT /F1 11 Tf 1 0 0 1 72 694 Tm (Second page body text.) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 0 >>
+stream
+
+endstream
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000127 00000 n 
+0000000224 00000 n 
+0000000350 00000 n 
+0000001204 00000 n 
+0000001330 00000 n 
+0000001491 00000 n 
+0000001617 00000 n 
+trailer
+<< /Size 10 /Root 1 0 R >>
+startxref
+1666
+%%EOF

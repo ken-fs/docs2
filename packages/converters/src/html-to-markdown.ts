@@ -13,6 +13,7 @@ import { buildTurndown } from "./turndown-rules";
 import {
   countStats,
   DEFAULT_OPTIONS,
+  listSome,
   tidy,
   type ConvertOptions,
   type ConvertResult,
@@ -40,7 +41,7 @@ export function convertHtml(
   const warnings: string[] = [];
   if (removed.length) {
     warnings.push(
-      `Removed unsafe HTML from this input: ${removed.slice(0, 8).join(", ")}`,
+      `Removed unsafe HTML from this input: ${listSome(removed, 8)}`,
     );
   }
   if (!markdown) {

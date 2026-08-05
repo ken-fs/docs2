@@ -43,3 +43,10 @@ next-env.d.ts
 # playwright
 test-results/
 playwright-report/
+
+# pdfjs-dist 的 worker/cmaps/字体，由 scripts/copy-pdfjs.mjs 复制进来
+apps/*/public/pdfjs/
+
+# verify/lighthouse.mjs 每次跑都会重写这份报告 —— 是测量结果不是源码，
+# 而且里面的毫秒数随机器负载浮动，进了库只会制造无意义的 diff
+verify/lighthouse-report.json

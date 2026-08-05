@@ -19,9 +19,11 @@ import {
   countStats,
   DEFAULT_OPTIONS,
   LegacyDocError,
+  listSome,
   NotADocxError,
   sniff,
   tidy,
+  zipKind,
   type ConvertOptions,
   type ConvertResult,
 } from "./types";
@@ -65,15 +67,28 @@ export async function convertDocx(
 ): Promise<ConvertResult> {
   const started = performance.now();
   const buffer = await file.arrayBuffer();
-  const kind = sniff(new Uint8Array(buffer.slice(0, 8)));
+  const bytes = new Uint8Array(buffer);
+  const kind = sniff(bytes);
 
-  if (kind === "doc") return convertLegacyDoc(buffer, opts, started);
+  if (kind === "ole") return convertLegacyDoc(buffer, opts, started);
+  if (kind === "pdf") {
+    throw new NotADocxError(
+      "That's a PDF, not a Word document. Use the PDF to Markdown page instead.",
+    );
+  }
   if (kind === "unknown") {
     throw new NotADocxError("Not a Word document. The file header doesn't match.");
   }
 
+  // .docx 和 .xlsx 的文件头一样，认不出来会让 mammoth 报一句看不懂的错
+  if (zipKind(bytes) === "xlsx") {
+    throw new NotADocxError(
+      "That's an Excel workbook, not a Word document. Use the Excel to Markdown page instead.",
+    );
+  }
+
   // .docx 就是个 zip，解压前先看看它声称会展开成多大
-  checkZipSize(new Uint8Array(buffer));
+  checkZipSize(bytes);
 
   const { value: html, messages } = await mammoth.convertToHtml(
     { arrayBuffer: buffer },
@@ -110,18 +125,24 @@ export async function convertDocx(
 
   const markdown = tidy(buildTurndown(opts).turndown(clean));
 
-  const warnings = Array.from(
+  const notes = Array.from(
     new Set(
       messages
         .filter((m) => m.type === "warning" || m.type === "error")
         .map((m) => m.message),
     ),
-  ).slice(0, 8);
+  );
+  // 一份样式很杂的文档能出几十条，全列出来没人看。但截断了要说一声 ——
+  // 「这里只显示前 8 条」和「一共就 8 条」对用户是两件不同的事。
+  const warnings = notes.slice(0, 8);
+  if (notes.length > warnings.length) {
+    warnings.push(`…and ${notes.length - warnings.length} more notes like these.`);
+  }
 
   // 文档里带脚本或事件属性属于异常，明确告诉用户删了什么，别静悄悄处理
   if (removed.length) {
     warnings.unshift(
-      `Removed unsafe HTML from this document: ${removed.slice(0, 8).join(", ")}`,
+      `Removed unsafe HTML from this document: ${listSome(removed, 8)}`,
     );
   }
 

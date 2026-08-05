@@ -1,6 +1,6 @@
-import { urlOf } from "@/content/tools";
+import { urlOf, type AnyKey } from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
-import type { Dictionary, PageKey } from "@/i18n/types";
+import type { Dictionary, LegalKey, PageKey } from "@/i18n/types";
 
 /** FAQPage：让问答有机会以富媒体结果出现，也方便 AI 抓取。 */
 export function faqJsonLd(locale: Locale, key: PageKey, dict: Dictionary) {
@@ -38,5 +38,63 @@ export function softwareJsonLd(
     browserRequirements: "Requires JavaScript",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     featureList: dict.chrome.features,
+  };
+}
+
+/**
+ * BreadcrumbList，方案 §8.6 要求的另一半。
+ *
+ * 首页只有它自己一层，就不发了 —— 单元素的面包屑对搜索引擎没有信息量。
+ */
+export function breadcrumbJsonLd(
+  locale: Locale,
+  key: AnyKey,
+  label: string,
+  dict: Dictionary,
+) {
+  if (key === "home") return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${urlOf(locale, key)}#crumbs`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: dict.chrome.breadcrumbHome,
+        item: urlOf(locale, "home"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: label,
+        item: urlOf(locale, key),
+      },
+    ],
+  };
+}
+
+/**
+ * 正式页面用 WebPage，不用 WebApplication —— 隐私政策不是一个应用。
+ * about 页额外声明一下站点归属，让 Google 知道这堆页面是谁的。
+ */
+export function legalJsonLd(locale: Locale, key: LegalKey, dict: Dictionary) {
+  const page = dict.legal[key];
+  const url = urlOf(locale, key);
+  return {
+    "@context": "https://schema.org",
+    "@type": key === "contact" ? "ContactPage" : "WebPage",
+    "@id": `${url}#page`,
+    url,
+    name: page.title,
+    description: page.description,
+    inLanguage: dict.htmlLang,
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": `${urlOf(locale, "home")}#site`,
+      name: "Docs to MD",
+      url: urlOf(locale, "home"),
+      inLanguage: dict.htmlLang,
+    },
   };
 }

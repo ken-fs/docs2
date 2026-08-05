@@ -37,13 +37,21 @@ const ALLOWED_TAGS = [
  */
 const ALLOWED_ATTR = ["href", "src", "alt", "title", "colspan", "rowspan", "start"];
 
+/** 上面那张表里真正装 URL 的两个。只有它们该按协议白名单校验。 */
+const URL_ATTR = ["href", "src"];
+
 /**
  * 允许的 URL 协议。DOMPurify 默认还放过 tel/sms/callto/cid/xmpp/matrix，
  * 这里收窄到文档里真正会出现的四种。
  *
  * 关键是 javascript: 不在其中 —— Word 的超链接字段可以塞任意协议。
+ *
+ * 写法是「列出允许的协议 + 拒绝其它任何 scheme」，而不是「列出允许的协议再补
+ * 几种相对路径的写法」：后者要枚举相对路径的所有形态，裸相对路径
+ * `images/photo.png` 会被漏掉。负向断言里的 `[a-z][a-z0-9+.\-]*:` 是
+ * RFC 3986 的 scheme 语法，所以 `foo/bar:baz` 不会被误判 —— 冒号在 / 之后。
  */
-const SAFE_URI = /^(?:https?:|mailto:|ftp:|#|\/|\.{1,2}\/)/i;
+const SAFE_URI = /^(?:(?:https?|mailto|ftp):|(?![a-z][a-z0-9+.\-]*:))/i;
 
 /**
  * 校验 URL 前要先剥掉的空白。抄的是 DOMPurify 自己那张表：`java\nscript:` 在
@@ -56,11 +64,19 @@ const CONFIG: Config = {
   ALLOWED_TAGS,
   ALLOWED_ATTR,
   ALLOWED_URI_REGEXP: SAFE_URI,
+  // ALLOWED_URI_REGEXP 会套在每一个不在 URI_SAFE_ATTRIBUTES 里的属性上，不只是
+  // href/src。不声明这条的话 colspan="2" 和 start="5" 会被当成非法 URL 删掉，
+  // 表格的跨列和有序列表的起始编号就这么没了。
+  ADD_URI_SAFE_ATTR: ALLOWED_ATTR.filter((a) => !URL_ATTR.includes(a)),
   // 白名单已经挡住了 script/iframe/object/embed，但连里面的文字一起删掉：
   // 默认行为是保留被删标签的内容，那样 script 的代码会变成可见正文
   FORBID_CONTENTS: ["script", "style", "iframe", "object", "embed", "noscript", "template"],
-  // <math>/<svg> 里能藏 foreignObject 之类的绕过手法，文档转换也用不上
-  USE_PROFILES: { html: true },
+  // 这里刻意不设 USE_PROFILES。它不是在上面的白名单之上再收一道，而是整个替换掉
+  // ALLOWED_TAGS / ALLOWED_ATTR（dompurify 3.4 的 _parseConfig 先把两者重置成
+  // 空表，再灌入 profile 自己那张表）。后果是 style 和 id 被放回来，而下面的
+  // assertClean 认得出它们不该在 —— 于是任何一段带 style 的 HTML 都会抛异常，
+  // 用户看到的是「文件可能已损坏」。<math>/<svg> 不在 ALLOWED_TAGS 里，白名单
+  // 已经挡住了，不靠 profile 再挡一遍。
   // 别让 <div id="body"> 这种覆盖 document.body
   SANITIZE_DOM: true,
   SANITIZE_NAMED_PROPS: true,

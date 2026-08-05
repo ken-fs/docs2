@@ -6,7 +6,17 @@
     "lint": "pnpm -r lint",
     "dev:md": "pnpm --filter docstomd dev",
     "build:md": "pnpm --filter docstomd build",
-    "test:md": "pnpm --filter docstomd test"
+    "test:md": "pnpm --filter docstomd test",
+    "dev:html": "pnpm --filter docs2html dev",
+    "build:html": "pnpm --filter docs2html build",
+    "test:html": "pnpm --filter docs2html test",
+    "verify:cross": "node verify/cross-site.mjs",
+    "verify:perf": "node verify/lighthouse.mjs",
+    "verify:browsers": "node verify/browsers.mjs",
+    "verify:i18n": "node verify/i18n.mjs"
   },
-  "packageManager": "pnpm@10.30.2"
+  "packageManager": "pnpm@10.30.2",
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
 }
