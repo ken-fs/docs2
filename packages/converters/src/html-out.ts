@@ -15,7 +15,12 @@
  * 写死的模板里 —— 那是拼接常量，不是「净化后又做了会重新引入危险标签的处理」。
  */
 import DOMPurify, { type Config } from "dompurify";
-import { SanitizerUnavailableError, type SanitizeReport } from "./sanitize";
+import {
+  describeRemoved,
+  SanitizerUnavailableError,
+  unwrapLink,
+  type SanitizeReport,
+} from "./sanitize";
 
 /**
  * 输出 HTML 的白名单。比 markdown 那份宽，但宽出来的都是纯语义标签。
@@ -108,16 +113,12 @@ const JUNK_CLASS =
   /^(?:c\d+|Mso[A-Za-z]*|docs-internal-guid-[0-9a-f-]+|lst-kix_[\w-]+|ListParagraph|TableGrid|western|calibre\d*|western\d*)$/i;
 
 /**
- * 跟踪参数。Google Docs 会把外链包一层 google.com/url?q=…，
- * 从别处复制的链接常带 utm_*。方案 §6.3 要求清掉。
+ * 清掉的死 class 和跟踪参数，用来告诉用户「顺手收拾了这些」。
+ *
+ * tidied 现在由 SanitizeReport 自己带（两条链路都要报这件事），
+ * 所以这里不再加字段 —— 留个别名是为了调用方读起来仍然明确。
  */
-const TRACKING_PARAM =
-  /^(?:utm_[a-z_]+|gclid|fbclid|msclkid|mc_[a-z]+|_hs[a-z]+|igshid|si|ref_src|ref_url|usp)$/i;
-
-export type HtmlSanitizeReport = SanitizeReport & {
-  /** 清掉的死 class 和跟踪参数，用来告诉用户「顺手收拾了这些」。 */
-  tidied: string[];
-};
+export type HtmlSanitizeReport = SanitizeReport;
 
 /**
  * 净化一段不可信 HTML，产出可以直接给人用的片段。
@@ -125,7 +126,7 @@ export type HtmlSanitizeReport = SanitizeReport & {
  * 拆链接和清 class 都在净化之后做，但只做删除 —— 删属性、删 query 参数、
  * 换 href 里的一个 URL。这三件事都不可能把标签变回来，所以不违反 §13 的
  * 「净化后不得再做会重新引入危险标签的处理」。而且换上去的 URL 还要再过一遍
- * SAFE_URI，见 unwrap()。
+ * SAFE_URI，见 sanitize.ts 的 unwrapLink()。
  */
 export function sanitizeForHtml(dirty: string): HtmlSanitizeReport {
   // isSupported 为 false 时 DOMPurify.sanitize 直接返回入参（fail-open）。
@@ -133,16 +134,9 @@ export function sanitizeForHtml(dirty: string): HtmlSanitizeReport {
   if (!DOMPurify.isSupported) throw new SanitizerUnavailableError();
 
   const html = DOMPurify.sanitize(dirty, CONFIG);
-
-  const removed = Array.from(
-    new Set(
-      DOMPurify.removed.map((item) => {
-        if ("attribute" in item && item.attribute) return `@${item.attribute.name}`;
-        const node = "element" in item ? item.element : undefined;
-        return `<${(node?.nodeName ?? "unknown").toLowerCase()}>`;
-      }),
-    ),
-  );
+  // 报告口径跟 HTML→Markdown 那条路共用一份，解析器痕迹（<body>、#comment）
+  // 在那儿滤掉 —— 见 describeRemoved
+  const removed = describeRemoved(DOMPurify.removed);
 
   const { html: tidyHtml, tidied } = declutter(html);
   return { html: tidyHtml, removed, tidied };
@@ -180,52 +174,11 @@ function declutter(html: string): { html: string; tidied: string[] } {
 
   for (const el of Array.from(doc.body.querySelectorAll("a[href]"))) {
     const href = el.getAttribute("href") ?? "";
-    const next = unwrap(href, linkNotes);
+    const next = unwrapLink(href, linkNotes);
     if (next !== href) el.setAttribute("href", next);
   }
 
   return { html: doc.body.innerHTML, tidied: [...linkNotes, ...classNotes] };
-}
-
-/**
- * 剥掉 Google 的 /url?q= 包装和 utm_* 之类的参数。
- *
- * 拆出来的目标 URL 必须重新过一遍 SAFE_URI —— 包装里可以塞
- * ?q=javascript:alert(1)，那串东西没经过 DOMPurify 的检查。这一步是整个
- * declutter 里唯一会往 href 写入新值的地方，所以校验就放在这儿。
- */
-function unwrap(href: string, tidied: Set<string>): string {
-  let url: URL;
-  try {
-    url = new URL(href, "https://example.invalid/");
-  } catch {
-    return href;
-  }
-
-  // Google Docs 的外链包装：google.com/url?q=<真地址>
-  if (/(?:^|\.)google\.[a-z.]+$/i.test(url.hostname) && url.pathname === "/url") {
-    const target = url.searchParams.get("q") ?? url.searchParams.get("url");
-    if (target && SAFE_URI.test(target.replace(ATTR_WHITESPACE, ""))) {
-      tidied.add("google.com/url wrapper");
-      return unwrap(target, tidied);
-    }
-  }
-
-  let touched = false;
-  for (const key of [...url.searchParams.keys()]) {
-    if (TRACKING_PARAM.test(key)) {
-      url.searchParams.delete(key);
-      tidied.add(`?${key}`);
-      touched = true;
-    }
-  }
-  if (!touched) return href;
-
-  // 相对地址是借了个假 origin 解析的，还得还原成相对形式
-  const rebuilt = url.href.replace(/\?$/, "");
-  return rebuilt.startsWith("https://example.invalid/")
-    ? rebuilt.slice("https://example.invalid".length)
-    : rebuilt;
 }
 
 /**
@@ -385,6 +338,11 @@ table { border-collapse: collapse; width: 100%; font-size: 0.94rem; }
 caption { padding-bottom: 0.5rem; text-align: left; font-weight: 600; }
 th, td { padding: 0.5rem 0.7rem; border: 1px solid #d6d3d1; text-align: left; vertical-align: top; }
 thead th { background: #f5f5f4; font-weight: 600; }
+/* Markdown 表格的 |:---:| 对齐。markdown-it 本来出的是行内 style，
+   而 style 全站不留，所以换成类名，定义放在这儿。 */
+.align-left { text-align: left; }
+.align-center { text-align: center; }
+.align-right { text-align: right; }
 tbody tr:nth-child(even) { background: #fafaf9; }
 @media (prefers-color-scheme: dark) {
   th, td { border-color: #44403c; }

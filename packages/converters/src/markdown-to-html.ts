@@ -79,6 +79,51 @@ function taskLists(md: Md) {
 }
 
 /**
+ * 表格的两处修正：表头补 scope，对齐从 style 换成 class。
+ *
+ * 两个问题都是 markdown-it 的输出撞上净化白名单撞出来的：
+ *
+ * scope —— markdown-it 出的是光溜溜的 <th>。屏幕阅读器靠 scope 才知道
+ * 这一格是列头还是行头，没有它，一张表读出来就是一串没有归属的数字。
+ * CSV / Excel 那两条路走 tableHtml，本来就带 scope，同一个站的两种表格
+ * 不该一个有一个没有。
+ *
+ * 对齐 —— `|:---:|` 在 markdown-it 那儿变成 style="text-align:center"，
+ * 而 style 是全站禁掉的（CSS 注入入口，html-out.ts 里连 id 一起不留）。
+ * 于是三件事同时发生：对齐没了、用户看到一句「移除了不安全的 HTML：@style」、
+ * 而他写的其实是完全合法的 Markdown。第二件最糟 —— 那是在指着用户的正确输入
+ * 说它危险。
+ *
+ * 改成 class：align-left / align-center / align-right。整页模式的 TABLE_CSS
+ * 里给了这三个类的定义，所以下载下来的 .html 是真的对齐的；片段模式交给
+ * 用户自己的 CSS —— 那正是片段模式的意思。
+ */
+function tableFixes(md: Md) {
+  md.core.ruler.push("table_fixes", (state) => {
+    for (const tok of state.tokens) {
+      // markdown-it 的 GFM 表格只有列头，没有行头，所以一律 col；
+      // 哪天支持了行头，这个判断得跟着改。
+      if (tok.type === "th_open") tok.attrSet("scope", "col");
+      if (tok.type !== "th_open" && tok.type !== "td_open") continue;
+
+      // attrGet 的返回类型是 string | number（markdown-it 允许数字属性值），
+      // 对齐那条永远是字符串，但还是照类型收窄，别拿 as 糊过去
+      const style = tok.attrGet("style");
+      if (typeof style !== "string") continue;
+      const side = /text-align:\s*(left|center|right)/.exec(style);
+      if (!side) continue;
+
+      tok.attrJoin("class", `align-${side[1]}`);
+      // 整条抹掉而不是只删 text-align 那一段：markdown-it 在这个属性里
+      // 只放对齐，没有别的东西会被顺手删掉
+      const rest = tok.attrs?.filter(([n]) => n !== "style");
+      tok.attrs = rest?.length ? rest : null;
+    }
+    return true;
+  });
+}
+
+/**
  * markdown-it 的配置。
  *
  * html: true 是刻意的 —— 用户的 markdown 里常有手写的 <br>、<sub>、<details>，
@@ -101,6 +146,7 @@ function build(opts: HtmlOptions) {
   // 删除线和表格是 GFM 的一部分，markdown-it 内置但默认没开
   md.enable(["strikethrough", "table"]);
   taskLists(md);
+  tableFixes(md);
 
   return md;
 }
@@ -138,6 +184,13 @@ export function convertMarkdown(
     warnings.push(
       `Removed unsafe HTML that was embedded in the Markdown: ${listSome(removed, 8)}`,
     );
+  }
+  // 改了用户的链接就必须说 —— declutter 会摘掉 utm_* 之类的参数、拆掉
+  // google.com/url?q= 的包装，那是在动内容，不是在删死属性。clean-html 和
+  // docx 两条路本来就报这一条，Markdown 这条之前拿到了 tidied 却没往外说，
+  // 于是 [x](…?utm_source=z) 转完 href 变了而页面上一句话都没有。
+  if (tidied.length) {
+    warnings.push(`Cleaned out: ${listSome(tidied, 8)}`);
   }
   if (!fragment.trim()) {
     warnings.push("Nothing to show — the Markdown had no content.");

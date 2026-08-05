@@ -119,7 +119,7 @@ export async function convertDocx(
     },
   );
 
-  const { html: clean, removed } = sanitizeHtml(html);
+  const { html: clean, removed, tidied } = sanitizeHtml(html);
   // 净化之后不再做任何会重新引入标签的处理，走一遍 DOM 确认这一点
   assertClean(clean);
 
@@ -137,6 +137,13 @@ export async function convertDocx(
   const warnings = notes.slice(0, 8);
   if (notes.length > warnings.length) {
     warnings.push(`…and ${notes.length - warnings.length} more notes like these.`);
+  }
+
+  // Word 里的超链接常带 utm_*，从 Google Docs 转存的 .docx 还带 /url?q= 包装。
+  // 改了链接指向就要说，排在 mammoth 那些样式提示前面 —— 那些是「这里没转好」，
+  // 这条是「我们动了你的内容」。
+  if (tidied.length) {
+    warnings.unshift(`Cleaned out: ${listSome(tidied, 8)}`);
   }
 
   // 文档里带脚本或事件属性属于异常，明确告诉用户删了什么，别静悄悄处理

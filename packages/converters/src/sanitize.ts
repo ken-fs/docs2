@@ -51,13 +51,13 @@ const URL_ATTR = ["href", "src"];
  * `images/photo.png` 会被漏掉。负向断言里的 `[a-z][a-z0-9+.\-]*:` 是
  * RFC 3986 的 scheme 语法，所以 `foo/bar:baz` 不会被误判 —— 冒号在 / 之后。
  */
-const SAFE_URI = /^(?:(?:https?|mailto|ftp):|(?![a-z][a-z0-9+.\-]*:))/i;
+export const SAFE_URI = /^(?:(?:https?|mailto|ftp):|(?![a-z][a-z0-9+.\-]*:))/i;
 
 /**
  * 校验 URL 前要先剥掉的空白。抄的是 DOMPurify 自己那张表：`java\nscript:` 在
  * 浏览器眼里等于 `javascript:`，所以不能只 trim 普通空格。
  */
-const ATTR_WHITESPACE =
+export const ATTR_WHITESPACE =
   /[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g;
 
 const CONFIG: Config = {
@@ -97,7 +97,160 @@ export type SanitizeReport = {
   html: string;
   /** 被删掉的标签名和属性名，去重后按出现顺序。用来给用户提示「有东西被移走了」。 */
   removed: string[];
+  /**
+   * 改写过的链接：拆掉的 google.com/url 包装、摘掉的跟踪参数。
+   *
+   * 跟 removed 分开，因为两件事的分量不一样 —— removed 是「删掉了不该在的东西」，
+   * 这个是「我们动了你的链接指向」。后者必须单独说，混在一起会被死 class 挤掉。
+   */
+  tidied: string[];
 };
+
+/**
+ * 跟踪参数。Google Docs 会把外链包一层 google.com/url?q=…，
+ * 从别处复制的链接常带 utm_*。方案 §6.3 要求清掉。
+ *
+ * 定义在这里而不是 html-out.ts：两条链路（→Markdown 和 →HTML）必须清同一批
+ * 参数，否则同一个链接在两个站上会得到两个不同的结果。
+ */
+const TRACKING_PARAM =
+  /^(?:utm_[a-z_]+|gclid|fbclid|msclkid|mc_[a-z]+|_hs[a-z]+|igshid|si|ref_src|ref_url|usp)$/i;
+
+/**
+ * 剥掉 Google 的 /url?q= 包装和 utm_* 之类的参数。
+ *
+ * 拆出来的目标 URL 必须重新过一遍 SAFE_URI —— 包装里可以塞
+ * ?q=javascript:alert(1)，那串东西没经过 DOMPurify 的检查。这是整条链路里
+ * 唯一会往 href 写入新值的地方，所以校验就放在这儿。
+ */
+export function unwrapLink(href: string, tidied: Set<string>): string {
+  let url: URL;
+  try {
+    url = new URL(href, "https://example.invalid/");
+  } catch {
+    return href;
+  }
+
+  // Google Docs 的外链包装：google.com/url?q=<真地址>
+  if (/(?:^|\.)google\.[a-z.]+$/i.test(url.hostname) && url.pathname === "/url") {
+    const target = url.searchParams.get("q") ?? url.searchParams.get("url");
+    if (target && SAFE_URI.test(target.replace(ATTR_WHITESPACE, ""))) {
+      tidied.add("google.com/url wrapper");
+      return unwrapLink(target, tidied);
+    }
+  }
+
+  let touched = false;
+  for (const key of [...url.searchParams.keys()]) {
+    if (TRACKING_PARAM.test(key)) {
+      url.searchParams.delete(key);
+      tidied.add(`?${key}`);
+      touched = true;
+    }
+  }
+  if (!touched) return href;
+
+  // 相对地址是借了个假 origin 解析的，还得还原成相对形式
+  const rebuilt = url.href.replace(/\?$/, "");
+  return rebuilt.startsWith("https://example.invalid/")
+    ? rebuilt.slice("https://example.invalid".length)
+    : rebuilt;
+}
+
+/**
+ * Google Docs 的「把全文加粗」外壳。
+ *
+ * 复制出来的内容被包在 <b style="font-weight:normal"> 里 —— Google 用它承载
+ * 文档级样式，而 style 会被上面的属性白名单删掉，剩一个语义正好相反的 <b>。
+ * 落到 Markdown 里就是首尾各一个孤立的 `**`（turndown 照实翻译它看见的标签）。
+ *
+ * 判据是「这个行内标签直接装着块级元素」：<b> 是行内标签，合法 HTML 里它不会
+ * 包着 <p> 或 <h1>。会这么写的只有 Google 那层文档级外壳，所以拆它不会误伤
+ * 真的要加粗的内容。
+ *
+ * 移动节点不新建标签，所以仍然满足 §13 的「净化后不得重新引入危险标签」。
+ */
+const BLOCK_CHILD = "p,h1,h2,h3,h4,h5,h6,ul,ol,table,blockquote,pre,div,section";
+
+/**
+ * 净化后的收尾：拆掉 Google 的外壳、把链接还原成真地址。
+ *
+ * 只做三件事 —— 移动已有节点、删属性、改 href。都不可能把标签变回来，
+ * 所以放在净化之后是安全的（§13）。
+ *
+ * 跟 html-out.ts 的 declutter 分开是因为那边还要清死 class（class 在这条
+ * 链路上早被属性白名单删干净了，Markdown 里也用不上），而这边要拆 <b> 外壳
+ * ——那件事在 HTML 输出侧由 clean-html.ts 单独做。共用的部分是 unwrapLink。
+ */
+function tidyLinks(html: string): { html: string; tidied: string[] } {
+  if (typeof DOMParser === "undefined") return { html, tidied: [] };
+
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const notes = new Set<string>();
+
+  // 外壳可能套了几层，倒着走（querySelectorAll 是文档顺序）能保证拆掉一个
+  // 之后剩下的引用仍然有效
+  const shells = Array.from(doc.body.querySelectorAll("b,strong,i,em,span,u"));
+  let unwrapped = 0;
+  for (const el of shells.reverse()) {
+    if (!el.querySelector(BLOCK_CHILD)) continue;
+    el.replaceWith(...Array.from(el.childNodes));
+    unwrapped++;
+  }
+
+  for (const el of Array.from(doc.body.querySelectorAll("a[href]"))) {
+    const href = el.getAttribute("href") ?? "";
+    const next = unwrapLink(href, notes);
+    if (next !== href) el.setAttribute("href", next);
+  }
+
+  // 链接的事排在前面：一次 Google Docs 粘贴只会带一个外壳，但可能带十几个
+  // 被重写的链接，而「我们改了你的链接指向」是更该被看见的那条
+  const tidied = [...notes];
+  if (unwrapped) {
+    tidied.push(`${unwrapped} redundant wrapper ${unwrapped === 1 ? "tag" : "tags"}`);
+  }
+  return { html: doc.body.innerHTML, tidied };
+}
+
+/**
+ * DOMPurify.removed 里不是用户内容的那几项。
+ *
+ * 它报的是「我从 DOM 上摘掉了这个节点」，而那棵 DOM 是它自己 parse 出来的 ——
+ * 里面有用户没写过的东西：
+ *
+ *   body —— 每次净化都会有一条。DOMPurify 把输入塞进一份完整文档再解析，
+ *   收工时把那层 <body> 壳子摘掉也记一笔。于是「移除了不安全的 HTML：<body>」
+ *   出现在每一次转换上，包括输入只有一行 `Hello there.` 的时候。
+ *
+ *   #comment —— DOM 里注释节点的 nodeName 就长这样，不是标签名。
+ *   `<!-- 待补 -->` 是 Markdown 和 HTML 里都完全合法的写法，说它不安全是不对的；
+ *   而且印出来的 `<#comment>` 根本不是用户能在自己文件里找到的字符串。
+ *
+ * 这两条都会让那句提示变成谎话 —— 指着用户写对的东西说危险。真有 <script>
+ * 时提示照旧，那才是它该出现的时候。
+ *
+ * 判断放在这一层而不是让 UI 去过滤：两条链路（sanitize.ts / html-out.ts）
+ * 都要这个结论，而「哪些是解析器痕迹」是净化器自己的知识，不是界面的知识。
+ */
+const PARSER_ARTIFACT = new Set(["body", "#comment", "html", "head"]);
+
+/**
+ * DOMPurify.removed → 给人看的名字表。
+ *
+ * 两个净化器（这里和 html-out.ts）共用，因为「删了什么」这件事的报告口径
+ * 必须一致：同一份输入在 HTML→Markdown 和 Markdown→HTML 两条路上，不该一边
+ * 说被删了东西、一边说没有。
+ */
+export function describeRemoved(removed: typeof DOMPurify.removed): string[] {
+  const names = removed.flatMap((item) => {
+    if ("attribute" in item && item.attribute) return [`@${item.attribute.name}`];
+    const node = "element" in item ? item.element : undefined;
+    const name = (node?.nodeName ?? "unknown").toLowerCase();
+    return PARSER_ARTIFACT.has(name) ? [] : [`<${name}>`];
+  });
+  return Array.from(new Set(names));
+}
 
 /**
  * 净化一段 HTML，并报告删了什么。
@@ -111,18 +264,10 @@ export function sanitizeHtml(dirty: string): SanitizeReport {
   if (!DOMPurify.isSupported) throw new SanitizerUnavailableError();
 
   const html = DOMPurify.sanitize(dirty, CONFIG);
+  const removed = describeRemoved(DOMPurify.removed);
 
-  const removed = Array.from(
-    new Set(
-      DOMPurify.removed.map((item) => {
-        if ("attribute" in item && item.attribute) return `@${item.attribute.name}`;
-        const node = "element" in item ? item.element : undefined;
-        return `<${(node?.nodeName ?? "unknown").toLowerCase()}>`;
-      }),
-    ),
-  );
-
-  return { html, removed };
+  const { html: tidyHtml, tidied } = tidyLinks(html);
+  return { html: tidyHtml, removed, tidied };
 }
 
 /**

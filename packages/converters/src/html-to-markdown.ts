@@ -32,7 +32,7 @@ export function convertHtml(
     throw new Error("That HTML is too large to convert here.");
   }
 
-  const { html: clean, removed } = sanitizeHtml(html);
+  const { html: clean, removed, tidied } = sanitizeHtml(html);
   // 净化之后不能再有任何会重新引入标签的处理
   assertClean(clean);
 
@@ -43,6 +43,12 @@ export function convertHtml(
     warnings.push(
       `Removed unsafe HTML from this input: ${listSome(removed, 8)}`,
     );
+  }
+  // 改了用户的链接就必须说 —— 拆掉 google.com/url 包装、摘掉 utm_* 都是在动
+  // 内容，不是在删死属性。这条以前拿到了 tidied 却没往外说：从 Google Docs
+  // 粘贴进来的链接被重写了，页面上一句话都没有。
+  if (tidied.length) {
+    warnings.push(`Cleaned out: ${listSome(tidied, 8)}`);
   }
   if (!markdown) {
     warnings.push("Nothing left after conversion — the input had no text content.");
