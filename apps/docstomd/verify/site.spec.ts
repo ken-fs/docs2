@@ -441,7 +441,12 @@ test("a missing trailing slash redirects to the canonical form", async ({ reques
     ["/ja/docx-to-markdown", "/ja/docx-to-markdown/"],
   ]) {
     const res = await request.get(from, { maxRedirects: 0 });
-    expect(res.status(), `status for ${from}`).toBe(308);
+    /* 307，不是 308 —— Cloudflare Workers 的 Static Assets 在
+       html_handling: force-trailing-slash 下给的就是 307（实测 workerd，
+       官方 html-handling 文档的表格里也只出现 307）。308 语义上更适合
+       这种规范化跳转，但线上给的不是它，断言跟着线上写，否则这一条
+       测的是 serve.mjs 自己而不是线上行为。 */
+    expect(res.status(), `status for ${from}`).toBe(307);
     expect(res.headers()["location"], `location for ${from}`).toBe(to);
   }
 });

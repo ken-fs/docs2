@@ -263,6 +263,19 @@ Markdown 的限制（纯文本没有字体、一行必须是一行、没有 cols
 讲 HTML 的（mso- 样式、`<h2>` 拿到站点样式、colspan 能表达）。同一件事换个词
 说仍然是同一页，方案 §8.7 要的是每页有它自己的角度。
 
+## 部署（Cloudflare Workers，不是 Pages）
+
+两个站是两个独立的 Worker（Static Assets），配置在 `apps/*/wrangler.jsonc`。方案原文写的是 Pages —— 改成 Workers 是因为 Cloudflare 现在主推它、Pages 在维护状态；产物是同一堆静态文件，两边都发得出去。
+
+**代价是 Pages 白给的两条行为在这儿要手写**，而且默认值跟这个站正好对不上，配错了**不报错**，只会静默变坏：
+
+- `html_handling: "force-trailing-slash"` —— 站点是 `trailingSlash: true`，canonical 和 hreflang 写的全是带斜杠的地址。默认的 `auto-trailing-slash` 让不带斜杠的地址直接 200，于是同一个页面有两个都能打开的地址，权重白白分掉。
+- `not_found_handling: "404-page"` —— `out/404.html` 必须以 404 状态码发。默认 `none` 发一个裸 404；`single-page-application` 更糟，会把每个打错的地址变成状态码 200 的重复内容，而「认不出的路径必须真 404」是这个项目已经花过力气的一条（`parseSegments` 返回 null → `notFound()`，两站各四条 spec 盯着）。
+
+**尾斜杠跳转是 307，不是 308。**原来 `serve.mjs` 和两站的 spec 都写 308（凭「永久重定向更适合规范化跳转」的直觉），而实测 `wrangler dev`（真 workerd）给的是 307，官方 html-handling 文档的表格里也只有 307。三处都改成 307 了 —— 写错的代价不是测试报红，是**本地验收在这一条上撒谎**，而 `serve.mjs` 存在的全部意义就是「本地测出来的行为等于线上」。
+
+验配置不用真部署：`wrangler deploy --dry-run --config apps/<app>/wrangler.jsonc` 会解析配置并数出 assets 文件数；要验路由行为就 `wrangler dev --config ... --port 8788 --local`，那是真 workerd，`curl -I` 一遍尾斜杠和 404 就知道。
+
 ## 别的注意事项
 
 Next.js 版本较新，API 和文件结构可能跟训练数据不一样，写代码前先读

@@ -44,6 +44,10 @@ next-env.d.ts
 test-results/
 playwright-report/
 
+# wrangler 的本地状态：dev 跑起来的 workerd 缓存、上传清单、遥测标记。
+# 不是配置（配置是 apps/*/wrangler.jsonc，那两份要进库），是运行痕迹。
+.wrangler/
+
 # pdfjs-dist 的 worker/cmaps/字体，由 scripts/copy-pdfjs.mjs 复制进来
 apps/*/public/pdfjs/
 

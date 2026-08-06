@@ -10,6 +10,8 @@
     "dev:html": "pnpm --filter docs2html dev",
     "build:html": "pnpm --filter docs2html build",
     "test:html": "pnpm --filter docs2html test",
+    "deploy:md": "pnpm --filter docstomd build && wrangler deploy --config apps/docstomd/wrangler.jsonc",
+    "deploy:html": "pnpm --filter docs2html build && wrangler deploy --config apps/docs2html/wrangler.jsonc",
     "verify:cross": "node verify/cross-site.mjs",
     "verify:perf": "node verify/lighthouse.mjs",
     "verify:browsers": "node verify/browsers.mjs",
@@ -19,6 +21,7 @@
   },
   "packageManager": "pnpm@10.30.2",
   "devDependencies": {
-    "@playwright/test": "1.62.1"
+    "@playwright/test": "1.62.1",
+    "wrangler": "4.119.0"
   }
 }

@@ -1,15 +1,15 @@
 /**
- * 把 out/ 当静态站点端出来，行为对齐 Cloudflare Pages：
+ * 把 out/ 当静态站点端出来，行为对齐 Cloudflare Workers 的 Static Assets：
  *
  *   /foo/          → out/foo/index.html
- *   /foo           → 308 到 /foo/          （trailingSlash: true 的产物）
+ *   /foo           → 307 到 /foo/          （trailingSlash: true 的产物）
  *   找不到          → out/404.html，状态码 404
  *   文本资源        → 按 Accept-Encoding 用 br / gzip 压缩后发
  *
  * 为什么不用 next start：一期部署是纯静态托管，next start 会跑 Node 服务器，
  * 测出来的 404 行为和线上不一样。这里测的就是真正要上传的那堆文件。
  *
- * 压缩这件事必须做，不然性能测出来是假的：Cloudflare Pages 对文本资源默认开
+ * 压缩这件事必须做，不然性能测出来是假的：Cloudflare 对文本资源默认开
  * brotli，而这堆 JS 压完只剩四分之一（1955KB → 484KB）。不压的话 Lighthouse
  * 在慢 4G 节流下把「下载完所有 JS」算成五六秒，LCP 直接判到 76 分 —— 那是在
  * 测这个测试服务器，不是在测站点。
@@ -109,7 +109,7 @@ createServer(async (req, res) => {
       // 中间层可能把压缩过的响应发给不支持的客户端
       headers.vary = "Accept-Encoding";
     }
-    // 指纹化的静态资源给长缓存，跟 Cloudflare Pages 对 _next/static 的行为一致。
+    // 指纹化的静态资源给长缓存，跟 Cloudflare 对 _next/static 的行为一致。
     // Lighthouse 的 cache-insight 审计会看这个头。
     headers["cache-control"] = pathname.startsWith("/_next/static/")
       ? "public, max-age=31536000, immutable"
@@ -131,7 +131,14 @@ createServer(async (req, res) => {
     // 目录存在就补斜杠跳过去，跟 trailingSlash: true 的线上行为一致
     const body = await readIfFile(join(OUT, pathname, "index.html"));
     if (body) {
-      res.writeHead(308, { location: `${pathname}/${url.search}` });
+      // 307 而不是 308：这是 Cloudflare Workers 的 Static Assets 在
+      // html_handling: force-trailing-slash 下的实际状态码（实测 workerd，
+      // 官方文档的 html-handling 表格里也只出现 307）。
+      //
+      // 写 308 会让本地验收在这一条上撒谎 —— 而这个文件存在的全部意义
+      // 就是「本地测出来的行为等于线上」。308 是永久重定向，语义上更适合
+      // 这种规范化跳转，但线上给的不是它，所以这里跟着线上写。
+      res.writeHead(307, { location: `${pathname}/${url.search}` });
       return res.end();
     }
   }

@@ -1,0 +1,40 @@
+/**
+ * Cloudflare Workers 的部署配置（Static Assets，不是 Pages）。
+ *
+ * 跟 apps/docstomd/wrangler.jsonc 是同一份，只有 name 不同 —— 两个站是两个
+ * 独立的 Worker、两个域名，一个项目装不下两份 out/。
+ *
+ * 这个站没有服务端代码 —— `next.config.ts` 是 output: "export"，转换全在
+ * 浏览器里跑（那就是「文件不上传」这个承诺的实现方式）。所以这里只有 assets，
+ * 没有 main：Worker 本体是空的，请求全部由静态资源层应答。
+ *
+ * 下面两条 assets 行为不是可选项，是这个站的硬要求 —— 而且它们的默认值
+ * 跟这个站对不上，配错了不报错，只会静默变坏：
+ *
+ *   html_handling: force-trailing-slash
+ *     next.config.ts 是 trailingSlash: true，canonical 和 hreflang 写的
+ *     全是带斜杠的地址。默认值 auto-trailing-slash 会让不带斜杠的地址
+ *     直接 200 —— 于是同一个页面有两个都能打开的地址，canonical 指向
+ *     其中一个，另一个白白分掉权重。
+ *
+ *   not_found_handling: 404-page
+ *     out/404.html 必须以 404 状态码发出去。默认是 none（发一个裸 404），
+ *     而 single-page-application 更糟 —— 那会把每个打错的地址变成一份
+ *     状态码 200 的重复内容（软 404）。方案要求认不出的路径真 404，
+ *     `parseSegments` 返回 null 让页面 notFound() 就是为了这个。
+ *
+ * 本地一直是 verify/serve.mjs 在模拟这两条行为（外加大小写敏感），所以
+ * 改这里要跟那个文件对照着看 —— 两边说的应该是同一件事。
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "docs2html",
+  // 只影响 Worker 运行时的 API 行为。这里没有 Worker 代码，但字段是必填的
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    // 相对这个配置文件所在的目录，也就是 apps/docs2html/out/
+    "directory": "./out",
+    "html_handling": "force-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

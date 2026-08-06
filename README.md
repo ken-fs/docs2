@@ -56,7 +56,27 @@ node apps/docstomd/verify/serve.mjs &   # 3311
 node apps/docs2html/verify/serve.mjs &  # 3312
 ```
 
-`serve.mjs` 模拟 Cloudflare Pages 的行为（大小写敏感、尾斜杠、404），因为一期就托管在那儿，而 macOS 的文件系统不区分大小写，本地「能打开」不代表线上能。
+`serve.mjs` 模拟线上托管的行为（大小写敏感、尾斜杠、404），因为本地「能打开」不代表线上能 —— macOS 的文件系统不区分大小写。它对齐的具体状态码见下面那节。
+
+## 部署
+
+两个站是两个独立的 Cloudflare Worker（Static Assets），配置各自在 `apps/*/wrangler.jsonc`。一个项目装不下两份 `out/`：两个域名、两份产物。
+
+```bash
+pnpm deploy:md      # 构建 docstomd 并发布
+pnpm deploy:html    # 构建 docs2html 并发布
+```
+
+控制台连 Git 自动部署时，两个项目分别填：
+
+| | docstomd | docs2html |
+|---|---|---|
+| 构建命令 | `pnpm --filter docstomd build` | `pnpm --filter docs2html build` |
+| 部署命令 | `npx wrangler deploy --config apps/docstomd/wrangler.jsonc` | `npx wrangler deploy --config apps/docs2html/wrangler.jsonc` |
+
+`wrangler.jsonc` 里那两条 `assets` 行为不是可选项，而且默认值跟这个站对不上、配错了不报错只会静默变坏：`html_handling: force-trailing-slash`（对齐 `trailingSlash: true`，否则同一页有两个都能打开的地址，白白分权重）、`not_found_handling: 404-page`（否则打错的地址变成状态码 200 的软 404）。理由写在那两个文件的注释里。
+
+**尾斜杠跳转是 307，不是 308。**实测 workerd 和官方 html-handling 文档都是 307（临时重定向）。308 语义上更适合这种规范化跳转，但线上给的不是它，所以 `serve.mjs` 和两站的 spec 都跟着写 307 —— 否则本地验收测的是 `serve.mjs` 自己，不是线上行为。
 
 关于 `verify:contrast`：改色板必跑。Lighthouse 的 color-contrast 审计只看首屏、只抽样，改一个色变量它未必报。这个脚本把 25 个页面里 header/main/footer 所有含文字的元素全走一遍（FAQ 折叠面板会先点开，Base UI 收起时是真的不渲染），按 WCAG AA 判：正文 4.5:1，大字 3:1。它上线时就抓到两处既存不达标 —— docstomd 的 `--ink-faint`（3.98）和 docs2html 的 `--graphite-faint`（3.87），Playwright 和 Lighthouse 都漏了。
 
