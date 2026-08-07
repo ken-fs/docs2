@@ -169,6 +169,12 @@ export function Converter({
   const [typed, setTyped] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
+  // 结果区在首屏之外：拖/选/粘贴一份文件，转换在几百毫秒内完成，但产物和
+  // 「下载」按钮出现在下方滚动区里，用户以为没反应。新导入时把结果滚进视野。
+  const resultsRef = useRef<HTMLDivElement>(null);
+  // 只有「新导入」才滚 —— 手动点队列里的另一个任务不该硬滚，那会打断人。
+  // 设成 ref 而不是 state：它只是给下面那个 effect 传一次信号，不参与渲染。
+  const wantScroll = useRef(false);
 
   const active = jobs.find((j) => j.id === activeId) ?? null;
   const done = jobs.filter((j) => j.status === "done");
@@ -248,6 +254,7 @@ export function Converter({
 
       setJobs((prev) => [...prev, ...fresh]);
       setActiveId((cur) => cur ?? fresh[0]?.id ?? null);
+      wantScroll.current = true;
 
       for (let i = 0; i < files.length; i++) {
         const job = fresh[i];
@@ -363,6 +370,7 @@ export function Converter({
         text,
       };
       setJobs((prev) => [...prev, job]);
+      wantScroll.current = true;
 
       try {
         const result =
@@ -490,6 +498,21 @@ export function Converter({
     const t = setTimeout(() => setCopied(false), 1600);
     return () => clearTimeout(t);
   }, [copied]);
+
+  // 新导入后把结果区滚进视野。挂在 jobs 上而不是在导入回调里直接滚：
+  // 结果区是 `jobs.length > 0` 才渲染的，导入的那一刻它还没进 DOM，
+  // scrollIntoView 会滚到一个不存在的节点。等 jobs 变化、DOM 更新后再滚才对得上。
+  useEffect(() => {
+    if (!wantScroll.current || !resultsRef.current) return;
+    wantScroll.current = false;
+    // 尊重「减少动态效果」：这类用户要的是立刻到位，不是一段动画。
+    // globals.css 里也全局关了缓动，这里跟它保持一致。
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    resultsRef.current.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [jobs]);
 
   // 支持整站粘贴：优先当文件，其次收剪贴板里的富文本
   useEffect(() => {
@@ -843,7 +866,10 @@ export function Converter({
 
       {/* ── 结果：非对称双栏，左窄右宽且顶部错位 ─────────── */}
       {jobs.length > 0 && (
-        <div className="mt-8 grid gap-6 lg:grid-cols-[19rem_minmax(0,1fr)] lg:gap-8">
+        <div
+          ref={resultsRef}
+          className="mt-8 grid gap-6 lg:grid-cols-[19rem_minmax(0,1fr)] lg:gap-8"
+        >
           {/* Queue */}
           <aside className="lg:pt-7">
             <div className="mb-3 flex items-baseline justify-between">
