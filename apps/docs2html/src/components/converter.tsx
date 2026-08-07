@@ -476,13 +476,16 @@ export function Converter({
   useEffect(() => {
     if (!wantScroll.current || !resultsRef.current) return;
     wantScroll.current = false;
+    // 上方留一截，不用 scrollIntoView({block:"start"}) 把结果顶到视口最上沿 ——
+    // 那样上面的拖放区整个被推出屏幕，人会觉得「被传送走了」，尤其结果很短
+    // （比如一条 failed 提示）时下面还空一大片。留 96px 让拖放区底部还露着，
+    // 「刚才拖进去的东西」和「它变成了什么」在同一屏里，看得出因果。
+    const MARGIN = 96;
+    const top = resultsRef.current.getBoundingClientRect().top + window.scrollY - MARGIN;
     // 尊重「减少动态效果」：这类用户要的是立刻到位，不是一段动画。
     // globals.css 里也全局关了缓动，这里跟它保持一致。
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    resultsRef.current.scrollIntoView({
-      behavior: reduce ? "auto" : "smooth",
-      block: "start",
-    });
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
   }, [jobs]);
 
   // 支持整站粘贴：优先当文件，其次收剪贴板里的富文本
