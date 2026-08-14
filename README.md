@@ -1,11 +1,11 @@
 # document-tools
 
-两个文档转换工具站的单体仓库。转换全部在浏览器里完成 —— 没有后端，文件不上传。
+两个文档转换工具站的单体仓库。转换全部在浏览器里完成 —— 没有后端，文件不上传（DOCX / PDF / Excel / HTML / Markdown 都在本地解析）。
 
 | 站点 | 域名 | 做什么 |
 | --- | --- | --- |
-| `apps/docstomd` | docstomd.com | 文档 → Markdown |
-| `apps/docs2html` | docs2html.com | 文档 → HTML |
+| `apps/docstomd` | [docstomd.com](https://docstomd.com) | 文档 → Markdown |
+| `apps/docs2html` | [docs2html.com](https://docs2html.com) | 文档 → HTML |
 
 每站六个工具页 × 六种语言（English / 简体中文 / 繁體中文 / Español / Português / 日本語），加上各自的 About / Contact / Privacy / Terms / Cookies，构建出 154 个静态页面（docstomd 80，docs2html 74）。
 
