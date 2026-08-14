@@ -13,6 +13,7 @@
     "./csv-to-markdown": "./src/csv-to-markdown.ts",
     "./excel-to-markdown": "./src/excel-to-markdown.ts",
     "./pdf-to-markdown": "./src/pdf-to-markdown.ts",
+    "./office-to-markdown": "./src/office-to-markdown.ts",
     "./html-out": "./src/html-out.ts",
     "./markdown-to-html": "./src/markdown-to-html.ts",
     "./docx-to-html": "./src/docx-to-html.ts",
@@ -22,6 +23,7 @@
     "./excel-to-html": "./src/excel-to-html.ts"
   },
   "dependencies": {
+    "@firecrawl/anydoc-wasm": "^0.1.8",
     "cfb": "^1.2.2",
     "dompurify": "^3.4.13",
     "mammoth": "^1.12.0",

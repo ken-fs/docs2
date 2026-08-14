@@ -28,7 +28,7 @@ const B = "http://localhost:3312"; // docs2html
 const SLUGS_A = [
   "", "docx-to-markdown", "word-to-markdown", "pdf-to-markdown",
   "html-to-markdown", "csv-to-markdown", "excel-to-markdown",
-  "google-docs-to-markdown",
+  "google-docs-to-markdown", "pptx-to-markdown",
   "guides",
   "guides/word-to-markdown-keep-formatting",
   "guides/pdf-to-markdown-layout",

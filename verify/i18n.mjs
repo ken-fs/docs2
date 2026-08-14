@@ -20,7 +20,7 @@ const SITES = [
     slugs: [
       "", "docx-to-markdown", "word-to-markdown", "pdf-to-markdown",
       "html-to-markdown", "csv-to-markdown", "excel-to-markdown",
-      "google-docs-to-markdown",
+      "google-docs-to-markdown", "pptx-to-markdown",
       // 正式页面也要查：AdSense 审核会看，而它们最容易被漏在翻译流程外面
       "about", "contact", "privacy", "terms", "cookies",
       // 内容页的字数是工具页的好几倍，漏翻一段的概率也高好几倍
@@ -70,8 +70,11 @@ const PROPER = new Set(
     "markdown", "md", "html", "csv", "tsv", "pdf", "docx", "doc", "xlsx", "excel",
     "word", "google docs", "docstomd", "docs2html", "docstomd.com",
     "docs2html.com", "adsense", "cloudflare", "github", "email", "zip",
+    "pptx", "ppt", "odp", "powerpoint",
     ".md", ".html", ".htm", ".docx", ".doc", ".csv", ".tsv", ".xlsx", ".pdf",
+    ".pptx", ".ppt", ".odp",
     "mammoth", "turndown", "markdown-it", "dompurify", "pdf.js", "utf-8",
+    "anydoc", "webassembly",
     "commonmark", "gfm", "mit", "bsd", "apache", "mpl",
   ].map((s) => s.toLowerCase()),
 );

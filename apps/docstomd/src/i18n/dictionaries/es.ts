@@ -722,6 +722,79 @@ const es: Dictionary = {
         BATCH,
       ],
     },
+    "pptx-to-markdown": {
+      short: "PPTX → MD",
+      eyebrow: "PPTX → Markdown",
+      title: "Convertir PPTX a Markdown — gratis, con las notas del orador",
+      description:
+        "Convierte una presentación de PowerPoint a Markdown en tu navegador. El título, las viñetas y las notas del orador de cada diapositiva salen como secciones de texto. Admite .pptx, .ppt y .odp de OpenDocument. Nada se sube.",
+      keywords: [
+        "pptx a markdown",
+        "powerpoint a markdown",
+        "convertir pptx a markdown",
+        "diapositivas a markdown",
+        "ppt a md online",
+      ],
+      h1: ["Saca el texto de una presentación.", "Con las notas."],
+      lede: [
+        "Suelta un .pptx y llévate las palabras: los títulos, las viñetas, las tablas y las notas debajo de cada diapositiva.",
+        "Corre en tu máquina, así que una presentación interna es buena para probar.",
+      ],
+      note: {
+        heading: "Bueno saberlo",
+        items: [
+          "Los títulos de diapositiva pasan a encabezados, en orden",
+          "Las notas del orador también salen, no solo las diapositivas",
+          "Admite .pptx, el viejo .ppt y el .odp de OpenDocument",
+        ],
+      },
+      body: {
+        stepsHeading: "Cómo funciona",
+        steps: [
+          "Suelta un .pptx, .ppt o .odp en la caja de arriba, o haz clic para elegirlo. Docenas a la vez está bien.",
+          "La presentación la lee anydoc en tu navegador: un conversor en Rust compilado a WebAssembly, servido desde este sitio, así que no se busca nada en una CDN ni se sube ningún archivo.",
+          "Cada diapositiva sale como su propia sección: el título como encabezado, el cuerpo como texto y listas, y las notas del orador después. Léelo y luego copia el Markdown o descarga el .md.",
+        ],
+        supportedHeading: "Qué admite",
+        supported: [
+          ".pptx de PowerPoint 2007 en adelante, incluidos PowerPoint para Mac y la web",
+          "El viejo .ppt de PowerPoint 97–2003, leído desde su formato binario",
+          "Presentaciones .odp de OpenDocument, de LibreOffice Impress y exportaciones de Google Slides",
+          "Títulos de diapositiva como encabezados, y listas con viñetas o numeradas según su nivel",
+          "Las notas del orador, las tablas de una diapositiva y los enlaces incrustados",
+          "Docenas de archivos de una vez, descargables en un solo zip",
+        ],
+        limitsHeading: "Qué no hace",
+        limits: [
+          "El diseño visual se pierde: una presentación es un lienzo de cajas colocadas, y Markdown es una sola columna de texto",
+          "Las imágenes salen como texto alternativo, no incrustadas; una diapositiva que es casi toda imagen queda pobre",
+          "Animaciones, transiciones y el vídeo o audio incrustado no tienen equivalente en texto",
+          "SmartArt, gráficos y WordArt salen como su texto a lo sumo, y a menudo como nada",
+          "Las presentaciones protegidas con contraseña se rechazan en vez de leerse a medias: quita la contraseña primero",
+          "Archivos de más de 25 MB, y cualquiera cuya relación de compresión parezca una bomba zip",
+        ],
+      },
+      faq: [
+        {
+          q: "¿Salen las notas del orador?",
+          a: "Sí, y a menudo es lo importante. Las notas de cada diapositiva quedan justo después de su contenido, así que una presentación que narraste conserva lo que ibas a decir. Si una diapositiva no tiene notas, no se añade nada.",
+        },
+        PRIVACY,
+        {
+          q: "¿Qué pasa con las imágenes de mis diapositivas?",
+          a: "Salen como texto alternativo —la descripción que guardó PowerPoint, en un marcador— no como imágenes incrustadas. Una presentación es un medio visual, así que una diapositiva que es sobre todo un diagrama o una captura queda pobre. Lo que sobrevive es el texto, los títulos y las notas.",
+        },
+        {
+          q: "¿Por qué no hay diseño, solo una lista de secciones?",
+          a: "Porque una diapositiva es un lienzo: cajas de texto, imágenes y formas colocadas por coordenadas. Markdown es una columna de texto, de arriba abajo. Así que cada diapositiva se aplana en una sección, en orden: la lectura de arriba abajo, no la disposición en la página.",
+        },
+        {
+          q: "¿Funciona el viejo .ppt, o solo el .pptx?",
+          a: "Ambos, más el .odp de OpenDocument. El formato se detecta del propio archivo, no de la extensión, así que un .ppt renombrado a .pptx se lee bien igual. En el formato antiguo los gráficos y las imágenes salen más pobres, pero los títulos, el texto y las notas pasan.",
+        },
+        BATCH,
+      ],
+    },
   },
   legal: {
     about: {

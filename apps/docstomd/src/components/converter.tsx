@@ -129,6 +129,9 @@ const KNOBS = {
   pdf: { bullet: true, pageMarks: true },
   csv: { header: true, align: true, delimiter: true },
   xlsx: { header: true, align: true },
+  // anydoc 自己生成 markdown，bullet/fence/images/tables 这些选项它一概不认，
+  // 所以一个旋钮都不摆 —— 摆一个调了没用的开关比不摆更糟。
+  office: {},
 } as const satisfies Record<
   ToolInput["engine"],
   Partial<
@@ -236,6 +239,13 @@ export function Converter({
           return { ...renderSheets(book, [0], options), book } as ConvertResult & {
             book: Workbook;
           };
+        }
+        case "office": {
+          const { convertOffice } = await import(
+            "@document-tools/converters/office-to-markdown"
+          );
+          // .wasm 由打包器发到同源的 _next/static/media/，不碰 CDN
+          return convertOffice(file, options);
         }
       }
     },

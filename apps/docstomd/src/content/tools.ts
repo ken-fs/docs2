@@ -20,6 +20,7 @@ export const PAGE_KEYS: PageKey[] = [
   "csv-to-markdown",
   "html-to-markdown",
   "google-docs-to-markdown",
+  "pptx-to-markdown",
 ];
 
 /** 导航里露出的 slug 页，首页不算。 */
@@ -111,7 +112,7 @@ function guideOfSlug(a: string, b: string): Route | undefined {
  *   paste   有没有粘贴/输入框，以及占位文案用哪种
  */
 export type ToolInput = {
-  engine: "docx" | "pdf" | "html" | "csv" | "xlsx";
+  engine: "docx" | "pdf" | "html" | "csv" | "xlsx" | "office";
   accept: string;
   paste: "none" | "html" | "csv";
 };
@@ -240,6 +241,14 @@ export const TOOL_INPUT: Record<PageKey, ToolInput> = {
     engine: "xlsx",
     accept:
       ".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    paste: "none",
+  },
+  "pptx-to-markdown": {
+    engine: "office",
+    // 演示文稿家族。.pptx 排最前（最认得），.ppt 次之，.odp 是 LibreOffice
+    // 的对应格式。三个都由 anydoc 的 WASM 转，同一块 blob。
+    accept:
+      ".pptx,.ppt,.odp,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-powerpoint,application/vnd.oasis.opendocument.presentation",
     paste: "none",
   },
 };
@@ -396,8 +405,8 @@ export function parseSegments(
 
 /**
  * 静态导出得把每条路径都列出来：
- *   13 页（首页 + 7 工具 + 5 正式）+ 1 个教程列表 + 6 篇教程 = 20
- *   × 6 语种 = 120 条
+ *   14 页（首页 + 8 工具 + 5 正式）+ 1 个教程列表 + 6 篇教程 = 21
+ *   × 6 语种 = 126 条
  */
 export function allSegments(): { segments: string[] }[] {
   return LOCALES.flatMap((locale) => {

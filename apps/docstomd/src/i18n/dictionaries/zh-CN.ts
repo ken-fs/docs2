@@ -718,6 +718,79 @@ const zhHans: Dictionary = {
         BATCH,
       ],
     },
+    "pptx-to-markdown": {
+      short: "PPTX → MD",
+      eyebrow: "PPTX → Markdown",
+      title: "PPTX 转 Markdown —— 免费，连演讲者备注一起转",
+      description:
+        "在浏览器里把 PowerPoint 演示文稿转成 Markdown。每页的标题、要点和演讲者备注都会变成一段段纯文本。支持 .pptx、.ppt 和 OpenDocument 的 .odp。文件不上传。",
+      keywords: [
+        "pptx 转 markdown",
+        "ppt 转 markdown",
+        "powerpoint 转 markdown",
+        "幻灯片转 markdown",
+        "在线 pptx 转 md",
+      ],
+      h1: ["把幻灯片里的字抠出来。", "备注也一起。"],
+      lede: [
+        "拖一个 .pptx 进来，把字拿走 —— 每页的标题、要点、表格，还有每页下面那段备注。",
+        "转换在你这台机器上跑，内部用的 deck 也能放心试。",
+      ],
+      note: {
+        heading: "先说清楚",
+        items: [
+          "每页标题变成标题行，按页顺序排",
+          "演讲者备注也转出来，不只是幻灯片正面",
+          "支持 .pptx、老的 .ppt 和 OpenDocument 的 .odp",
+        ],
+      },
+      body: {
+        stepsHeading: "怎么用",
+        steps: [
+          "把 .pptx、.ppt 或 .odp 拖到上面那个框，或者点一下自己选。几十个一起来都行。",
+          "文件在你的浏览器里由 anydoc 读开 —— 一个编译成 WebAssembly 的 Rust 转换器，代码从本站加载，不碰 CDN，文件也不上传。",
+          "每页出来是自己的一段：标题当标题行，正文是文字和列表，备注跟在后面。看一眼，然后复制走或者下载 .md。",
+        ],
+        supportedHeading: "支持什么",
+        supported: [
+          ".pptx，PowerPoint 2007 及以后，含 Mac 版和网页版",
+          "老的 .ppt（PowerPoint 97–2003），从它的二进制格式里读",
+          "OpenDocument 的 .odp，来自 LibreOffice Impress 或 Google 幻灯片导出",
+          "幻灯片标题变标题行，项目符号和编号列表按缩进层级保留",
+          "演讲者备注、幻灯片里的表格、以及内嵌的链接",
+          "几十个文件一次转，打包成一个 zip 下载",
+        ],
+        limitsHeading: "做不到什么",
+        limits: [
+          "视觉排版没了 —— 一页 deck 是一块摆满方框的画布，而 Markdown 是单栏文字",
+          "图片以 alt 文字的形式出来，不内嵌；一页几乎全是图的，读起来会很薄",
+          "动画、切换、以及内嵌的视频音频都没有文字对应物",
+          "SmartArt、图表、艺术字最多出它们的文字，常常什么都不剩",
+          "加密的 deck 会被挡下而不是读一半 —— 先去掉密码",
+          "超过 25 MB 的文件，以及压缩比看着像 zip bomb 的",
+        ],
+      },
+      faq: [
+        {
+          q: "演讲者备注能转出来吗？",
+          a: "能，而且这常常正是重点。每页的备注紧跟在这页内容后面，你讲过的那份 deck 还留着你本来想说的话。某页没备注就什么都不加。",
+        },
+        PRIVACY,
+        {
+          q: "幻灯片上的图片会怎样？",
+          a: "以 alt 文字出来 —— PowerPoint 存的那段描述，放在一个占位里，而不是内嵌的图。deck 本来是靠看的，所以一页要是主体是张图表或截图，读起来会很薄。留下的是文字、标题和备注。",
+        },
+        {
+          q: "为什么没有排版，只有一段段？",
+          a: "因为一页幻灯片是一块画布：文本框、图片、形状按坐标摆着。而 Markdown 是从上到下的单栏文字。所以每页被拍平成一段，按页顺序排 —— 给你的是从上往下读的顺序，不是页面上的摆放。",
+        },
+        {
+          q: "老的 .ppt 行吗，还是只有 .pptx？",
+          a: "都行，还有 OpenDocument 的 .odp。格式是从文件本身认的，不看扩展名，所以一个改名成 .pptx 的 .ppt 照样读得对。老格式里图表和图片更薄，但标题、正文和备注都能过来。",
+        },
+        BATCH,
+      ],
+    },
   },
   legal: {
     about: {

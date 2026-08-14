@@ -720,6 +720,80 @@ const en: Dictionary = {
         BATCH,
       ],
     },
+    "pptx-to-markdown": {
+      short: "PPTX → MD",
+      eyebrow: "PPTX → Markdown",
+      title: "PPTX to Markdown Converter — free, slides and speaker notes",
+      description:
+        "Convert a PowerPoint deck to Markdown in your browser. Each slide's title, bullets and speaker notes come through as plain sections. Takes .pptx, .ppt and OpenDocument .odp. Nothing is uploaded.",
+      keywords: [
+        "pptx to markdown",
+        "powerpoint to markdown",
+        "pptx to markdown converter",
+        "convert pptx to markdown online",
+        "ppt to md",
+        "slides to markdown",
+      ],
+      h1: ["Pull the text out of a deck.", "Speaker notes included."],
+      lede: [
+        "Drop a .pptx in and get the words — slide titles, bullets, tables and the notes under each slide.",
+        "It runs on your machine, so an internal deck is a fine thing to test with.",
+      ],
+      note: {
+        heading: "Good to know",
+        items: [
+          "Slide titles become headings, in slide order",
+          "Speaker notes come through, not just the slides",
+          "Takes .pptx, old .ppt and OpenDocument .odp",
+        ],
+      },
+      body: {
+        stepsHeading: "How it works",
+        steps: [
+          "Drop a .pptx, .ppt or .odp onto the box above, or click to pick one. Dozens at a time is fine.",
+          "The deck is read in your browser by anydoc, a Rust converter compiled to WebAssembly — the code is served from this site, so nothing is fetched from a CDN and no file is uploaded.",
+          "Each slide comes out as its own section: the title as a heading, the body as text and lists, the speaker notes after it. Read it, then copy the Markdown or download the .md.",
+        ],
+        supportedHeading: "What's supported",
+        supported: [
+          ".pptx from PowerPoint 2007 onward, plus PowerPoint for Mac and the web",
+          "Old .ppt from PowerPoint 97–2003, read from its binary format",
+          "OpenDocument .odp presentations from LibreOffice Impress and Google Slides exports",
+          "Slide titles as headings, bullet and numbered lists at their nesting depth",
+          "Speaker notes, tables on a slide, and embedded links",
+          "Dozens of files in one go, downloadable as a single zip",
+        ],
+        limitsHeading: "What it won't do",
+        limits: [
+          "The visual layout is gone — a deck is a canvas of positioned boxes, and Markdown is a single column of text",
+          "Images come through as alt text, not embedded; a slide that's mostly a picture reads thin",
+          "Animations, transitions, and embedded video or audio have no text equivalent",
+          "SmartArt, charts and WordArt come across as their text at best, often as nothing",
+          "Password-protected decks are refused rather than half-read — remove the password first",
+          "Files over 25 MB, and anything whose compression ratio looks like a zip bomb",
+        ],
+      },
+      faq: [
+        {
+          q: "Do the speaker notes come through?",
+          a: "Yes, and that's often the point. Each slide's notes land right after the slide's content, so a deck you narrated still carries what you meant to say. If a slide has no notes, nothing is added.",
+        },
+        PRIVACY,
+        {
+          q: "What happens to the images on my slides?",
+          a: "They come through as alt text — the description PowerPoint stored, in a placeholder — not as embedded pictures. A deck is a visual medium, so a slide that's mostly a diagram or a screenshot will read thin. The words, titles and notes are what survive.",
+        },
+        {
+          q: "Why is there no layout, just a list of sections?",
+          a: "Because a slide is a canvas: text boxes, images and shapes placed at coordinates. Markdown is one column of text, top to bottom. So each slide is flattened to a section in slide order — the reading you'd get top-to-bottom, not the arrangement on the page.",
+        },
+        {
+          q: "Does old .ppt work, or only .pptx?",
+          a: "Both, plus OpenDocument .odp. The format is detected from the file itself, not the extension, so a .ppt renamed to .pptx still reads correctly. Charts and images are thinner in the older format, but titles, text and notes come across.",
+        },
+        BATCH,
+      ],
+    },
   },
   legal: {
     about: {

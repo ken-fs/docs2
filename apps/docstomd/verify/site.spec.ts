@@ -20,6 +20,7 @@ const SLUGS = [
   "csv-to-markdown",
   "html-to-markdown",
   "google-docs-to-markdown",
+  "pptx-to-markdown",
 ];
 /** 方案 §15 要求 AdSense 上线前这五页齐备，而且每个语种都得有。 */
 const LEGAL = ["about", "contact", "privacy", "terms", "cookies"];
@@ -678,6 +679,26 @@ test("a scanned pdf says so instead of returning an empty file", async ({ page }
   // 用户会以为工具坏了，而真正该知道的是「这需要 OCR」
   await expect(page.getByText(/scan|no text/i).first()).toBeVisible({ timeout: 30000 });
   await expect(page.locator("pre")).toHaveCount(0);
+});
+
+test("pptx converts off same-origin wasm, notes and all", async ({ page }) => {
+  const { external, errors } = watchNetwork(page);
+  await page.goto("/pptx-to-markdown/");
+  await page.locator("input[type=file]").setInputFiles(`${FIXTURES}/deck.pptx`);
+  await expect(page.locator("pre").first()).toBeVisible({ timeout: 30000 });
+
+  const md = await page.locator("pre").first().innerText();
+  // 每张幻灯片的标题变成 ## 标题，按页顺序排
+  expect(md).toContain("## Quarterly Deck");
+  expect(md).toContain("## Findings");
+  // 正文和演讲者备注都要出来 —— 备注是这个页面的卖点
+  expect(md).toContain("Revenue climbed this quarter.");
+  expect(md).toContain("Say the revenue number out loud.");
+
+  // 「文件不出本机」也包括那块 6.7MB 的 .wasm：它由打包器发到同源的
+  // _next/static/media/，anydoc 的胶水去那儿取。任何外部请求都说明它跑去 CDN 了。
+  expect(external, "anydoc 打了外部请求").toEqual([]);
+  expect(errors).toEqual([]);
 });
 
 test("password-protected files say so instead of failing vaguely", async ({ page }) => {

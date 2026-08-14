@@ -21,7 +21,7 @@ const SITES = [
     slugs: [
       "", "docx-to-markdown", "word-to-markdown", "pdf-to-markdown",
       "html-to-markdown", "csv-to-markdown", "excel-to-markdown",
-      "google-docs-to-markdown",
+      "google-docs-to-markdown", "pptx-to-markdown",
       "about", "contact", "privacy", "terms", "cookies",
       // 内容页有工具页没有的排版元素：眉标、示例前后对照、正文里的行内代码
       "guides",

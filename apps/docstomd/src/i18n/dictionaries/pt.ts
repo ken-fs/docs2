@@ -725,6 +725,79 @@ const pt: Dictionary = {
         BATCH,
       ],
     },
+    "pptx-to-markdown": {
+      short: "PPTX → MD",
+      eyebrow: "PPTX → Markdown",
+      title: "Converter PPTX para Markdown — grátis, com as notas do apresentador",
+      description:
+        "Converta uma apresentação do PowerPoint em Markdown no seu navegador. O título, os tópicos e as notas do apresentador de cada slide saem como seções de texto. Aceita .pptx, .ppt e .odp do OpenDocument. Nada é enviado.",
+      keywords: [
+        "pptx para markdown",
+        "powerpoint para markdown",
+        "converter pptx para markdown",
+        "slides para markdown",
+        "ppt para md online",
+      ],
+      h1: ["Tire o texto de uma apresentação.", "Com as notas."],
+      lede: [
+        "Solte um .pptx e leve as palavras: os títulos, os tópicos, as tabelas e as notas embaixo de cada slide.",
+        "Roda na sua máquina, então uma apresentação interna é boa para testar.",
+      ],
+      note: {
+        heading: "Bom saber",
+        items: [
+          "Os títulos dos slides viram cabeçalhos, na ordem dos slides",
+          "As notas do apresentador também saem, não só os slides",
+          "Aceita .pptx, o antigo .ppt e o .odp do OpenDocument",
+        ],
+      },
+      body: {
+        stepsHeading: "Como funciona",
+        steps: [
+          "Solte um .pptx, .ppt ou .odp na caixa acima, ou clique para escolher um. Dezenas de uma vez está tudo bem.",
+          "A apresentação é lida pelo anydoc no seu navegador: um conversor em Rust compilado para WebAssembly, servido a partir deste site, então nada é buscado numa CDN e nenhum arquivo é enviado.",
+          "Cada slide sai como sua própria seção: o título como cabeçalho, o corpo como texto e listas, e as notas do apresentador depois. Leia e então copie o Markdown ou baixe o .md.",
+        ],
+        supportedHeading: "O que é aceito",
+        supported: [
+          ".pptx do PowerPoint 2007 em diante, incluindo PowerPoint para Mac e para a web",
+          "O antigo .ppt do PowerPoint 97–2003, lido do seu formato binário",
+          "Apresentações .odp do OpenDocument, do LibreOffice Impress e de exportações do Google Slides",
+          "Títulos de slide como cabeçalhos, e listas com marcadores ou numeradas conforme o nível",
+          "As notas do apresentador, as tabelas de um slide e os links incorporados",
+          "Dezenas de arquivos de uma vez, baixáveis em um único zip",
+        ],
+        limitsHeading: "O que não faz",
+        limits: [
+          "O layout visual se perde: uma apresentação é uma tela de caixas posicionadas, e o Markdown é uma única coluna de texto",
+          "As imagens saem como texto alternativo, não incorporadas; um slide que é quase todo imagem fica pobre",
+          "Animações, transições e o vídeo ou áudio incorporado não têm equivalente em texto",
+          "SmartArt, gráficos e WordArt saem como o seu texto na melhor das hipóteses, muitas vezes como nada",
+          "Apresentações protegidas por senha são recusadas em vez de lidas pela metade: tire a senha primeiro",
+          "Arquivos com mais de 25 MB, e qualquer um cuja taxa de compressão pareça uma bomba zip",
+        ],
+      },
+      faq: [
+        {
+          q: "As notas do apresentador vêm junto?",
+          a: "Vêm, e muitas vezes é esse o ponto. As notas de cada slide ficam logo depois do conteúdo dele, então uma apresentação que você narrou ainda carrega o que você ia dizer. Se um slide não tem notas, nada é adicionado.",
+        },
+        PRIVACY,
+        {
+          q: "O que acontece com as imagens dos meus slides?",
+          a: "Saem como texto alternativo — a descrição que o PowerPoint guardou, num marcador — não como imagens incorporadas. Uma apresentação é um meio visual, então um slide que é sobretudo um diagrama ou uma captura fica pobre. O que sobrevive é o texto, os títulos e as notas.",
+        },
+        {
+          q: "Por que não há layout, só uma lista de seções?",
+          a: "Porque um slide é uma tela: caixas de texto, imagens e formas posicionadas por coordenadas. O Markdown é uma coluna de texto, de cima para baixo. Então cada slide é achatado em uma seção, na ordem dos slides: a leitura de cima para baixo, não a disposição na página.",
+        },
+        {
+          q: "O antigo .ppt funciona, ou só o .pptx?",
+          a: "Ambos, mais o .odp do OpenDocument. O formato é detectado do próprio arquivo, não da extensão, então um .ppt renomeado para .pptx é lido corretamente do mesmo jeito. No formato antigo os gráficos e as imagens saem mais pobres, mas os títulos, o texto e as notas passam.",
+        },
+        BATCH,
+      ],
+    },
   },
   legal: {
     about: {

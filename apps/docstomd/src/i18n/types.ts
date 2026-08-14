@@ -49,7 +49,8 @@ export type PageKey =
   | "pdf-to-markdown"
   | "html-to-markdown"
   | "csv-to-markdown"
-  | "excel-to-markdown";
+  | "excel-to-markdown"
+  | "pptx-to-markdown";
 
 /**
  * 正式页面。AdSense 审核要求 About / Contact / Privacy / Terms / Cookie 五页
