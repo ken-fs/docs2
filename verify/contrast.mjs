@@ -31,6 +31,7 @@ const SITES = [
       "guides/html-to-markdown-clean",
       "guides/csv-to-markdown-tables",
       "guides/excel-to-markdown-formulas",
+      "guides/word-to-markdown-without-uploading",
     ],
   },
   {
@@ -47,6 +48,7 @@ const SITES = [
       "guides/plain-text-to-html-paragraphs",
       "guides/csv-to-html-table-large-files",
       "guides/excel-to-html-table-formulas",
+      "guides/word-to-html-without-uploading",
     ],
   },
 ];

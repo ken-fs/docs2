@@ -41,12 +41,13 @@ export const LEGAL_KEYS: LegalKey[] = [
 ];
 
 /**
- * 教程文章，一个工具页配一篇。顺序跟 TOOL_KEYS 对齐，列表页照这个顺序排。
+ * 教程文章。前六篇一个工具页配一篇，顺序跟 TOOL_KEYS 对齐；外加一篇讲所有
+ * 转换器共通的「文件不上传」，配挂在 docx-to-html 上。列表页照这个顺序排。
  *
  * 它们挂在 /guides/ 下面而不是根目录：跟工具页 slug 抢名字空间是一件麻烦事
  * （"markdown-to-html" 和 "markdown-tables-to-html" 摆在同一层，导航里分不清
  * 哪个是工具哪个是文章），而多一层目录也把「这是读的，那是用的」说清楚了。
- * 不叫 /blog/ —— 那个词暗示时间序和更新频率，六篇教程放着不动会看着像
+ * 不叫 /blog/ —— 那个词暗示时间序和更新频率，这些教程放着不动会看着像
  * 废弃的博客，而它们本来就不需要更新。
  */
 export const GUIDE_KEYS: GuideKey[] = [
@@ -56,6 +57,8 @@ export const GUIDE_KEYS: GuideKey[] = [
   "plain-text-to-html-paragraphs",
   "csv-to-html-table-large-files",
   "excel-to-html-table-formulas",
+  // 放最后，它是「另外那篇」—— 不配单个引擎，讲全站共通的隐私承诺。
+  "word-to-html-without-uploading",
 ];
 
 /** /guides/ 这一段。改它等于改全部教程的 URL，所以只在这里写一次。 */

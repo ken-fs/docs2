@@ -76,7 +76,9 @@ export type GuideKey =
   | "google-docs-to-html-clean"
   | "plain-text-to-html-paragraphs"
   | "csv-to-html-table-large-files"
-  | "excel-to-html-table-formulas";
+  | "excel-to-html-table-formulas"
+  // 唯一不配单个引擎的一篇：讲所有转换器共通的「文件不上传」，配 docx-to-html。
+  | "word-to-html-without-uploading";
 
 /** 一节正文：标题 + 若干段落，需要时再挂一个列表。 */
 export type LegalSection = {

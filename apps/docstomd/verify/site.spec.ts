@@ -36,6 +36,7 @@ const GUIDES = [
   "guides/html-to-markdown-clean",
   "guides/csv-to-markdown-tables",
   "guides/excel-to-markdown-formulas",
+  "guides/word-to-markdown-without-uploading",
 ];
 /** sitemap 和 canonical 检查覆盖全站，不只是工具页。 */
 const ALL_SLUGS = [...SLUGS, ...LEGAL, ...GUIDES];

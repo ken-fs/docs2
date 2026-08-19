@@ -1097,14 +1097,77 @@ const en: Dictionary = {
     eyebrow: "Guides",
     title: "Guides — the awkward parts of converting documents to Markdown",
     description:
-      "Six walkthroughs for the conversions that don't come out right the first time: Word formatting, PDF layout, Google Docs pastes, messy HTML, CSV tables and Excel formulas.",
+      "Seven walkthroughs: six for the conversions that don't come out right the first time — Word formatting, PDF layout, Google Docs pastes, messy HTML, CSV tables, Excel formulas — and one on converting without uploading the file at all.",
     h1: "Guides",
     lede: [
       "Every converter has a page that says what it does. These are for what comes after — the file that converted badly, and the reason why.",
-      "One guide per conversion engine, written from the questions people actually send in. Each one links straight to the tool it's about.",
+      "One guide per conversion engine, plus one on keeping the file off the network — all written from the questions people actually send in. Each links straight to the tool it's about.",
     ],
   },
   guides: {
+    "word-to-markdown-without-uploading": {
+      short: "No upload",
+      eyebrow: "Guide · Word → Markdown",
+      title: "Convert Word to Markdown without uploading the file anywhere",
+      description:
+        "The .docx is unzipped in this browser tab, not sent to a server. How to confirm that yourself, why a plain-text result is the private part, and what converting in the browser still can't protect.",
+      keywords: [
+        "convert word to markdown without uploading",
+        "offline word to markdown converter",
+        "private docx to markdown",
+        "is it safe to convert word to markdown online",
+        "word to markdown no upload",
+      ],
+      h1: "Turning Word into Markdown without the file leaving your computer",
+      lede: [
+        "Most online converters take your file, send it to a server, and hand back the result. This one sends nothing — the .docx is opened right here, in the tab.",
+        "That matters most for the documents you'd hesitate to upload: a contract, an unreleased draft, anything with a client's name in it. So it's worth checking the claim rather than taking it on faith.",
+      ],
+      tool: "word-to-markdown",
+      sections: [
+        {
+          heading: "Where the file goes: nowhere",
+          body: [
+            "A .docx is a zip archive. Opening it means unzipping it and reading the XML inside, and every step of that runs in JavaScript on this page — the same code the browser already downloaded when the page loaded.",
+            "There is no upload because there is nothing to upload to. The tool is a handful of static files; nothing behind it is waiting for your document. The bytes stay on the machine you're sitting at.",
+          ],
+        },
+        {
+          heading: "Confirm it: pull the network cable",
+          steps: [
+            "Load this page once, then switch off wifi or unplug the network.",
+            "Drop a .docx in. It converts exactly as before — offline, with nowhere to send it.",
+            "Want proof instead of a demo? Open developer tools, watch the Network tab, and convert a file. Nothing goes out carrying it.",
+          ],
+          body: [
+            "An offline conversion is the entire argument in one gesture: code that phones home cannot work with the phone unplugged.",
+          ],
+        },
+        {
+          heading: "The plain-text result is the private part",
+          body: [
+            "Markdown is plain text. Every character of the output is on the screen in front of you, and you can read all of it before pasting it anywhere — there is no hidden layer left to trust.",
+            "A .docx is the opposite. It carries author names, an editing history, revision marks and template paths, tucked where you never see them. Converting to Markdown leaves that behind: the words come through, the buried metadata does not, because plain text has nowhere to keep it.",
+          ],
+        },
+        {
+          heading: "What an ordinary online converter does instead",
+          body: [
+            "It uploads. Your file lands in temporary storage on someone else's computer, is converted there, and is meant to be deleted afterwards — on a schedule you can't see and can't check.",
+            "For a meme, fine. For anything under an NDA, \"deleted within an hour\" is a promise, and a promise is a different thing from a file that was never sent.",
+          ],
+        },
+        {
+          heading: "What converting in the browser can't do",
+          body: [
+            "It's fair to name the edges. Keeping the file off the network says nothing about what you do with the result: paste the Markdown into a public gist and it's public, however it got there.",
+            "Anything already watching your own machine still sees it — a browser extension with access to the page, or malware, reads what you read. Converting locally removes the upload, not every risk. What it removes is the largest one: a copy of your document resting on a stranger's server.",
+          ],
+        },
+      ],
+      outro:
+        "Unplug the network if you want to be sure, then drop the .docx in. It's unzipped in this tab and goes no further.",
+    },
     "word-to-markdown-keep-formatting": {
       short: "Word formatting",
       eyebrow: "Guide · Word → Markdown",

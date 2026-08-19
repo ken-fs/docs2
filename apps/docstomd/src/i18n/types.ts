@@ -82,7 +82,9 @@ export type GuideKey =
   | "google-docs-to-markdown-paste"
   | "html-to-markdown-clean"
   | "csv-to-markdown-tables"
-  | "excel-to-markdown-formulas";
+  | "excel-to-markdown-formulas"
+  // 唯一不配单个引擎的一篇：讲所有转换器共通的「文件不上传」，配 word-to-markdown。
+  | "word-to-markdown-without-uploading";
 
 /** 一节正文：标题 + 若干段落，需要时再挂一个列表。 */
 export type LegalSection = {

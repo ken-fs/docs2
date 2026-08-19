@@ -1004,14 +1004,80 @@ const pt: Dictionary = {
     eyebrow: "Guias",
     title: "Guias — as partes chatas de converter documentos para HTML",
     description:
-      "Seis passo a passo para as conversões que não saem bem na primeira tentativa: tabelas de Markdown, formatação do Word, a sopa de classes do Google Docs, parágrafos de texto puro, arquivos CSV grandes e fórmulas do Excel.",
+      "Sete passo a passo: seis para as conversões que não saem bem na primeira tentativa — tabelas de Markdown, formatação do Word, a sopa de classes do Google Docs, parágrafos de texto puro, arquivos CSV grandes e fórmulas do Excel — mais um sobre fazer tudo isso sem o arquivo sair do navegador.",
     h1: "Guias",
     lede: [
       "Cada conversor tem uma página que diz o que ele faz. Estes são para o que vem depois: o arquivo que saiu errado, e por quê.",
-      "Um guia por ferramenta, escritos a partir das perguntas que as pessoas realmente mandam. Sem cadastro, e cada página leva direto ao conversor de que ela trata.",
+      "Um guia por ferramenta, mais um sobre manter o arquivo fora da rede, escritos a partir das perguntas que as pessoas realmente mandam. Sem cadastro, e cada página leva direto ao conversor de que ela trata.",
     ],
   },
   guides: {
+    "word-to-html-without-uploading": {
+      short: "Sem upload",
+      eyebrow: "Guia · Word → HTML",
+      title: "Converter Word para HTML sem enviar — e ler o código antes de publicar",
+      description:
+        "O documento vira HTML dentro desta aba, e a pré-visualização roda num sandbox trancado. Por que isso é melhor que um conversor no servidor, como inspecionar a marcação você mesmo, e onde converter no navegador para de ajudar.",
+      keywords: [
+        "word para html sem enviar",
+        "conversor docx para html offline",
+        "word para html privado",
+        "conversor de documento para html seguro",
+        "word para html sem servidor",
+      ],
+      h1: "Word para HTML, montado na sua aba e mostrado num sandbox",
+      lede: [
+        "Este conversor monta o HTML na sua própria máquina e o mostra numa pré-visualização que não alcança a rede. Duas promessas separadas, e as duas dá para conferir.",
+        "Quando o documento é uma entrega para um cliente ou algo ainda não público, a pergunta útil não é se eles apagam — é se ele chegou a ser enviado. Aqui não foi.",
+      ],
+      tool: "docx-to-html",
+      sections: [
+        {
+          heading: "A marcação é montada antes que qualquer requisição pudesse disparar",
+          body: [
+            "Um .docx é um zip de XML. Esta ferramenta o descompacta e reconstrói a estrutura como HTML inteiramente em scripts da página — código que chegou quando você abriu a página e trabalha localmente daí em diante.",
+            "Não há servidor por trás esperando por um arquivo. O site é composto de arquivos estáticos, então não existe endereço para onde um documento pudesse ser enviado nem que o código tentasse.",
+          ],
+        },
+        {
+          heading: "A pré-visualização está em sandbox de propósito",
+          body: [
+            "O HTML gerado é renderizado dentro de um iframe em sandbox restrito. Esse quadro consegue desenhar a marcação, mas está impedido de rodar scripts, buscar fontes remotas ou fazer requisições — então uma marcação que por acaso contivesse algo ativo ainda assim não consegue agir.",
+            "O sandbox protege a pré-visualização; não é a mesma coisa que a privacidade do arquivo. Mas é por isso que você pode pré-visualizar um documento que não escreveu sem que a própria pré-visualização vire uma porta para a rede.",
+          ],
+        },
+        {
+          heading: "Leia o HTML antes de confiar nele",
+          steps: [
+            "Converta o arquivo, depois olhe o painel de código, não só a visão renderizada.",
+            "Procure qualquer coisa que você não esperava — uma tag script, uma imagem remota, um rastreador. Não há nenhuma por padrão: é o seu documento em tags, sem nada parafusado em cima.",
+            "Copie a marcação para um editor simples e confirme a mesma coisa fora da página.",
+          ],
+          body: [
+            "Uma marcação que você consegue ler é uma marcação por que você pode responder — um tipo de confiança diferente da de um serviço que devolve um arquivo pronto que você nunca abre.",
+          ],
+        },
+        {
+          heading: "Agora tente com a rede desligada",
+          steps: [
+            "Abra a página, depois desconecte da internet.",
+            "Entregue um .docx. Sai o mesmo HTML; nunca houve uma ida e volta para quebrar.",
+          ],
+          body: [
+            "Deixe a aba Rede aberta durante uma conversão e o ponto fica claro sem desligar nada: o documento não dispara nenhuma requisição de saída.",
+          ],
+        },
+        {
+          heading: "As partes que isto não cobre",
+          body: [
+            "Manter o arquivo fora da rede é a afirmação forte, não a única que importa. Assim que o HTML sai para um repositório, um CMS ou um e-mail colado, o alcance dele é o que aquele lugar for.",
+            "E um navegador continua sendo um navegador: uma extensão lendo a página, ou algo que já está no computador, vê o documento de todo jeito. O que sumiu é a maior exposição — uma cópia morando nos servidores de um conversor. O resto continua igual.",
+          ],
+        },
+      ],
+      outro:
+        "Converta, leia o código e desconecte para uma demonstração ao vivo, se quiser. O documento é reconstruído como HTML nesta aba e nunca é enviado adiante.",
+    },
     "markdown-tables-to-html": {
       short: "Tabelas de Markdown",
       eyebrow: "Guia · Markdown → HTML",

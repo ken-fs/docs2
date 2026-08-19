@@ -50,6 +50,7 @@ const GUIDES = [
   "guides/plain-text-to-html-paragraphs",
   "guides/csv-to-html-table-large-files",
   "guides/excel-to-html-table-formulas",
+  "guides/word-to-html-without-uploading",
 ];
 
 /** sitemap 和 canonical 检查覆盖全站，不只是工具页。 */

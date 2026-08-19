@@ -41,7 +41,8 @@ export const LEGAL_KEYS: LegalKey[] = [
 ];
 
 /**
- * 教程文章，一篇配一个转换引擎。列表页照这个顺序排。
+ * 教程文章。前六篇一篇配一个转换引擎；外加一篇讲所有转换器共通的
+ * 「文件不上传」，配挂在流量最大的 word-to-markdown 上。列表页照这个顺序排。
  *
  * 六篇而不是七篇（工具页有七个）：docx-to-markdown 和 word-to-markdown 走的
  * 是同一个转换器，各写一篇就是两篇内容重合的文章抢同一批查询。Word 那篇
@@ -50,7 +51,7 @@ export const LEGAL_KEYS: LegalKey[] = [
  * 它们挂在 /guides/ 下面而不是根目录：跟工具页 slug 抢名字空间是一件麻烦事
  * （"word-to-markdown" 和 "word-to-markdown-keep-formatting" 摆在同一层，
  * 导航里分不清哪个是工具哪个是文章），而多一层目录也把「这是读的，那是用的」
- * 说清楚了。不叫 /blog/ —— 那个词暗示时间序和更新频率，六篇教程放着不动
+ * 说清楚了。不叫 /blog/ —— 那个词暗示时间序和更新频率，这些教程放着不动
  * 会看着像废弃的博客，而它们本来就不需要更新。
  */
 export const GUIDE_KEYS: GuideKey[] = [
@@ -60,6 +61,8 @@ export const GUIDE_KEYS: GuideKey[] = [
   "html-to-markdown-clean",
   "csv-to-markdown-tables",
   "excel-to-markdown-formulas",
+  // 放最后，它是「另外那篇」—— 不配单个引擎，讲全站共通的隐私承诺。
+  "word-to-markdown-without-uploading",
 ];
 
 /** /guides/ 这一段。改它等于改全部教程的 URL，所以只在这里写一次。 */

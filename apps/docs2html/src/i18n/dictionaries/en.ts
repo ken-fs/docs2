@@ -1003,14 +1003,80 @@ const en: Dictionary = {
     eyebrow: "Guides",
     title: "Guides — the awkward parts of converting documents to HTML",
     description:
-      "Six walkthroughs for the conversions that don't go smoothly the first time: Markdown tables, Word formatting, Google Docs class soup, plain-text paragraphs, big CSV files and Excel formulas.",
+      "Seven walkthroughs: six for the conversions that don't go smoothly the first time — Markdown tables, Word formatting, Google Docs class soup, plain-text paragraphs, big CSV files, Excel formulas — plus one on doing it all without the file leaving the browser.",
     h1: "Guides",
     lede: [
       "Each converter has a page that tells you what it does. These are for the part after that — the file that came out wrong, and why.",
-      "One guide per tool, written from the questions people actually send in. No sign-up, and every page links straight to the converter it's about.",
+      "One guide per tool, plus one on keeping the file off the network — all written from the questions people actually send in. No sign-up, and every page links straight to the converter it's about.",
     ],
   },
   guides: {
+    "word-to-html-without-uploading": {
+      short: "No upload",
+      eyebrow: "Guide · Word → HTML",
+      title: "Convert Word to HTML without uploading — and read the source before you ship it",
+      description:
+        "The document becomes HTML inside this tab, and the preview runs in a locked-down sandbox. Why that beats a server-side converter, how to inspect the markup yourself, and where converting in the browser stops helping.",
+      keywords: [
+        "convert word to html without uploading",
+        "offline docx to html converter",
+        "private word to html",
+        "safe document to html converter",
+        "word to html no server",
+      ],
+      h1: "Word to HTML, built in your tab and shown in a sandbox",
+      lede: [
+        "This converter assembles the HTML on your own machine and shows it in a preview that can't reach the network. Two separate promises, and both can be checked.",
+        "When the document is a client deliverable or something not yet public, the useful question isn't whether they delete it — it's whether it was ever sent. Here it wasn't.",
+      ],
+      tool: "docx-to-html",
+      sections: [
+        {
+          heading: "The markup is built before any request could fire",
+          body: [
+            "A .docx is a zip of XML. This tool unzips it and rebuilds the structure as HTML entirely in page scripts — code that arrived when you opened the page and works locally from then on.",
+            "No server stands behind it waiting for a file. The site is static assets, so there is no address a document could be sent to even if the code tried.",
+          ],
+        },
+        {
+          heading: "The preview is sandboxed on purpose",
+          body: [
+            "The generated HTML is rendered inside a restricted sandbox iframe. That frame can draw the markup but is blocked from running scripts, fetching remote fonts, or making requests — so markup that happened to contain something active still can't act.",
+            "The sandbox guards the preview; it isn't the same thing as the file's privacy. But it's why you can preview a document you didn't write without the preview itself becoming a door to the network.",
+          ],
+        },
+        {
+          heading: "Read the HTML before you trust it",
+          steps: [
+            "Convert the file, then look at the source pane, not only the rendered view.",
+            "Scan for anything you didn't expect — a script tag, a remote image, a beacon. There is none by default: it's your document as tags, with nothing bolted on.",
+            "Copy the markup into a plain editor to confirm the same thing away from the page.",
+          ],
+          body: [
+            "Markup you can read is markup you can vouch for — a different kind of trust from a service that hands back a finished file you never open.",
+          ],
+        },
+        {
+          heading: "Now try it with the network off",
+          steps: [
+            "Open the page, then disconnect from the internet.",
+            "Hand it a .docx. The same HTML comes out; there was never a round trip to break.",
+          ],
+          body: [
+            "Leave the Network tab open during a conversion and the point lands without unplugging anything: the document triggers no outbound request.",
+          ],
+        },
+        {
+          heading: "The parts this doesn't cover",
+          body: [
+            "Keeping the file off the wire is the strong claim, not the only one that matters. Once the HTML leaves for a repo, a CMS, or a pasted email, its reach is whatever that place is.",
+            "And a browser is still a browser: an extension reading the page, or something already on the computer, sees the document either way. What's gone is the biggest exposure — a copy living on a converter's servers. The rest is unchanged.",
+          ],
+        },
+      ],
+      outro:
+        "Convert, read the source, and disconnect for a live demonstration if you like. The document is rebuilt as HTML in this tab and never sent on.",
+    },
     "markdown-tables-to-html": {
       short: "Markdown tables",
       eyebrow: "Guide · Markdown → HTML",

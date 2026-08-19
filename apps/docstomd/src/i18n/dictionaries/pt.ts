@@ -1101,14 +1101,77 @@ const pt: Dictionary = {
     eyebrow: "Guias",
     title: "Guias — as partes chatas de converter documentos para Markdown",
     description:
-      "Seis percursos pelas conversões que não dão certo na primeira tentativa: formatação do Word, layout de PDF, colar do Google Docs, HTML desarrumado, tabelas CSV e fórmulas do Excel.",
+      "Sete percursos: seis pelas conversões que não dão certo na primeira tentativa — formatação do Word, layout de PDF, colar do Google Docs, HTML desarrumado, tabelas CSV e fórmulas do Excel — e um sobre converter sem enviar o arquivo para lugar nenhum.",
     h1: "Guias",
     lede: [
       "Cada conversor tem uma página que explica o que ele faz. Estes aqui são sobre o que vem depois: o arquivo que saiu errado, e por quê.",
-      "Um guia por motor de conversão, escritos a partir das perguntas que as pessoas mandam de verdade. Cada página leva direto para a ferramenta de que fala.",
+      "Um guia por motor de conversão, mais um sobre manter o arquivo fora da rede, escritos a partir das perguntas que as pessoas mandam de verdade. Cada página leva direto para a ferramenta de que fala.",
     ],
   },
   guides: {
+    "word-to-markdown-without-uploading": {
+      short: "Sem upload",
+      eyebrow: "Guia · Word → Markdown",
+      title: "Converter Word para Markdown sem enviar o arquivo para lugar nenhum",
+      description:
+        "O .docx é descompactado nesta aba do navegador, não enviado a um servidor. Como confirmar isso você mesmo, por que um resultado em texto puro é a parte privada, e o que converter no navegador ainda não protege.",
+      keywords: [
+        "word para markdown sem enviar",
+        "conversor word para markdown offline",
+        "docx para markdown privado",
+        "é seguro converter word para markdown online",
+        "word para markdown sem upload",
+      ],
+      h1: "Transformar Word em Markdown sem o arquivo sair do seu computador",
+      lede: [
+        "A maioria dos conversores online pega seu arquivo, manda para um servidor e devolve o resultado. Este não manda nada — o .docx é aberto aqui mesmo, na aba.",
+        "Isso importa mais para os documentos que você pensaria duas vezes antes de enviar: um contrato, um rascunho não publicado, qualquer coisa com o nome de um cliente. Então vale conferir a afirmação em vez de acreditar nela de olhos fechados.",
+      ],
+      tool: "word-to-markdown",
+      sections: [
+        {
+          heading: "Para onde o arquivo vai: lugar nenhum",
+          body: [
+            "Um .docx é um arquivo zip. Abri-lo significa descompactá-lo e ler o XML lá dentro, e cada etapa disso roda em JavaScript nesta página — o mesmo código que o navegador já baixou quando a página carregou.",
+            "Não há upload porque não existe para onde enviar. A ferramenta é um punhado de arquivos estáticos; não há nada por trás dela esperando pelo seu documento. Os bytes ficam na máquina em que você está sentado.",
+          ],
+        },
+        {
+          heading: "Confirme: tire o cabo de rede",
+          steps: [
+            "Carregue esta página uma vez, depois desligue o wi-fi ou tire o cabo de rede.",
+            "Solte um .docx. Ele converte exatamente como antes — offline, sem ter para onde ser enviado.",
+            "Quer prova em vez de demonstração? Abra as ferramentas de desenvolvimento, observe a aba Rede e converta um arquivo. Nada sai levando ele.",
+          ],
+          body: [
+            "Uma conversão offline é o argumento inteiro em um só gesto: um código que telefona para casa não funciona com o telefone fora da tomada.",
+          ],
+        },
+        {
+          heading: "O resultado em texto puro é a parte privada",
+          body: [
+            "Markdown é texto puro. Cada caractere da saída está na tela à sua frente, e você pode ler tudo antes de colar em qualquer lugar — não sobra nenhuma camada escondida para você ter de confiar.",
+            "Um .docx é o oposto. Ele carrega nomes de autores, um histórico de edição, marcas de revisão e caminhos de modelo, metidos onde você nunca vê. Converter para Markdown deixa tudo isso para trás: as palavras passam, os metadados enterrados não, porque texto puro não tem onde guardá-los.",
+          ],
+        },
+        {
+          heading: "O que um conversor online comum faz no lugar",
+          body: [
+            "Ele faz upload. Seu arquivo aterrissa num armazenamento temporário no computador de outra pessoa, é convertido lá e deve ser apagado depois — num prazo que você não vê e não tem como conferir.",
+            "Para um meme, tudo bem. Para qualquer coisa sob um acordo de confidencialidade, «apagado em até uma hora» é uma promessa, e uma promessa é uma coisa bem diferente de um arquivo que nunca foi enviado.",
+          ],
+        },
+        {
+          heading: "O que converter no navegador não consegue fazer",
+          body: [
+            "É justo apontar os limites. Manter o arquivo fora da rede não diz nada sobre o que você faz com o resultado: cole o Markdown num gist público e ele fica público, não importa como chegou lá.",
+            "Qualquer coisa que já esteja de olho na sua própria máquina continua vendo — uma extensão de navegador com acesso à página, ou um malware, lê o que você lê. Converter localmente tira o upload, não todo risco. O que ele tira é o maior deles: uma cópia do seu documento parada no servidor de um estranho.",
+          ],
+        },
+      ],
+      outro:
+        "Tire a rede da tomada se quiser ter certeza, depois solte o .docx. Ele é descompactado nesta aba e não vai além disso.",
+    },
     "word-to-markdown-keep-formatting": {
       short: "Formatação do Word",
       eyebrow: "Guia · Word → Markdown",
