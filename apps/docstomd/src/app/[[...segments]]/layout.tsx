@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import {
   Bricolage_Grotesque,
   IBM_Plex_Mono,
@@ -87,6 +88,21 @@ export default async function RootLayout({
       lang={htmlLang}
       className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-06NR7QZ94Q"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-06NR7QZ94Q');
+          `}
+        </Script>
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
