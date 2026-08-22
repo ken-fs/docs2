@@ -1694,6 +1694,101 @@ const zhHans: Dictionary = {
         "把工作簿拖进来，勾上要的工作表，复制表格。.xlsx 是在这个标签页里解开的，不去别处 —— 文件是财务模型的时候，这一点要紧。",
     },
   },
+  preview: {
+    short: "Markdown 预览",
+    eyebrow: "预览 Markdown",
+    title: "Markdown 预览 —— 在浏览器里实时渲染 Markdown",
+    description:
+      "粘贴或输入 Markdown，实时看到渲染效果。免费、私密的 Markdown 预览工具，全程在你的浏览器里运行，什么都不上传。",
+    keywords: [
+      "markdown 预览",
+      "markdown 在线预览",
+      "markdown 查看器",
+      "渲染 markdown",
+      "markdown 编辑器",
+    ],
+    h1: ["粘贴 Markdown，", "实时看渲染"],
+    lede: [
+      "在左边输入或粘贴 Markdown，右边随着编辑实时渲染。",
+      "全程在浏览器里跑 —— 文字不离开你的电脑，什么都不上传。",
+    ],
+    editorLabel: "Markdown",
+    previewLabel: "预览",
+    placeholder: "在这里粘贴或输入 Markdown…",
+    sample: "载入示例",
+    sampleMarkdown: `# Markdown 预览
+
+在左边输入，右边实时看到**渲染结果** —— 全程在你的浏览器里。
+
+## 能渲染什么
+
+- 标题、**粗体**、_斜体_ 和 \`行内代码\`
+- 有序和无序列表
+- [链接](https://docstomd.com) 与图片
+
+> 引用块也会渲染，左侧带一道竖线。
+
+| 格式 | 转成 |
+| --- | --- |
+| .docx | Markdown |
+| .pdf | Markdown |
+
+\`\`\`
+代码块会保留原本的缩进。
+\`\`\`
+`,
+    clear: "清空",
+    emptyState: "你输入的 Markdown 会在这里实时渲染出来。",
+    charCount: { one: "{n} 个字符", other: "{n} 个字符" },
+    note: {
+      heading: "在你的浏览器里运行",
+      items: [
+        "什么都不上传 —— 文字留在你的电脑上",
+        "随着输入实时渲染，不用点按钮",
+        "免费、免注册，加载后离线也能用",
+      ],
+    },
+    body: {
+      stepsHeading: "怎么用",
+      steps: [
+        "把 Markdown 粘贴或输入到左边的框里。",
+        "右边随着编辑实时显示排版后的结果。",
+        "调整源码直到预览满意 —— 它会立即更新。",
+      ],
+      supportedHeading: "能渲染什么",
+      supported: [
+        "标题、段落、粗体、斜体、删除线",
+        "有序和无序列表",
+        "带表头的表格",
+        "引用块和代码块",
+        "链接和图片占位",
+      ],
+      limitsHeading: "不做什么",
+      limits: [
+        "它是预览器，不是导出器 —— 没有 HTML 下载。",
+        "Markdown 里的原始 HTML 按纯文本显示、不执行，任何不可信内容都不会运行。",
+        "深层嵌套或冷门语法可能比完整 CommonMark 引擎渲染得更朴素。",
+      ],
+    },
+    faq: [
+      {
+        q: "我的 Markdown 会被发到服务器吗？",
+        a: "不会。预览是用 JavaScript 在你的浏览器里渲染的。你粘贴的文字不会离开你的电脑，什么都不上传。",
+      },
+      {
+        q: "它能导出 HTML 吗？",
+        a: "这个页面是实时预览器，不是转换器 —— 它展示你的 Markdown 渲染成什么样。如果你要把文档转成 Markdown，用下面链接里的转换器。",
+      },
+      {
+        q: "为什么我 Markdown 里的一些 HTML 显示成了纯文本？",
+        a: "粘进来的内容按不可信处理，所以原始 HTML 会照原样显示、不执行。这样预览就不会被源码里藏的东西影响。",
+      },
+      {
+        q: "它能离线用吗？",
+        a: "页面加载完之后，没有网络也能继续用，因为渲染是在你的浏览器本地完成的。",
+      },
+    ],
+  },
 };
 
 export default zhHans;

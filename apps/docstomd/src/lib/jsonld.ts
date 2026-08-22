@@ -1,4 +1,4 @@
-import { guideUrl, urlOf, type AnyKey } from "@/content/tools";
+import { guideUrl, previewUrl, urlOf, type AnyKey } from "@/content/tools";
 import type { Locale } from "@/i18n/locales";
 import type { Dictionary, GuideKey, LegalKey, PageKey } from "@/i18n/types";
 
@@ -38,6 +38,68 @@ export function softwareJsonLd(
     browserRequirements: "Requires JavaScript",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     featureList: dict.chrome.features,
+  };
+}
+
+/**
+ * markdown 预览页的 WebApplication。跟 softwareJsonLd 同型，但取 dict.preview，
+ * 且 URL 走 previewUrl（预览页没有 PageKey）。
+ */
+export function softwarePreviewJsonLd(locale: Locale, dict: Dictionary) {
+  const p = dict.preview;
+  const url = previewUrl(locale);
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "@id": `${url}#app`,
+    name: `Docs to MD — ${p.short}`,
+    url,
+    inLanguage: dict.htmlLang,
+    description: p.description,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any browser",
+    browserRequirements: "Requires JavaScript",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    featureList: dict.chrome.features,
+  };
+}
+
+/** 预览页的 FAQPage。 */
+export function faqPreviewJsonLd(locale: Locale, dict: Dictionary) {
+  const url = previewUrl(locale);
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${url}#faq`,
+    inLanguage: dict.htmlLang,
+    mainEntity: dict.preview.faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}
+
+/** 预览页的面包屑：首页 / 预览页。两层。 */
+export function previewCrumbJsonLd(locale: Locale, dict: Dictionary) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${previewUrl(locale)}#crumbs`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: dict.chrome.breadcrumbHome,
+        item: urlOf(locale, "home"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: dict.preview.short,
+        item: previewUrl(locale),
+      },
+    ],
   };
 }
 

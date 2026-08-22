@@ -1698,6 +1698,101 @@ const es: Dictionary = {
         "Suelta el libro, marca las hojas que quieras, copia la tabla. El .xlsx se descomprime en esta pestaña y no va a ninguna otra parte, lo que importa cuando el archivo es un modelo financiero.",
     },
   },
+  preview: {
+    short: "Vista previa de Markdown",
+    eyebrow: "Previsualizar Markdown",
+    title: "Vista previa de Markdown — Renderiza Markdown en tu navegador",
+    description:
+      "Pega o escribe Markdown y velo renderizado al instante. Un visor de Markdown gratuito y privado que funciona por completo en tu navegador: nada se sube.",
+    keywords: [
+      "vista previa de markdown",
+      "visor de markdown",
+      "previsualizar markdown online",
+      "renderizar markdown",
+      "editor de markdown",
+    ],
+    h1: ["Pega Markdown,", "velo renderizado"],
+    lede: [
+      "Escribe o pega Markdown a la izquierda y míralo renderizarse a la derecha, en vivo mientras editas.",
+      "Funciona en tu navegador: el texto nunca sale de tu equipo y nada se sube.",
+    ],
+    editorLabel: "Markdown",
+    previewLabel: "Vista previa",
+    placeholder: "Pega o escribe Markdown aquí…",
+    sample: "Cargar ejemplo",
+    sampleMarkdown: `# Vista previa de Markdown
+
+Escribe a la izquierda y velo **renderizado** a la derecha: en vivo, en tu navegador.
+
+## Qué renderiza
+
+- Títulos, **negrita**, _cursiva_ y \`código en línea\`
+- Listas ordenadas y sin ordenar
+- [Enlaces](https://docstomd.com) e imágenes
+
+> Las citas también se renderizan, con una línea al costado.
+
+| Formato | Se convierte en |
+| --- | --- |
+| .docx | Markdown |
+| .pdf | Markdown |
+
+\`\`\`
+Los bloques de código conservan su espaciado.
+\`\`\`
+`,
+    clear: "Limpiar",
+    emptyState: "Tu Markdown renderizado aparece aquí mientras escribes.",
+    charCount: { one: "{n} carácter", other: "{n} caracteres" },
+    note: {
+      heading: "Funciona en tu navegador",
+      items: [
+        "Nada se sube: el texto se queda en tu equipo",
+        "Se renderiza en vivo mientras escribes, sin pulsar ningún botón",
+        "Gratis, sin registro, funciona sin conexión una vez cargado",
+      ],
+    },
+    body: {
+      stepsHeading: "Cómo usarlo",
+      steps: [
+        "Pega o escribe tu Markdown en el cuadro de la izquierda.",
+        "Mira aparecer el resultado con formato a la derecha mientras editas.",
+        "Ajusta el origen hasta que la vista previa se vea bien: se actualiza al instante.",
+      ],
+      supportedHeading: "Qué renderiza",
+      supported: [
+        "Títulos, párrafos, negrita, cursiva y tachado",
+        "Listas ordenadas y sin ordenar",
+        "Tablas con fila de encabezado",
+        "Citas y bloques de código",
+        "Enlaces y marcadores de imagen",
+      ],
+      limitsHeading: "Qué no hace",
+      limits: [
+        "Es un visor, no un exportador: no hay descarga de HTML.",
+        "El HTML en bruto dentro del Markdown se muestra como texto, no se ejecuta, así que nada no confiable corre.",
+        "La sintaxis muy anidada o exótica puede renderizarse de forma más simple que con un motor CommonMark completo.",
+      ],
+    },
+    faq: [
+      {
+        q: "¿Mi Markdown se envía a un servidor?",
+        a: "No. La vista previa se renderiza en tu navegador con JavaScript. El texto que pegas nunca sale de tu equipo y nada se sube.",
+      },
+      {
+        q: "¿Exporta HTML?",
+        a: "Esta página es un visor en vivo, no un conversor: muestra cómo se renderiza tu Markdown. Si necesitas convertir documentos a Markdown, usa uno de los conversores enlazados abajo.",
+      },
+      {
+        q: "¿Por qué parte del HTML de mi Markdown se muestra como texto plano?",
+        a: "El contenido pegado se trata como no confiable, así que el HTML en bruto se muestra literalmente en vez de ejecutarse. Eso mantiene la vista previa a salvo de cualquier cosa oculta en el origen.",
+      },
+      {
+        q: "¿Funciona sin conexión?",
+        a: "Una vez cargada la página sigue funcionando sin conexión, porque el renderizado ocurre localmente en tu navegador.",
+      },
+    ],
+  },
 };
 
 export default es;

@@ -5,6 +5,7 @@ import {
   guidePath,
   LEGAL_KEYS,
   pathOf,
+  previewPath,
   TOOL_KEYS,
   type Route,
 } from "@/content/tools";
@@ -59,6 +60,19 @@ export function SiteHeader({ locale, route, dict }: ChromeProps) {
               {dict.pages[k].short}
             </Link>
           ))}
+          {/* markdown 预览页排在转换器后面：它是反方向的工具（看 markdown 渲染
+              成什么样，而不是把文件转成 markdown），但同属这一排「用的」工具，
+              所以留在工具排里，不跟教程归一类。 */}
+          <Link
+            href={previewPath(locale)}
+            className={
+              route.kind === "preview"
+                ? "whitespace-nowrap text-pine"
+                : "whitespace-nowrap transition-colors duration-150 hover:text-pine"
+            }
+          >
+            {dict.preview.short}
+          </Link>
           {/* 教程入口排在七个工具后面，前面加一道竖线：它不是第八个工具，
               是另一类东西（读的，不是用的）。没有这个入口的话，六篇文章
               只能靠 sitemap 和工具页底部那条链接进去 —— 页头是唯一每页都在

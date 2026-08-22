@@ -1701,6 +1701,101 @@ const pt: Dictionary = {
         "Solte a pasta de trabalho, marque as planilhas que quiser, copie a tabela. O .xlsx é descompactado nesta aba e não vai a nenhum outro lugar, o que importa quando o arquivo é um modelo financeiro.",
     },
   },
+  preview: {
+    short: "Prévia de Markdown",
+    eyebrow: "Pré-visualizar Markdown",
+    title: "Prévia de Markdown — Renderize Markdown no seu navegador",
+    description:
+      "Cole ou digite Markdown e veja renderizado na hora. Um visualizador de Markdown gratuito e privado que roda inteiramente no seu navegador — nada é enviado.",
+    keywords: [
+      "prévia de markdown",
+      "visualizador de markdown",
+      "pré-visualizar markdown online",
+      "renderizar markdown",
+      "editor de markdown",
+    ],
+    h1: ["Cole Markdown,", "veja renderizado"],
+    lede: [
+      "Digite ou cole Markdown à esquerda e veja renderizar à direita, ao vivo enquanto edita.",
+      "Roda no seu navegador — o texto nunca sai da sua máquina e nada é enviado.",
+    ],
+    editorLabel: "Markdown",
+    previewLabel: "Prévia",
+    placeholder: "Cole ou digite Markdown aqui…",
+    sample: "Carregar exemplo",
+    sampleMarkdown: `# Prévia de Markdown
+
+Digite à esquerda e veja **renderizado** à direita — ao vivo, no seu navegador.
+
+## O que ele renderiza
+
+- Títulos, **negrito**, _itálico_ e \`código embutido\`
+- Listas ordenadas e não ordenadas
+- [Links](https://docstomd.com) e imagens
+
+> Citações também são renderizadas, com uma linha na lateral.
+
+| Formato | Vira |
+| --- | --- |
+| .docx | Markdown |
+| .pdf | Markdown |
+
+\`\`\`
+Blocos de código mantêm o espaçamento.
+\`\`\`
+`,
+    clear: "Limpar",
+    emptyState: "Seu Markdown renderizado aparece aqui enquanto você digita.",
+    charCount: { one: "{n} caractere", other: "{n} caracteres" },
+    note: {
+      heading: "Roda no seu navegador",
+      items: [
+        "Nada é enviado — o texto fica na sua máquina",
+        "Renderiza ao vivo enquanto você digita, sem apertar botão",
+        "Grátis, sem cadastro, funciona offline depois de carregado",
+      ],
+    },
+    body: {
+      stepsHeading: "Como usar",
+      steps: [
+        "Cole ou digite seu Markdown na caixa à esquerda.",
+        "Veja o resultado formatado surgir à direita enquanto edita.",
+        "Ajuste a origem até a prévia ficar certa — ela atualiza na hora.",
+      ],
+      supportedHeading: "O que ele renderiza",
+      supported: [
+        "Títulos, parágrafos, negrito, itálico e tachado",
+        "Listas ordenadas e não ordenadas",
+        "Tabelas com linha de cabeçalho",
+        "Citações e blocos de código",
+        "Links e marcadores de imagem",
+      ],
+      limitsHeading: "O que ele não faz",
+      limits: [
+        "É um visualizador, não um exportador — não há download de HTML.",
+        "HTML bruto dentro do Markdown é mostrado como texto, não executado, então nada não confiável roda.",
+        "Sintaxe muito aninhada ou exótica pode renderizar de forma mais simples que um motor CommonMark completo.",
+      ],
+    },
+    faq: [
+      {
+        q: "Meu Markdown é enviado para um servidor?",
+        a: "Não. A prévia é renderizada no seu navegador com JavaScript. O texto que você cola nunca sai da sua máquina e nada é enviado.",
+      },
+      {
+        q: "Ele exporta HTML?",
+        a: "Esta página é um visualizador ao vivo, não um conversor — ela mostra como seu Markdown renderiza. Se você precisa converter documentos em Markdown, use um dos conversores nos links abaixo.",
+      },
+      {
+        q: "Por que parte do HTML no meu Markdown aparece como texto puro?",
+        a: "O conteúdo colado é tratado como não confiável, então o HTML bruto é exibido literalmente em vez de executado. Isso mantém a prévia segura contra qualquer coisa escondida na origem.",
+      },
+      {
+        q: "Funciona offline?",
+        a: "Depois que a página carrega, ela continua funcionando sem conexão, porque a renderização acontece localmente no seu navegador.",
+      },
+    ],
+  },
 };
 
 export default pt;

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { GuideIndex } from "@/components/guide-index";
 import { GuideShell } from "@/components/guide-shell";
 import { LegalShell } from "@/components/legal-shell";
+import { PreviewShell } from "@/components/preview-shell";
 import { ToolShell } from "@/components/tool-shell";
 import {
   allSegments,
@@ -16,10 +17,13 @@ import {
   articleJsonLd,
   breadcrumbJsonLd,
   faqJsonLd,
+  faqPreviewJsonLd,
   guideCrumbJsonLd,
   guideIndexCrumbJsonLd,
   legalJsonLd,
+  previewCrumbJsonLd,
   softwareJsonLd,
+  softwarePreviewJsonLd,
 } from "@/lib/jsonld";
 
 /**
@@ -59,8 +63,10 @@ export async function generateMetadata({
           { page: dict.legal[hit.key], keywords: undefined }
         : hit.kind === "guide"
           ? { page: dict.guides[hit.key], keywords: dict.guides[hit.key].keywords }
-          : // 列表页的关键词都归到六篇文章身上了，它自己不争
-            { page: dict.guideIndex, keywords: undefined };
+          : hit.kind === "preview"
+            ? { page: dict.preview, keywords: dict.preview.keywords }
+            : // 列表页的关键词都归到六篇文章身上了，它自己不争
+              { page: dict.guideIndex, keywords: undefined };
 
   const path = routePath(locale, hit);
 
@@ -114,7 +120,13 @@ export default async function Route({ params }: PageProps<"/[[...segments]]">) {
           ]
         : hit.kind === "guide"
           ? [articleJsonLd(locale, hit.key, dict), guideCrumbJsonLd(locale, hit.key, dict)]
-          : [guideIndexCrumbJsonLd(locale, dict)]
+          : hit.kind === "preview"
+            ? [
+                softwarePreviewJsonLd(locale, dict),
+                faqPreviewJsonLd(locale, dict),
+                previewCrumbJsonLd(locale, dict),
+              ]
+            : [guideIndexCrumbJsonLd(locale, dict)]
   ).filter(Boolean);
 
   return (
@@ -129,6 +141,8 @@ export default async function Route({ params }: PageProps<"/[[...segments]]">) {
         <LegalShell locale={locale} legalKey={hit.key} dict={dict} />
       ) : hit.kind === "guide" ? (
         <GuideShell locale={locale} guideKey={hit.key} dict={dict} />
+      ) : hit.kind === "preview" ? (
+        <PreviewShell locale={locale} dict={dict} />
       ) : (
         <GuideIndex locale={locale} dict={dict} />
       )}

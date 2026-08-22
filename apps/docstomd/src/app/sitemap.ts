@@ -4,6 +4,7 @@ import {
   GUIDE_KEYS,
   guideUrl,
   LEGAL_KEYS,
+  previewUrl,
   type AnyKey,
   urlOf,
 } from "@/content/tools";
@@ -39,6 +40,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ["x-default", guideUrl("en", key)],
     ]);
 
+  const previewLanguages = Object.fromEntries([
+    ...LOCALES.map((l) => [l, previewUrl(l)]),
+    ["x-default", previewUrl("en")],
+  ]);
+
   return LOCALES.flatMap((locale) => [
     ...ALL_KEYS.map((key) => ({
       url: urlOf(locale, key),
@@ -60,5 +66,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
       alternates: { languages: guideLanguages(key) },
     })),
+    {
+      // markdown 预览页，跟工具页同权重（0.8）：它也是一个能排上去的工具页
+      url: previewUrl(locale),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+      alternates: { languages: previewLanguages },
+    },
   ]);
 }

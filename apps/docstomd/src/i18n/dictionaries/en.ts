@@ -1697,6 +1697,101 @@ const en: Dictionary = {
         "Drop the workbook, tick the sheets you want, copy the table. The .xlsx is unzipped in this tab and goes nowhere else, which matters when the file is a financial model.",
     },
   },
+  preview: {
+    short: "Markdown Preview",
+    eyebrow: "Preview Markdown",
+    title: "Markdown Preview — Render Markdown Live in Your Browser",
+    description:
+      "Paste or type Markdown and see it rendered instantly. A free, private Markdown viewer that runs entirely in your browser — nothing is uploaded.",
+    keywords: [
+      "markdown preview",
+      "markdown viewer",
+      "preview markdown online",
+      "render markdown",
+      "markdown editor",
+    ],
+    h1: ["Paste Markdown,", "see it rendered"],
+    lede: [
+      "Type or paste Markdown on the left and watch it render on the right, live as you edit.",
+      "It runs in your browser — the text never leaves your machine and nothing is uploaded.",
+    ],
+    editorLabel: "Markdown",
+    previewLabel: "Preview",
+    placeholder: "Paste or type Markdown here…",
+    sample: "Load sample",
+    sampleMarkdown: `# Markdown preview
+
+Type on the left, see it **rendered** on the right — live, in your browser.
+
+## What it renders
+
+- Headings, **bold**, _italic_, and \`inline code\`
+- Ordered and unordered lists
+- [Links](https://docstomd.com) and images
+
+> Blockquotes render too, with a rule down the side.
+
+| Format | Goes to |
+| --- | --- |
+| .docx | Markdown |
+| .pdf | Markdown |
+
+\`\`\`
+Fenced code blocks keep their spacing.
+\`\`\`
+`,
+    clear: "Clear",
+    emptyState: "Your rendered Markdown appears here as you type.",
+    charCount: { one: "{n} character", other: "{n} characters" },
+    note: {
+      heading: "Runs in your browser",
+      items: [
+        "Nothing is uploaded — the text stays on your machine",
+        "Renders live as you type, no button to press",
+        "Free, no sign-up, works offline once loaded",
+      ],
+    },
+    body: {
+      stepsHeading: "How to use it",
+      steps: [
+        "Paste or type your Markdown into the box on the left.",
+        "Watch the formatted result appear on the right as you edit.",
+        "Tweak the source until the preview looks right — it updates instantly.",
+      ],
+      supportedHeading: "What it renders",
+      supported: [
+        "Headings, paragraphs, bold, italic, and strikethrough",
+        "Ordered and unordered lists",
+        "Tables with a header row",
+        "Blockquotes and fenced code blocks",
+        "Links and image placeholders",
+      ],
+      limitsHeading: "What it doesn't do",
+      limits: [
+        "It's a viewer, not an exporter — there's no HTML download.",
+        "Raw HTML in the Markdown is shown as text, not executed, so nothing untrusted runs.",
+        "Deeply nested or exotic syntax may render more plainly than a full CommonMark engine.",
+      ],
+    },
+    faq: [
+      {
+        q: "Is my Markdown sent to a server?",
+        a: "No. The preview is rendered in your browser with JavaScript. The text you paste never leaves your machine and nothing is uploaded.",
+      },
+      {
+        q: "Does it export HTML?",
+        a: "This page is a live viewer, not a converter — it shows how your Markdown renders. If you need to turn documents into Markdown, use one of the converters linked below.",
+      },
+      {
+        q: "Why does some HTML in my Markdown show as plain text?",
+        a: "Pasted content is treated as untrusted, so raw HTML is displayed literally rather than executed. That keeps the preview safe from anything hidden in the source.",
+      },
+      {
+        q: "Does it work offline?",
+        a: "Once the page has loaded it keeps working without a connection, because the rendering happens locally in your browser.",
+      },
+    ],
+  },
 };
 
 export default en;

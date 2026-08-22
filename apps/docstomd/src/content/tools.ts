@@ -69,6 +69,16 @@ export const GUIDE_KEYS: GuideKey[] = [
 export const GUIDES_SEGMENT = "guides";
 
 /**
+ * markdown 预览页那一段：/markdown-preview/。
+ *
+ * 单独一个常量而不是塞进 PAGE_KEYS：预览页不是「文件 → markdown」的转换器，
+ * 它没有 TOOL_INPUT（engine/accept/paste），把它列进 PAGE_KEYS 会让
+ * pickerAccept / pagesForExtension 这些按「转换器」遍历 TOOL_KEYS 的逻辑
+ * 把预览页也算进去。所以它走自己的 Route kind，slug 只在这里写一次。
+ */
+export const PREVIEW_SEGMENT = "markdown-preview";
+
+/**
  * 一条路径指向工具页、正式页面还是教程。
  *
  * 做成可辨识联合而不是让 key 变成 PageKey | LegalKey：几类页面的字典结构
@@ -80,7 +90,9 @@ export type Route =
   | { kind: "legal"; key: LegalKey }
   | { kind: "guide"; key: GuideKey }
   /** /guides/ 本身：教程列表页。没有 key，它不属于任何一篇。 */
-  | { kind: "guideIndex" };
+  | { kind: "guideIndex" }
+  /** /markdown-preview/：markdown 预览页。单页，没有 key。 */
+  | { kind: "preview" };
 
 const LEGAL_SET = new Set<string>(LEGAL_KEYS);
 const GUIDE_SET = new Set<string>(GUIDE_KEYS);
@@ -88,6 +100,7 @@ const GUIDE_SET = new Set<string>(GUIDE_KEYS);
 /** slug 反查成路由。认不出返回 undefined。 */
 function routeOfSlug(slug: string): Route | undefined {
   if (slug === GUIDES_SEGMENT) return { kind: "guideIndex" };
+  if (slug === PREVIEW_SEGMENT) return { kind: "preview" };
   if (LEGAL_SET.has(slug)) return { kind: "legal", key: slug as LegalKey };
   const key = PAGE_KEYS.find((k) => slugOf(k) === slug);
   return key ? { kind: "tool", key } : undefined;
@@ -369,6 +382,20 @@ export function guidePath(locale: Locale, key?: GuideKey) {
 }
 
 /**
+ * 预览页的路径。单段固定 slug，跟 guidePath 一样以 / 结尾：
+ *
+ *   previewPath("en")  → /markdown-preview/
+ *   previewPath("ja")  → /ja/markdown-preview/
+ *
+ * 没并进 pathOf：那个收的是 AnyKey（等于某个页面 key），而预览页没有 key，
+ * 塞进去就得把参数放宽成联合类型、每个调用点跟着判一次。
+ */
+export function previewPath(locale: Locale) {
+  const parts = [LOCALE_PREFIX[locale], PREVIEW_SEGMENT].filter(Boolean);
+  return `/${parts.map((p) => `${p}/`).join("")}`;
+}
+
+/**
  * 把 catch-all 的 segments 解析回语种 + 页面。认不出来返回 null，由页面
  * notFound() —— 别把打错的路径兜成英文首页，软 404 比真 404 更伤 SEO。
  */
@@ -408,8 +435,9 @@ export function parseSegments(
 
 /**
  * 静态导出得把每条路径都列出来：
- *   14 页（首页 + 8 工具 + 5 正式）+ 1 个教程列表 + 6 篇教程 = 21
- *   × 6 语种 = 126 条
+ *   14 页（首页 + 8 工具 + 5 正式）+ 1 个教程列表 + 6 篇教程
+ *   + 1 个 markdown 预览页 = 22
+ *   × 6 语种 = 132 条
  */
 export function allSegments(): { segments: string[] }[] {
   return LOCALES.flatMap((locale) => {
@@ -422,6 +450,7 @@ export function allSegments(): { segments: string[] }[] {
       ...GUIDE_KEYS.map((key) => ({
         segments: [prefix, GUIDES_SEGMENT, key].filter(Boolean),
       })),
+      { segments: [prefix, PREVIEW_SEGMENT].filter(Boolean) },
     ];
   });
 }
@@ -458,6 +487,22 @@ export function guideAlternates(key?: GuideKey) {
   return map;
 }
 
+/** 预览页的绝对地址。sitemap 和 JSON-LD 用。 */
+export function previewUrl(locale: Locale) {
+  return `${SITE}${previewPath(locale)}`;
+}
+
+/**
+ * 预览页的 hreflang 表。六语种互指 + x-default 指英文，且包含自己 ——
+ * Google 要这个关系双向成立。
+ */
+export function previewAlternates() {
+  const map: Record<string, string> = {};
+  for (const locale of LOCALES) map[locale] = previewPath(locale);
+  map["x-default"] = previewPath("en");
+  return map;
+}
+
 /**
  * 一条路由的路径 / hreflang 表。
  *
@@ -475,7 +520,9 @@ export function routePath(locale: Locale, route: Route) {
     ? guidePath(locale, route.key)
     : route.kind === "guideIndex"
       ? guidePath(locale)
-      : pathOf(locale, route.key);
+      : route.kind === "preview"
+        ? previewPath(locale)
+        : pathOf(locale, route.key);
 }
 
 export function routeAlternates(route: Route) {
@@ -483,5 +530,7 @@ export function routeAlternates(route: Route) {
     ? guideAlternates(route.key)
     : route.kind === "guideIndex"
       ? guideAlternates()
-      : languageAlternates(route.key);
+      : route.kind === "preview"
+        ? previewAlternates()
+        : languageAlternates(route.key);
 }

@@ -1693,6 +1693,101 @@ const zhHant: Dictionary = {
         "把活頁簿拖進來，勾上要的工作表，複製表格。.xlsx 是在這個分頁裡解開的，不去別處 —— 檔案是財務模型的時候，這一點要緊。",
     },
   },
+  preview: {
+    short: "Markdown 預覽",
+    eyebrow: "預覽 Markdown",
+    title: "Markdown 預覽 —— 在瀏覽器裡即時渲染 Markdown",
+    description:
+      "貼上或輸入 Markdown，即時看到渲染效果。免費、私密的 Markdown 預覽工具，全程在你的瀏覽器裡執行，什麼都不上傳。",
+    keywords: [
+      "markdown 預覽",
+      "markdown 線上預覽",
+      "markdown 檢視器",
+      "渲染 markdown",
+      "markdown 編輯器",
+    ],
+    h1: ["貼上 Markdown，", "即時看渲染"],
+    lede: [
+      "在左邊輸入或貼上 Markdown，右邊隨著編輯即時渲染。",
+      "全程在瀏覽器裡跑 —— 文字不離開你的電腦，什麼都不上傳。",
+    ],
+    editorLabel: "Markdown",
+    previewLabel: "預覽",
+    placeholder: "在這裡貼上或輸入 Markdown…",
+    sample: "載入範例",
+    sampleMarkdown: `# Markdown 預覽
+
+在左邊輸入，右邊即時看到**渲染結果** —— 全程在你的瀏覽器裡。
+
+## 能渲染什麼
+
+- 標題、**粗體**、_斜體_ 和 \`行內程式碼\`
+- 有序和無序清單
+- [連結](https://docstomd.com) 與圖片
+
+> 引用區塊也會渲染，左側帶一道豎線。
+
+| 格式 | 轉成 |
+| --- | --- |
+| .docx | Markdown |
+| .pdf | Markdown |
+
+\`\`\`
+程式碼區塊會保留原本的縮排。
+\`\`\`
+`,
+    clear: "清空",
+    emptyState: "你輸入的 Markdown 會在這裡即時渲染出來。",
+    charCount: { one: "{n} 個字元", other: "{n} 個字元" },
+    note: {
+      heading: "在你的瀏覽器裡執行",
+      items: [
+        "什麼都不上傳 —— 文字留在你的電腦上",
+        "隨著輸入即時渲染，不用按按鈕",
+        "免費、免註冊，載入後離線也能用",
+      ],
+    },
+    body: {
+      stepsHeading: "怎麼用",
+      steps: [
+        "把 Markdown 貼上或輸入到左邊的框裡。",
+        "右邊隨著編輯即時顯示排版後的結果。",
+        "調整原始碼直到預覽滿意 —— 它會立即更新。",
+      ],
+      supportedHeading: "能渲染什麼",
+      supported: [
+        "標題、段落、粗體、斜體、刪除線",
+        "有序和無序清單",
+        "帶表頭的表格",
+        "引用區塊和程式碼區塊",
+        "連結和圖片佔位",
+      ],
+      limitsHeading: "不做什麼",
+      limits: [
+        "它是預覽器，不是匯出器 —— 沒有 HTML 下載。",
+        "Markdown 裡的原始 HTML 以純文字顯示、不執行，任何不可信內容都不會執行。",
+        "深層巢狀或冷門語法可能比完整 CommonMark 引擎渲染得更樸素。",
+      ],
+    },
+    faq: [
+      {
+        q: "我的 Markdown 會被送到伺服器嗎？",
+        a: "不會。預覽是用 JavaScript 在你的瀏覽器裡渲染的。你貼上的文字不會離開你的電腦，什麼都不上傳。",
+      },
+      {
+        q: "它能匯出 HTML 嗎？",
+        a: "這個頁面是即時預覽器，不是轉換器 —— 它展示你的 Markdown 渲染成什麼樣。如果你要把文件轉成 Markdown，用下面連結裡的轉換器。",
+      },
+      {
+        q: "為什麼我 Markdown 裡的一些 HTML 顯示成了純文字？",
+        a: "貼進來的內容以不可信處理，所以原始 HTML 會照原樣顯示、不執行。這樣預覽就不會被原始碼裡藏的東西影響。",
+      },
+      {
+        q: "它能離線用嗎？",
+        a: "頁面載入完之後，沒有網路也能繼續用，因為渲染是在你的瀏覽器本地完成的。",
+      },
+    ],
+  },
 };
 
 export default zhHant;

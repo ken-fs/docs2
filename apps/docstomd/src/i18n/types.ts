@@ -41,6 +41,58 @@ export type PageCopy = {
   faq: Faq[];
 };
 
+/**
+ * markdown 预览页 /markdown-preview/ 的文案。
+ *
+ * 跟 PageCopy 分开建模：预览页收的是「粘贴/输入的 markdown」而不是文件，
+ * 没有转换器旋钮、没有那套「拖错文件去哪一页」的报错，反而多了编辑器 /
+ * 预览两栏的界面文案。硬塞进 PageCopy 会让一堆字段（转换相关的）在这页
+ * 全是空的，而这页自己要的（editor / preview / placeholder / sample）又得
+ * 变成 PageCopy 的可选字段污染其余八个工具页。
+ *
+ * SEO 必需的那几项（short / eyebrow / title / description / keywords / h1 /
+ * lede / note / body / faq）跟工具页对齐，页面才有和兄弟页同等的正文分量。
+ */
+export type PreviewCopy = {
+  /** 导航和面包屑用的短名 */
+  short: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  keywords: string[];
+  /** H1 拆两半，后半截带荧光笔下划线 */
+  h1: [string, string];
+  lede: string[];
+  /** 编辑器一栏的标题（如「Markdown」） */
+  editorLabel: string;
+  /** 预览一栏的标题（如「Preview」） */
+  previewLabel: string;
+  /** 输入框空时的占位提示 */
+  placeholder: string;
+  /** 「载入示例」按钮 */
+  sample: string;
+  /** 示例按钮塞进输入框的那段 markdown，本地化正文、演示各种语法 */
+  sampleMarkdown: string;
+  /** 「清空」按钮 */
+  clear: string;
+  /** 预览栏在输入框为空时显示的那句话 */
+  emptyState: string;
+  /** 字数统计，{n} 是字符数 */
+  charCount: Plural;
+  /** 便签条 */
+  note: { heading: string; items: string[] };
+  /** 正文三段：怎么用、支持什么、限制是什么。与工具页同结构。 */
+  body: {
+    stepsHeading: string;
+    steps: string[];
+    supportedHeading: string;
+    supported: string[];
+    limitsHeading: string;
+    limits: string[];
+  };
+  faq: Faq[];
+};
+
 export type PageKey =
   | "home"
   | "docx-to-markdown"
@@ -295,6 +347,8 @@ export type Dictionary = {
   pages: Record<PageKey, PageCopy>;
   legal: Record<LegalKey, LegalCopy>;
   guides: Record<GuideKey, GuideCopy>;
+  /** markdown 预览页 /markdown-preview/ 自己的文案。 */
+  preview: PreviewCopy;
   /**
    * 教程列表页 /guides/ 自己的文案。
    *
