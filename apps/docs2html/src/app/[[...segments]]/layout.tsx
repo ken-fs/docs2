@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import { parseSegments, SITE } from "@/content/tools";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -74,6 +75,21 @@ export default async function RootLayout({
       lang={htmlLang}
       className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-Y81QDNRL1R"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Y81QDNRL1R');
+          `}
+        </Script>
+      </head>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
