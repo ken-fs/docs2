@@ -80,7 +80,7 @@ export function LangSwitch({
                   className={
                     current
                       ? "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] font-medium text-ink"
-                      : "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] text-ink-soft transition-colors duration-100 hover:bg-ink hover:text-paper"
+                      : "relative flex items-center gap-2 py-1.5 pr-2.5 pl-7 text-[13px] text-ink-soft transition-colors duration-100 hover:bg-pine hover:text-paper"
                   }
                 >
                   {current && (

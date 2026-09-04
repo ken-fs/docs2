@@ -1151,8 +1151,8 @@ function Chip({
       className={cn(
         "border px-2 py-1 text-[12px] leading-none transition-all duration-150 ease-snap",
         on
-          ? "border-ink bg-ink text-paper"
-          : "border-rule-firm bg-paper/70 text-ink-soft hover:border-ink hover:text-ink",
+          ? "border-pine-deep bg-pine text-paper"
+          : "border-rule-firm bg-paper/70 text-ink-soft hover:border-pine-deep hover:text-pine-deep",
       )}
     >
       {children}
