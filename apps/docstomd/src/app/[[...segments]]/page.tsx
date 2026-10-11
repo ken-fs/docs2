@@ -39,6 +39,14 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
+/** 全站共用一张分享图（public/og.png，1200×630），文案取自首页 hero */
+const OG_IMAGE = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: "Docs to MD — Pull the words out of Word. Get clean Markdown.",
+};
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[[...segments]]">): Promise<Metadata> {
@@ -88,11 +96,15 @@ export async function generateMetadata({
       description: page.description,
       locale: OG_LOCALE[locale],
       alternateLocale: ogAlternates(locale),
+      // openGraph 在这一层整块覆盖 layout 的，图片只能写在这儿；
+      // 相对路径由 layout 的 metadataBase 补成绝对地址（分享卡片要绝对 URL）
+      images: [OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: page.title,
       description: page.description,
+      images: [OG_IMAGE.url],
     },
   };
 }
