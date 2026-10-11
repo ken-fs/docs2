@@ -1312,17 +1312,18 @@ const en: Dictionary = {
     "plain-text-to-html-paragraphs": {
       short: "Text to paragraphs",
       eyebrow: "Guide · Text → HTML",
-      title: "Plain text to HTML paragraphs: blank lines, <br> and links",
+      title: "Blank line between paragraphs in HTML: plain text to <p> tags",
       description:
-        "A blank line starts a new paragraph, a single newline becomes a <br> or a space depending on one switch, and bare URLs can be linked automatically. What plain text can and can't turn into.",
+        "A blank line in your text starts a new paragraph, but empty lines in HTML source collapse — the browser ignores them. How blank lines become <p> tags, when to use <br>, and how single newlines and bare URLs are handled.",
       keywords: [
+        "blank line between paragraphs html",
+        "empty line in html",
+        "add blank line in html",
         "plain text to html",
         "text to html paragraphs",
         "convert text to html p tags",
-        "text file to html",
-        "txt to html converter",
       ],
-      h1: "Plain text into HTML paragraphs",
+      h1: "Blank lines and paragraphs in HTML",
       lede: [
         "Text pasted straight into a page collapses into one block, because HTML ignores your newlines. Every run of whitespace is one space as far as a browser is concerned.",
         "Two rules decide the whole result: blank lines separate paragraphs, and single newlines are yours to choose about. Everything else follows from those.",
@@ -1330,9 +1331,10 @@ const en: Dictionary = {
       tool: "text-to-html",
       sections: [
         {
-          heading: "Blank lines make paragraphs",
+          heading: "A blank line between paragraphs",
           body: [
             "One blank line between two blocks of text produces two <p> elements. That's the only paragraph rule there is, and it's the same convention every plain-text email has used for thirty years.",
+            "In HTML itself, empty lines in the source are ignored — a browser collapses any run of whitespace to a single space — so pressing Enter in your markup adds no visible gap. Paragraph spacing comes from the <p> tags themselves; a single <br> only breaks a line. This converter turns each blank line in your text into a real <p> break so you don't hand-write any of that.",
             "A line with spaces or tabs on it still counts as blank. Several blank lines in a row still make one break, not empty paragraphs.",
             "If your text has no blank lines at all, you get one long paragraph — correctly, since there was nothing to split on. The converter says so when it spots that, rather than letting you find out later.",
           ],

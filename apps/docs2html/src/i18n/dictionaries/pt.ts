@@ -315,7 +315,7 @@ const pt: Dictionary = {
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",
-      title: "Conversor de DOCX para HTML — HTML semântico limpo, sem entulho do Word",
+      title: "Converter Word (DOCX) para HTML — HTML limpo, sem entulho do Word",
       description:
         "Converta .docx em HTML semântico limpo no seu navegador. Estilos mso- e classes redundantes do Word são removidos. As imagens são embutidas em base64 ou baixadas junto com o HTML num zip.",
       keywords: [
@@ -607,7 +607,7 @@ const pt: Dictionary = {
     "excel-to-html-table": {
       short: "Excel → tabela",
       eyebrow: "Excel → tabela HTML",
-      title: "Conversor de Excel para tabela HTML — escolha suas planilhas, grátis",
+      title: "Converter Excel em tabela HTML — Excel para HTML, grátis",
       description:
         "Converta uma pasta de trabalho .xlsx em tabelas HTML semânticas. Escolha quais planilhas incluir, defina a linha de cabeçalho e receba os valores exibidos nas células em vez do código das fórmulas. Nada é enviado.",
       keywords: [

@@ -54,3 +54,13 @@ apps/*/public/pdfjs/
 # verify/lighthouse.mjs 每次跑都会重写这份报告 —— 是测量结果不是源码，
 # 而且里面的毫秒数随机器负载浮动，进了库只会制造无意义的 diff
 verify/lighthouse-report.json
+
+# 私有运营战略文件
+/seo-strategy.md
+/article1-blogger.html
+/article-docs2html-blogger.html
+/article1-hashnode.md
+/article-docs2html-hashnode.md
+
+# 私有运营物料（外链投放文章，不入库）
+/外链/
