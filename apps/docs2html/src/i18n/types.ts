@@ -167,6 +167,17 @@ export type Dictionary = {
     footerLegal: string;
     legalContactCue: string;
     legalUpdated: string;
+    /**
+     * GA 同意条。gtag 在点「允许」之前不加载、不设 cookie。
+     * settings 是页脚那个「统计设置」按钮，点了把同意条叫回来改主意。
+     */
+    consent: {
+      text: string;
+      privacy: string;
+      accept: string;
+      decline: string;
+      settings: string;
+    };
     /** 站点之间互指：这站转出 HTML，另一站转出 Markdown */
     siblingHeading: string;
     siblingNote: string;

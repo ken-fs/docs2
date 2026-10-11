@@ -59,11 +59,18 @@ const pt: Dictionary = {
     startOver: "Voltar ao início",
     startOverNote: "A versão simples, sem formato no nome",
     footerLeft: "docstomd.com — uma ferramenta pequena, feita por uma pessoa",
-    footerRight: "roda no seu navegador · não guarda nada · não rastreia nada",
+    footerRight: "roda no seu navegador · não guarda nada · sem análise, a menos que você permita",
     langLabel: "Idioma",
     footerLegal: "As páginas formais",
     legalContactCue: "Ficou alguma coisa aqui pouco clara, ou tem algo que você quer que a gente mude?",
     legalUpdated: "Em vigor desde",
+    consent: {
+      text: "Podemos contar sua visita com o Google Analytics? Ele define cookies, então fica desligado a menos que você diga sim. Seus arquivos nunca entram nisso.",
+      privacy: "Privacidade",
+      accept: "Permitir",
+      decline: "Não, obrigado",
+      settings: "Configurações de análise",
+    },
     guide: {
       cta: "Abrir o conversor",
       pairedWith: "Usa",
@@ -805,7 +812,7 @@ const pt: Dictionary = {
       eyebrow: "Sobre este site",
       title: "Sobre o Docs to MD — quem faz e por quê",
       description:
-        "O Docs to MD é um conversor de documentos gratuito que roda no navegador, feito por um desenvolvedor independente. Sem contas, sem upload, sem rastreamento. Aqui está como funciona e por que foi feito assim.",
+        "O Docs to MD é um conversor de documentos gratuito que roda no navegador, feito por um desenvolvedor independente. Sem contas, sem upload, sem análise de visitas a menos que você permita. Aqui está como funciona e por que foi feito assim.",
       h1: "Uma ferramenta pequena, e o raciocínio por trás dela",
       lede: [
         "O Docs to MD transforma documentos em Markdown. É esse o produto inteiro.",
@@ -936,9 +943,17 @@ const pt: Dictionary = {
           ],
         },
         {
+          heading: "Análise, só se você disser sim",
+          body: [
+            "Na sua primeira visita, uma barrinha no rodapé da página pergunta se podemos contar sua visita. Até você clicar em “Permitir”, nenhum script de análise é carregado e nenhum cookie é definido.",
+            "Se você permitir, o Google Analytics é carregado e define os próprios cookies para contar visitas e distinguir um visitante novo de um que volta. Ele vê em que página você está, sua localização aproximada e seu navegador. Ele nunca vê seus arquivos nem o que você converte. Os Google Signals e a personalização de anúncios ficam desligados.",
+            "Sua resposta fica salva no armazenamento local deste navegador, para não perguntarmos em toda página. Para mudar de ideia, clique em “Configurações de análise” no rodapé de qualquer página. Dizer não depois de um sim desliga a análise e apaga os cookies dela.",
+          ],
+        },
+        {
           heading: "Cookies e publicidade",
           body: [
-            "O site em si não define nenhum cookie. Ele não tem login, nem carrinho, nem preferências para lembrar entre visitas, então não há nada para um cookie guardar.",
+            "A menos que você permita a análise, o site não define nenhum cookie. Ele não tem login, nem carrinho, nem mais nada para um cookie guardar. Os únicos cookies que podem aparecer são os do Google Analytics, depois que você disser sim.",
             "Pretendemos exibir publicidade do Google AdSense para cobrir os custos de hospedagem. Quando isso for ativado, o Google poderá definir cookies ou ler identificadores de dispositivo para exibir e medir anúncios, de acordo com as políticas dele. Essa é a única parte deste site em que um terceiro vê algo sobre a sua visita — e é sobre a página em que você está, não sobre o documento que você converteu, que o Google não tem como ver.",
             "Se você está no Espaço Econômico Europeu, no Reino Unido ou na Suíça, será pedido consentimento antes do uso de qualquer cookie não essencial, e você pode retirá-lo depois. A política de cookies explica as categorias e como mudar de ideia.",
           ],
@@ -952,7 +967,8 @@ const pt: Dictionary = {
             "O Cloudflare Pages hospeda os arquivos estáticos que compõem este site.",
             "O Google AdSense, quando ativado, exibe a publicidade descrita acima.",
             "As fontes do Google Fonts são hospedadas neste domínio, então pedir uma página não conta ao Google que você esteve aqui.",
-            "Nenhuma página carrega plataforma de análise, gravador de sessão, mapa de calor, widget de chat ou incorporação de rede social.",
+            "O Google Analytics conta visitas, mas só depois que você clica em “Permitir”, como descrito acima.",
+            "Nenhuma página carrega gravador de sessão, mapa de calor, widget de chat ou incorporação de rede social.",
           ],
         },
         {
@@ -965,7 +981,7 @@ const pt: Dictionary = {
           heading: "Seus direitos",
           body: [
             "Sob a LGPD, o GDPR, a CCPA e leis semelhantes, você tem direito de acessar, corrigir, excluir e portar seus dados pessoais, e de se opor ao tratamento deles. Respeitamos todos — e na prática os pedidos aqui são incomumente simples de responder, porque não temos nenhum arquivo que você converteu nem um perfil seu para entregar, corrigir ou excluir.",
-            "Para os cookies de publicidade descritos acima, o controlador é o Google, e as ferramentas dele dão o controle mais direto sobre a personalização de anúncios. Escreva e a gente indica o lugar certo.",
+            "Para os cookies de análise e de publicidade descritos acima, o controlador é o Google, e as ferramentas dele dão o controle mais direto sobre a personalização de anúncios. Escreva e a gente indica o lugar certo.",
           ],
         },
         {
@@ -1039,13 +1055,13 @@ const pt: Dictionary = {
     cookies: {
       short: "Cookies",
       eyebrow: "Política de cookies",
-      title: "Política de cookies — o Docs to MD não usa cookies próprios",
+      title: "Política de cookies — quais cookies o Docs to MD usa",
       description:
-        "Quais cookies o Docs to MD usa. O site em si não define nenhum. A publicidade, quando ativada, pode definir — e no EEE, no Reino Unido e na Suíça, só com o seu consentimento.",
+        "Quais cookies o Docs to MD usa: nenhum, a menos que você permita a análise; aí o Google Analytics define os dele. A publicidade, quando ativada, precisa do seu consentimento no EEE, no Reino Unido e na Suíça.",
       h1: "Política de cookies",
       lede: [
-        "Este site não define nenhum cookie próprio. Não há login e não há nada para lembrar entre visitas.",
-        "A exceção é a publicidade, e esta página diz exatamente o que isso envolve.",
+        "Este site não define nenhum cookie, a menos que você aceite a análise. Não há login e não há mais nada para lembrar entre visitas.",
+        "Esta página diz exatamente o que a análise, e mais tarde a publicidade, envolvem.",
       ],
       sections: [
         {
@@ -1057,8 +1073,9 @@ const pt: Dictionary = {
         {
           heading: "Cookies que este site define",
           body: [
-            "Nenhum. Nem um, no momento em que isto foi escrito.",
+            "Nenhum, a menos que você clique em “Permitir” na barra de análise. Aí o Google Analytics define dois: _ga, que distingue um visitante novo de um que volta, e _ga_ seguido de um ID, que acompanha a visita atual. Os dois podem durar até dois anos. Clique em “Não, obrigado”, ou ignore a barra, e nada é definido.",
             "Não há conta em que permanecer logado, nem carrinho, nem preferência para guardar entre visitas. Até os ajustes do conversor — estilo de marcador, estilo de cerca, linha de cabeçalho, alinhamento — vivem apenas na página enquanto ela está aberta, e voltam ao padrão ao recarregar. Seus arquivos e o resultado convertido também nunca são escritos em armazenamento local, IndexedDB ou cookie.",
+            "A única coisa que guardamos é a sua resposta à barra de análise, no armazenamento local deste navegador, para não perguntar em toda página.",
           ],
         },
         {
@@ -1072,7 +1089,7 @@ const pt: Dictionary = {
           heading: "Consentimento, se você está na Europa",
           body: [
             "Se você está no Espaço Econômico Europeu, no Reino Unido ou na Suíça, cookies não essenciais só são usados depois que você concordar. Você será perguntado uma vez, por meio de uma caixa de consentimento, e pode recusar e continuar usando todas as partes do site — nada aqui depende de consentimento.",
-            "Você pode mudar sua resposta a qualquer momento pela mesma caixa, acessível no rodapé quando a publicidade estiver ativa. Retirar o consentimento interrompe a definição de novos cookies não essenciais.",
+            "Você pode mudar sua resposta a qualquer momento: clique em “Configurações de análise” no rodapé de qualquer página e a barra volta. Dizer não depois de um sim desliga a análise e apaga os cookies que ela definiu.",
           ],
         },
         {

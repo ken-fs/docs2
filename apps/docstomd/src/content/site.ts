@@ -7,4 +7,4 @@
 export const CONTACT_EMAIL = "hello@docstomd.com";
 
 /** 条款和隐私政策的生效日期，也是 LegalShell 上显示的那个。 */
-export const EFFECTIVE_DATE = "2026-08-04";
+export const EFFECTIVE_DATE = "2026-10-11";

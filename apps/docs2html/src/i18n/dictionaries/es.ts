@@ -50,11 +50,18 @@ const es: Dictionary = {
     startOver: "Empezar de nuevo",
     startOverNote: "Markdown a HTML, el de la portada",
     footerLeft: "docs2html.com — una herramienta pequeña, hecha por una persona",
-    footerRight: "corre en tu navegador · no guarda nada · no te rastrea",
+    footerRight: "corre en tu navegador · no guarda nada · sin analítica salvo que la permitas",
     langLabel: "Idioma",
     footerLegal: "Las páginas formales",
     legalContactCue: "¿Algo aquí no queda claro, o hay algo que quieras cambiar?",
     legalUpdated: "En vigor desde",
+    consent: {
+      text: "¿Podemos contar tu visita con Google Analytics? Pone cookies, así que queda apagado salvo que digas que sí. Tus archivos nunca forman parte de eso.",
+      privacy: "Privacidad",
+      accept: "Permitir",
+      decline: "No, gracias",
+      settings: "Ajustes de analítica",
+    },
     siblingHeading: "¿Vas en la otra dirección?",
     siblingNote:
       "DocsToMD es esta misma herramienta al revés: Word, PDF, Excel y HTML a Markdown. Mismo enfoque, mismo modelo de privacidad, salida opuesta.",
@@ -688,7 +695,7 @@ const es: Dictionary = {
       eyebrow: "Sobre este sitio",
       title: "Sobre Docs 2 HTML — quién lo hace y por qué",
       description:
-        "Docs 2 HTML es un convertidor gratuito que funciona en el navegador y transforma Markdown, Word, Google Docs, texto, CSV y Excel en HTML limpio. Sin cuentas, sin subidas, sin rastreo. Aquí explicamos cómo y por qué.",
+        "Docs 2 HTML es un convertidor gratuito que funciona en el navegador y transforma Markdown, Word, Google Docs, texto, CSV y Excel en HTML limpio. Sin cuentas, sin subidas, sin analítica salvo que la permitas. Aquí explicamos cómo y por qué.",
       h1: "Una herramienta pequeña, y el razonamiento detrás",
       lede: [
         "Docs 2 HTML convierte documentos en HTML que estarías dispuesto a firmar. Ese es todo el producto.",
@@ -840,9 +847,17 @@ const es: Dictionary = {
           ],
         },
         {
+          heading: "Analítica, solo si dices que sí",
+          body: [
+            "En tu primera visita, una pequeña barra al pie de la página te pregunta si podemos contar tu visita. Hasta que pulses «Permitir», no se carga ningún script de analítica ni se pone ninguna cookie.",
+            "Si lo permites, se carga Google Analytics y pone sus propias cookies para contar visitas y distinguir a quien llega por primera vez de quien vuelve. Ve en qué página estás, tu ubicación aproximada y tu navegador. Nunca ve tus archivos ni lo que conviertes. Las señales de Google y la personalización de anuncios están desactivadas.",
+            "Tu respuesta se guarda en el almacenamiento local de este navegador para no preguntarte en cada página. Para cambiar de opinión, pulsa «Ajustes de analítica» al pie de cualquier página. Decir que no después de un sí apaga la analítica y borra sus cookies.",
+          ],
+        },
+        {
           heading: "Cookies y publicidad",
           body: [
-            "El sitio en sí no establece ninguna cookie. No tiene inicio de sesión, ni carrito, ni preferencias que recordar entre visitas, así que no hay nada que una cookie deba guardar.",
+            "Salvo que permitas la analítica, el sitio no establece ninguna cookie. No tiene inicio de sesión, ni carrito, ni nada más que una cookie deba guardar. Las únicas cookies que pueden aparecer son las de Google Analytics, después de que digas que sí.",
             "Tenemos la intención de mostrar publicidad de Google AdSense para cubrir los costes de alojamiento. Cuando esté activada, Google podrá establecer cookies o leer identificadores de dispositivo para servir y medir anuncios, conforme a sus propias políticas. Es la única parte de este sitio donde un tercero ve algo sobre tu visita, y se refiere a la página en la que estás, no al documento que convertiste, que Google no tiene forma de ver.",
             "Si estás en el Espacio Económico Europeo, el Reino Unido o Suiza, se te pedirá consentimiento antes de usar cookies no esenciales, y podrás retirarlo después. La política de cookies explica las categorías y cómo cambiar de opinión.",
           ],
@@ -854,7 +869,8 @@ const es: Dictionary = {
             "Cloudflare Pages aloja los archivos estáticos que componen este sitio.",
             "Google AdSense, una vez activado, sirve la publicidad descrita más arriba.",
             "Los archivos de Google Fonts se alojan aquí, servidos desde este dominio, así que pedir una página no le dice a Google que has estado.",
-            "No se carga ninguna plataforma de analítica, grabador de sesiones, mapa de calor, widget de chat ni contenido social incrustado en ninguna página.",
+            "Google Analytics cuenta visitas, pero solo después de que pulses «Permitir», como se explica arriba.",
+            "No se carga ningún grabador de sesiones, mapa de calor, widget de chat ni contenido social incrustado en ninguna página.",
           ],
         },
         {
@@ -867,7 +883,7 @@ const es: Dictionary = {
           heading: "Tus derechos",
           body: [
             "Según el RGPD, la CCPA y leyes similares, tienes derecho a acceder, corregir, eliminar y portar tus datos personales, y a oponerte a su tratamiento. Los respetamos todos y, en la práctica, aquí las solicitudes son inusualmente fáciles de responder, porque no conservamos ningún archivo que hayas convertido ni ningún perfil tuyo que entregar, corregir o eliminar.",
-            "Para las cookies publicitarias descritas antes, el responsable es Google, y sus propias herramientas te dan el control más directo sobre la personalización de anuncios. Escríbenos y te indicaremos el sitio adecuado.",
+            "Para las cookies de analítica y de publicidad descritas antes, el responsable es Google, y sus propias herramientas te dan el control más directo sobre la personalización de anuncios. Escríbenos y te indicaremos el sitio adecuado.",
           ],
         },
         {
@@ -942,13 +958,13 @@ const es: Dictionary = {
     cookies: {
       short: "Cookies",
       eyebrow: "Política de cookies",
-      title: "Política de cookies — Docs 2 HTML",
+      title: "Política de cookies — qué cookies usa Docs 2 HTML",
       description:
-        "Qué cookies usa Docs 2 HTML. El sitio en sí no establece ninguna. La publicidad, una vez activada, puede establecerlas, y en el EEE, el Reino Unido y Suiza solo con tu consentimiento.",
+        "Qué cookies usa Docs 2 HTML: ninguna salvo que permitas la analítica, y entonces Google Analytics establece las suyas. La publicidad, una vez activada, necesita tu consentimiento en el EEE, el Reino Unido y Suiza.",
       h1: "Política de cookies",
       lede: [
-        "Este sitio no establece cookies propias. No hay inicio de sesión ni nada que recordar entre visitas.",
-        "La excepción es la publicidad, y esta página dice exactamente qué implica.",
+        "Este sitio no establece cookies salvo que digas que sí a la analítica. No hay inicio de sesión ni nada más que recordar entre visitas.",
+        "Esta página dice exactamente qué implican la analítica y, más adelante, la publicidad.",
       ],
       sections: [
         {
@@ -960,8 +976,9 @@ const es: Dictionary = {
         {
           heading: "Cookies que establece este sitio",
           body: [
-            "Ninguna. Ni una, a día de hoy.",
+            "Ninguna, salvo que pulses «Permitir» en la barra de analítica. Entonces Google Analytics pone dos: _ga, que distingue a quien llega por primera vez de quien vuelve, y _ga_ seguida de un ID, que sigue la visita en curso. Las dos pueden durar hasta dos años. Si pulsas «No, gracias» o ignoras la barra, no se pone nada.",
             "No hay cuenta en la que mantener la sesión, ni carrito, ni preferencia que guardar entre visitas. Incluso los ajustes del convertidor (fragmento o página completa, sangría, fila de encabezado, delimitador) viven solo en la página mientras la tienes abierta y se reinician al recargar. Tus archivos y su resultado convertido tampoco se escriben nunca en almacenamiento local, IndexedDB o una cookie.",
+            "Lo único que sí guardamos es tu respuesta a la barra de analítica, en el almacenamiento local de este navegador, para no preguntarte en cada página.",
           ],
         },
         {
@@ -975,7 +992,7 @@ const es: Dictionary = {
           heading: "Consentimiento, si estás en Europa",
           body: [
             "Si estás en el Espacio Económico Europeo, el Reino Unido o Suiza, las cookies no esenciales solo se usan después de que hayas aceptado. Se te preguntará una vez, mediante un diálogo de consentimiento, y puedes rechazarlo y seguir usando todas las partes del sitio: aquí nada está condicionado al consentimiento.",
-            "Puedes cambiar tu respuesta en cualquier momento mediante el mismo diálogo, accesible desde el pie de página una vez activada la publicidad. Retirar el consentimiento detiene el establecimiento de nuevas cookies no esenciales.",
+            "Puedes cambiar tu respuesta cuando quieras: pulsa «Ajustes de analítica» al pie de cualquier página y la barra vuelve a aparecer. Decir que no después de un sí apaga la analítica y borra las cookies que haya puesto.",
           ],
         },
         {

@@ -50,11 +50,18 @@ const zhTW: Dictionary = {
     startOver: "回首頁重來",
     startOverNote: "Markdown 轉 HTML，首頁那個",
     footerLeft: "docs2html.com —— 一個人做的小工具",
-    footerRight: "在瀏覽器裡執行 · 不存檔案 · 不做追蹤",
+    footerRight: "在瀏覽器裡執行 · 不存檔案 · 你不同意就不統計",
     langLabel: "語言",
     footerLegal: "正式條款",
     legalContactCue: "這頁哪裡沒寫清楚，或者你希望改點什麼？",
     legalUpdated: "生效日期",
+    consent: {
+      text: "可以用 Google Analytics 記下這次造訪嗎？它會設 cookie，所以你點同意之前不會開。你的檔案不在統計範圍內。",
+      privacy: "隱私權",
+      accept: "允許",
+      decline: "不用了",
+      settings: "統計設定",
+    },
     siblingHeading: "想反著轉？",
     siblingNote:
       "DocsToMD 是同一套東西反過來用 —— Word、PDF、Excel、HTML 轉成 Markdown。做法一樣，隱私模型一樣，只是輸出格式相反。",
@@ -683,7 +690,7 @@ const zhTW: Dictionary = {
       eyebrow: "關於本站",
       title: "關於 Docs 2 HTML —— 誰做的，為什麼做",
       description:
-        "Docs 2 HTML 是一個免費的瀏覽器端轉換工具，把 Markdown、Word、Google 文件、純文字、CSV 和 Excel 轉成乾淨的 HTML。不用註冊，不上傳，不追蹤。這一頁講清怎麼做的、為什麼這麼做。",
+        "Docs 2 HTML 是一個免費的瀏覽器端轉換工具，把 Markdown、Word、Google 文件、純文字、CSV 和 Excel 轉成乾淨的 HTML。不用註冊，不上傳，你不同意就不做統計。這一頁講清怎麼做的、為什麼這麼做。",
       h1: "一個小工具，以及它背後的想法",
       lede: [
         "Docs 2 HTML 把文件轉成你願意署上自己名字的 HTML。這就是產品的全部。",
@@ -835,9 +842,17 @@ const zhTW: Dictionary = {
           ],
         },
         {
+          heading: "統計：只在你同意時才開",
+          body: [
+            "第一次造訪時，頁面底部會跳出一條小橫幅，問你能不能記下這次造訪。在你點「允許」之前，不會載入任何統計指令碼，也不會設任何 cookie。",
+            "如果你允許，Google Analytics 會載入，並設定它自己的 cookie，用來計算造訪次數、分辨新訪客和回訪者。它看得到你在哪個頁面、大概所在地區和你用的瀏覽器。它看不到你的檔案，也看不到你轉換了什麼。Google 信號和廣告個人化都是關閉的。",
+            "你的選擇會存在這個瀏覽器的 localStorage 裡，這樣不用每頁都問一次。想改主意，點任何頁面底部的「統計設定」就行。先允許後拒絕，統計會關掉，它設的 cookie 也會刪掉。",
+          ],
+        },
+        {
           heading: "Cookie 與廣告",
           body: [
-            "站點本身不設定任何 cookie。它沒有登入、沒有購物車、也沒有需要跨造訪記住的偏好，沒有什麼要放進 cookie 裡。",
+            "只要你沒同意統計，站點就不設定任何 cookie。它沒有登入、沒有購物車，也沒有什麼要放進 cookie 裡。唯一可能出現的是 Google Analytics 的 cookie，而且要在你同意之後。",
             "我們打算展示 Google AdSense 的廣告來覆蓋主機成本。啟用之後，Google 可能會按其自身政策設定 cookie 或讀取裝置識別碼，用於投放和衡量廣告。這是本站唯一有第三方了解到你的造訪的地方 —— 而它了解的是你在哪個頁面，不是你轉換了什麼文件，後者 Google 無從得知。",
             "如果你在歐洲經濟區、英國或瑞士，在使用任何非必要 cookie 之前會先徵求你的同意，之後也可以撤回。Cookie 政策裡寫了各個類別和改變主意的方法。",
           ],
@@ -849,7 +864,8 @@ const zhTW: Dictionary = {
             "Cloudflare Pages 託管構成本站的靜態檔案。",
             "Google AdSense 在啟用後投放上面說的那些廣告。",
             "Google Fonts 的字型檔案是自行託管的，從本網域提供，所以請求一個頁面不會告訴 Google 你來過。",
-            "任何頁面上都沒有載入分析平台、工作階段錄製、熱圖、聊天小工具或社群嵌入。",
+            "Google Analytics 統計造訪次數，但只在你點「允許」之後，見上文。",
+            "任何頁面上都沒有載入工作階段錄製、熱圖、聊天小工具或社群嵌入。",
           ],
         },
         {
@@ -862,7 +878,7 @@ const zhTW: Dictionary = {
           heading: "你的權利",
           body: [
             "依據 GDPR、CCPA 及類似法律，你有權存取、更正、刪除和攜帶你的個人資料，也有權反對其處理。這些我們全部尊重 —— 而實際上，這裡的請求異常好答，因為我們手上沒有你轉換過的任何檔案，也沒有一份關於你的剖繪可以交出、更正或刪除。",
-            "至於上面說的廣告 cookie，控制者是 Google，它自己的工具能讓你最直接地控制廣告個人化。寫信給我們，我們會告訴你去哪兒改。",
+            "至於上面說的統計和廣告 cookie，控制者是 Google，它自己的工具能讓你最直接地控制廣告個人化。寫信給我們，我們會告訴你去哪兒改。",
           ],
         },
         {
@@ -937,13 +953,13 @@ const zhTW: Dictionary = {
     cookies: {
       short: "Cookie",
       eyebrow: "Cookie 政策",
-      title: "Cookie 政策 —— Docs 2 HTML 不設自有 cookie",
+      title: "Cookie 政策 —— Docs 2 HTML 會設哪些 cookie",
       description:
-        "Docs 2 HTML 用到哪些 cookie。站點本身一個都不設。廣告啟用後可能會設定 cookie —— 在歐洲經濟區、英國和瑞士，只在你同意之後。",
+        "Docs 2 HTML 用到哪些 cookie：你不同意統計就一個都沒有；同意後 Google Analytics 會設它自己的。廣告啟用後，在歐洲經濟區、英國和瑞士須經你同意。",
       h1: "Cookie 政策",
       lede: [
-        "本站不設定任何屬於自己的 cookie。沒有登入，也沒有需要跨造訪記住的東西。",
-        "例外是廣告，這一頁把那件事說清楚。",
+        "除非你同意統計，本站不設定任何 cookie。沒有登入，也沒有別的需要跨造訪記住的東西。",
+        "這一頁把統計，以及之後的廣告，各意味著什麼說清楚。",
       ],
       sections: [
         {
@@ -955,8 +971,9 @@ const zhTW: Dictionary = {
         {
           heading: "本站設定的 cookie",
           body: [
-            "沒有。寫這段話的時候，一個都沒有。",
+            "沒有，除非你在統計橫幅上點了「允許」。點了之後，Google Analytics 會設兩個：_ga 用來分辨新訪客和回訪者，_ga_ 開頭加一串 ID 的那個用來記錄這次造訪。兩者最長可保留兩年。點「不用了」或者不理橫幅，就什麼都不會設。",
             "這裡沒有要保持登入的帳號，沒有購物車，也沒有需要跨造訪保存的偏好。就連轉換器上那些開關 —— 片段還是整頁、縮排、標題列、分隔符號 —— 也只活在你開著的這個頁面裡，重新載入就復位。你的檔案和轉換結果同樣不會被寫進 localStorage、IndexedDB 或 cookie。",
+            "我們唯一會存的，是你對統計橫幅的選擇，存在這個瀏覽器的 localStorage 裡，這樣不用每頁都問你。",
           ],
         },
         {
@@ -970,7 +987,7 @@ const zhTW: Dictionary = {
           heading: "如果你在歐洲，關於同意",
           body: [
             "如果你在歐洲經濟區、英國或瑞士，非必要 cookie 只會在你同意之後才使用。會問你一次，透過一個同意對話框；你可以拒絕，並且照樣使用本站的每一個功能 —— 這裡沒有任何東西被同意卡著。",
-            "你隨時可以透過同一個對話框改變答案，廣告啟用後可從頁尾進入。撤回同意後不會再設定新的非必要 cookie。",
+            "你隨時可以改答案：點任何頁面底部的「統計設定」，橫幅就會回來。先允許後拒絕，統計會關掉，並刪除它設過的 cookie。",
           ],
         },
         {

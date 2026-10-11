@@ -1601,3 +1601,64 @@ test("no page loads a parser it doesn't need", async ({ page }) => {
   // 跟着 mammoth 一起进同一批 chunk 是对的，不是多加载
   expect(loaded(), "DOCX 转换时拉的库不对").toEqual(["mammoth"]);
 });
+
+/**
+ * GA 走同意门控：首屏 HTML 里没有 gtag，点「允许」之前零第三方请求、零 cookie
+ * （上面那几条「external 必须为空」靠的就是这个）。点了才插 gtag.js，选择记在
+ * localStorage，刷新后不再问；页脚「统计设置」能把条叫回来。
+ * 测试里把 Google 的请求全部拦掉（abort）：只验「去请求了」，不真往 GA 发数据。
+ */
+const GA_HOSTS = /googletagmanager\.com|google-analytics\.com/;
+const GA_SETTINGS = "Analytics settings";
+const GA_ACCEPT = "Allow";
+const GA_DECLINE = "No thanks";
+
+test("analytics stays off until you allow it", async ({ page, context }) => {
+  const ga: string[] = [];
+  await page.route(GA_HOSTS, (r) => {
+    ga.push(r.request().url());
+    return r.abort();
+  });
+  const html = await (await page.request.get("/")).text();
+  expect(html, "首屏 HTML 里不该有 gtag").not.toMatch(GA_HOSTS);
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  const bar = page.getByRole("region", { name: GA_SETTINGS });
+  await expect(bar).toBeVisible();
+  expect(ga, "没同意就请求了 Google").toEqual([]);
+  expect(await context.cookies()).toEqual([]);
+
+  await bar.getByRole("button", { name: GA_ACCEPT, exact: true }).click();
+  await expect(bar).toBeHidden();
+  await expect(page.locator('script[src*="googletagmanager.com/gtag/js?id=G-"]')).toHaveCount(1);
+  await expect.poll(() => ga.length).toBeGreaterThan(0);
+  expect(await page.evaluate(() => localStorage.getItem("analytics-consent"))).toBe("accepted");
+
+  // 记住了：刷新不再问，直接加载
+  ga.length = 0;
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator('script[src*="googletagmanager.com/gtag/js?id=G-"]')).toHaveCount(1);
+  await page.waitForTimeout(1500);
+  await expect(bar).toBeHidden();
+});
+
+test("declining loads nothing, and the footer link brings the choice back", async ({ page }) => {
+  const ga: string[] = [];
+  await page.route(GA_HOSTS, (r) => {
+    ga.push(r.request().url());
+    return r.abort();
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+  const bar = page.getByRole("region", { name: GA_SETTINGS });
+  await bar.getByRole("button", { name: GA_DECLINE, exact: true }).click();
+  await expect(bar).toBeHidden();
+
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForTimeout(1500);
+  await expect(bar).toBeHidden();
+  expect(ga, "拒绝了还请求 Google").toEqual([]);
+
+  await page.locator("footer").getByRole("button", { name: GA_SETTINGS }).click();
+  await expect(bar).toBeVisible();
+  await expect(page.locator('script[src*="googletagmanager"]')).toHaveCount(0);
+});

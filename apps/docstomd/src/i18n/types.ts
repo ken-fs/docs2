@@ -228,6 +228,17 @@ export type Dictionary = {
     /** 正式页面上标注生效日期的前缀，后面接日期 */
     legalUpdated: string;
     /**
+     * GA 同意条。gtag 在点「允许」之前不加载、不设 cookie。
+     * settings 是页脚那个「统计设置」按钮，点了把同意条叫回来改主意。
+     */
+    consent: {
+      text: string;
+      privacy: string;
+      accept: string;
+      decline: string;
+      settings: string;
+    };
+    /**
      * 教程壳子上的字。文章正文在 guides 里，这儿只有布局自己要说的那几句。
      *
      * 单独一组而不是平铺进 chrome：chrome 已经二十来个键了，教程这几个是

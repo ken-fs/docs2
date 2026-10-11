@@ -50,11 +50,18 @@ const en: Dictionary = {
     startOver: "Start over",
     startOverNote: "Markdown to HTML, the one on the front page",
     footerLeft: "docs2html.com — a small tool, made by one person",
-    footerRight: "runs in your browser · stores nothing · tracks nothing",
+    footerRight: "runs in your browser · stores nothing · no analytics unless you allow it",
     langLabel: "Language",
     footerLegal: "The formal pages",
     legalContactCue: "Something here unclear, or something you want changed?",
     legalUpdated: "In effect since",
+    consent: {
+      text: "Can we count your visit with Google Analytics? It sets cookies, so it stays off unless you say yes. Your files are never part of it.",
+      privacy: "Privacy",
+      accept: "Allow",
+      decline: "No thanks",
+      settings: "Analytics settings",
+    },
     siblingHeading: "Going the other way?",
     siblingNote:
       "DocsToMD is this same tool pointed in reverse — Word, PDF, Excel and HTML into Markdown. Same approach, same privacy model, opposite output.",
@@ -687,7 +694,7 @@ const en: Dictionary = {
       eyebrow: "About this site",
       title: "About Docs 2 HTML — who makes it and why",
       description:
-        "Docs 2 HTML is a free browser-based converter that turns Markdown, Word, Google Docs, text, CSV and Excel into clean HTML. No accounts, no uploads, no tracking. Here's how and why.",
+        "Docs 2 HTML is a free browser-based converter that turns Markdown, Word, Google Docs, text, CSV and Excel into clean HTML. No accounts, no uploads, no analytics unless you allow it. Here's how and why.",
       h1: "A small tool, and the reasoning behind it",
       lede: [
         "Docs 2 HTML turns documents into HTML you'd be willing to put your name on. That's the whole product.",
@@ -839,9 +846,17 @@ const en: Dictionary = {
           ],
         },
         {
+          heading: "Analytics, only if you say yes",
+          body: [
+            "On your first visit a small bar at the bottom of the page asks whether we can count your visit. Until you click Allow, no analytics script loads and no cookies are set.",
+            "If you allow it, Google Analytics loads and sets its own cookies so it can count visits and tell a new visitor from a returning one. It sees which page you're on, your rough location and your browser. It never sees your files or what you convert. Google signals and ad personalisation are turned off.",
+            "Your answer is saved in this browser's local storage so we don't ask on every page. To change your mind, click “Analytics settings” at the bottom of any page. Saying no after a yes switches analytics off and deletes its cookies.",
+          ],
+        },
+        {
           heading: "Cookies and advertising",
           body: [
-            "The site itself sets no cookies. It has no login, no shopping cart and no preferences to remember across visits, so there's nothing for a cookie to hold.",
+            "Unless you allow analytics, the site sets no cookies. It has no login, no shopping cart and nothing else for a cookie to hold. The only cookies that can appear are Google Analytics' ones, after you say yes.",
             "We intend to show advertising from Google AdSense to cover hosting costs. When that is enabled, Google may set cookies or read device identifiers to serve and measure ads, in accordance with its own policies. That is the one part of this site where a third party sees something about your visit — and it's about the page you're on, not the document you converted, which Google has no way of seeing.",
             "If you're in the European Economic Area, the United Kingdom or Switzerland, you will be asked for consent before any non-essential cookies are used, and you can withdraw it later. The cookie policy explains the categories and how to change your mind.",
           ],
@@ -853,7 +868,8 @@ const en: Dictionary = {
             "Cloudflare Pages hosts the static files that make up this site.",
             "Google AdSense, once enabled, serves the advertising described above.",
             "Google Fonts files are self-hosted, served from this domain, so requesting a page doesn't tell Google you visited.",
-            "No analytics platform, session recorder, heatmap, chat widget or social embed is loaded on any page.",
+            "Google Analytics counts visits, but only after you click Allow, as described above.",
+            "No session recorder, heatmap, chat widget or social embed is loaded on any page.",
           ],
         },
         {
@@ -866,7 +882,7 @@ const en: Dictionary = {
           heading: "Your rights",
           body: [
             "Under the GDPR, the CCPA and similar laws you have rights to access, correct, delete and port your personal data, and to object to its processing. We honour all of them — and in practice, requests are unusually simple to answer here, because we hold no file you've converted and no profile of you to hand over, correct or delete.",
-            "For the advertising cookies described above, the controller is Google, and its own tools give you the most direct control over ad personalisation. Write to us and we'll point you to the right place.",
+            "For the analytics and advertising cookies described above, the controller is Google, and its own tools give you the most direct control over ad personalisation. Write to us and we'll point you to the right place.",
           ],
         },
         {
@@ -943,11 +959,11 @@ const en: Dictionary = {
       eyebrow: "Cookie policy",
       title: "Cookie Policy — Docs 2 HTML",
       description:
-        "Which cookies Docs 2 HTML uses. The site itself sets none. Advertising, once enabled, may set cookies — and in the EEA, UK and Switzerland only with your consent.",
+        "Which cookies Docs 2 HTML uses: none unless you allow analytics, then Google Analytics sets its own. Advertising, once enabled, needs your consent in the EEA, UK and Switzerland.",
       h1: "Cookie policy",
       lede: [
-        "This site sets no cookies of its own. There's no login and nothing to remember between visits.",
-        "The exception is advertising, and this page says exactly what that involves.",
+        "This site sets no cookies unless you say yes to analytics. There's no login and nothing else to remember between visits.",
+        "This page says exactly what analytics, and later advertising, involve.",
       ],
       sections: [
         {
@@ -959,8 +975,9 @@ const en: Dictionary = {
         {
           heading: "Cookies this site sets",
           body: [
-            "None. Not one, at the time of writing.",
+            "None, unless you click Allow on the analytics bar. Then Google Analytics sets two: _ga, which tells a new visitor from a returning one, and _ga_ followed by an ID, which keeps track of the current visit. Both can last up to two years. Click No thanks, or ignore the bar, and nothing is set.",
             "There's no account to stay logged into, no cart, and no cross-visit preference to store. Even the settings on the converter — fragment or full page, indentation, header row, delimiter — live only in the page while you have it open, and reset when you reload. Your files and their converted output are likewise never written to local storage, IndexedDB or a cookie.",
+            "The one thing we do keep is your answer to the analytics bar, in this browser's local storage, so you aren't asked on every page.",
           ],
         },
         {
@@ -974,7 +991,7 @@ const en: Dictionary = {
           heading: "Consent, if you're in Europe",
           body: [
             "If you're in the European Economic Area, the United Kingdom or Switzerland, non-essential cookies are only used after you've agreed. You'll be asked once, through a consent dialogue, and you can decline and keep using every part of the site — nothing here is gated behind consent.",
-            "You can change your answer at any time through the same dialogue, reachable from the footer once advertising is enabled. Withdrawing consent stops further non-essential cookies being set.",
+            "You can change your answer any time: click “Analytics settings” at the bottom of any page and the bar comes back. Saying no after a yes switches analytics off and deletes the cookies it set.",
           ],
         },
         {

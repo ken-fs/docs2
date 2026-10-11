@@ -57,11 +57,18 @@ const es: Dictionary = {
     startOver: "Volver al inicio",
     startOverNote: "La versión sencilla, sin formato en el nombre",
     footerLeft: "docstomd.com — una herramienta pequeña, hecha por una persona",
-    footerRight: "corre en tu navegador · no guarda nada · no rastrea nada",
+    footerRight: "corre en tu navegador · no guarda nada · sin analítica salvo que la permitas",
     langLabel: "Idioma",
     footerLegal: "Las páginas formales",
     legalContactCue: "¿Algo aquí no queda claro, o hay algo que quieres que cambiemos?",
     legalUpdated: "En vigor desde",
+    consent: {
+      text: "¿Podemos contar tu visita con Google Analytics? Pone cookies, así que queda apagado salvo que digas que sí. Tus archivos nunca forman parte de eso.",
+      privacy: "Privacidad",
+      accept: "Permitir",
+      decline: "No, gracias",
+      settings: "Ajustes de analítica",
+    },
     guide: {
       cta: "Abrir el conversor",
       pairedWith: "Usa",
@@ -802,7 +809,7 @@ const es: Dictionary = {
       eyebrow: "Sobre este sitio",
       title: "Acerca de Docs to MD — quién lo hace y por qué",
       description:
-        "Docs to MD es un convertidor de documentos gratuito que corre en el navegador, hecho por un desarrollador independiente. Sin cuentas, sin subidas, sin rastreo. Aquí está cómo funciona y por qué se hizo así.",
+        "Docs to MD es un convertidor de documentos gratuito que corre en el navegador, hecho por un desarrollador independiente. Sin cuentas, sin subidas, sin analítica salvo que la permitas. Aquí está cómo funciona y por qué se hizo así.",
       h1: "Una herramienta pequeña, y el razonamiento detrás",
       lede: [
         "Docs to MD convierte documentos a Markdown. Eso es todo el producto.",
@@ -933,9 +940,17 @@ const es: Dictionary = {
           ],
         },
         {
+          heading: "Analítica, solo si dices que sí",
+          body: [
+            "En tu primera visita, una pequeña barra al pie de la página te pregunta si podemos contar tu visita. Hasta que pulses «Permitir», no se carga ningún script de analítica ni se pone ninguna cookie.",
+            "Si lo permites, se carga Google Analytics y pone sus propias cookies para contar visitas y distinguir a quien llega por primera vez de quien vuelve. Ve en qué página estás, tu ubicación aproximada y tu navegador. Nunca ve tus archivos ni lo que conviertes. Las señales de Google y la personalización de anuncios están desactivadas.",
+            "Tu respuesta se guarda en el almacenamiento local de este navegador para no preguntarte en cada página. Para cambiar de opinión, pulsa «Ajustes de analítica» al pie de cualquier página. Decir que no después de un sí apaga la analítica y borra sus cookies.",
+          ],
+        },
+        {
           heading: "Cookies y publicidad",
           body: [
-            "El sitio en sí no pone ninguna cookie. No tiene inicio de sesión, ni carrito, ni preferencias que recordar entre visitas, así que no hay nada que una cookie pueda guardar.",
+            "Salvo que permitas la analítica, el sitio no pone ninguna cookie. No tiene inicio de sesión, ni carrito, ni nada más que una cookie pueda guardar. Las únicas cookies que pueden aparecer son las de Google Analytics, después de que digas que sí.",
             "Tenemos intención de mostrar publicidad de Google AdSense para cubrir los costes de alojamiento. Cuando eso se active, Google podrá poner cookies o leer identificadores de dispositivo para servir y medir anuncios, de acuerdo con sus propias políticas. Es la única parte de este sitio donde un tercero ve algo sobre tu visita, y es sobre la página en la que estás, no sobre el documento que convertiste, que Google no tiene forma de ver.",
             "Si estás en el Espacio Económico Europeo, el Reino Unido o Suiza, se te pedirá consentimiento antes de usar cualquier cookie no esencial, y podrás retirarlo después. La política de cookies explica las categorías y cómo cambiar de opinión.",
           ],
@@ -949,7 +964,8 @@ const es: Dictionary = {
             "Cloudflare Pages aloja los archivos estáticos que componen este sitio.",
             "Google AdSense, una vez activado, sirve la publicidad descrita arriba.",
             "Las fuentes de Google Fonts se alojan en este dominio, así que pedir una página no le dice a Google que estuviste aquí.",
-            "Ninguna página carga plataformas de analítica, grabadores de sesión, mapas de calor, widgets de chat ni incrustaciones de redes sociales.",
+            "Google Analytics cuenta visitas, pero solo después de que pulses «Permitir», como se explica arriba.",
+            "Ninguna página carga grabadores de sesión, mapas de calor, widgets de chat ni incrustaciones de redes sociales.",
           ],
         },
         {
@@ -962,7 +978,7 @@ const es: Dictionary = {
           heading: "Tus derechos",
           body: [
             "Bajo el RGPD, la CCPA y leyes similares tienes derecho a acceder, corregir, borrar y portar tus datos personales, y a oponerte a su tratamiento. Los respetamos todos, y en la práctica las solicitudes aquí son inusualmente fáciles de responder, porque no tenemos ningún archivo que hayas convertido ni un perfil tuyo que entregar, corregir o borrar.",
-            "Para las cookies publicitarias descritas arriba el responsable es Google, y sus propias herramientas te dan el control más directo sobre la personalización de anuncios. Escríbenos y te indicamos dónde.",
+            "Para las cookies de analítica y de publicidad descritas arriba el responsable es Google, y sus propias herramientas te dan el control más directo sobre la personalización de anuncios. Escríbenos y te indicamos dónde.",
           ],
         },
         {
@@ -1036,13 +1052,13 @@ const es: Dictionary = {
     cookies: {
       short: "Cookies",
       eyebrow: "Política de cookies",
-      title: "Política de cookies — Docs to MD",
+      title: "Política de cookies — qué cookies usa Docs to MD",
       description:
-        "Qué cookies usa Docs to MD. El sitio en sí no pone ninguna. La publicidad, una vez activada, puede ponerlas — y en el EEE, el Reino Unido y Suiza solo con tu consentimiento.",
+        "Qué cookies usa Docs to MD: ninguna salvo que permitas la analítica, y entonces Google Analytics pone las suyas. La publicidad, una vez activada, necesita tu consentimiento en el EEE, el Reino Unido y Suiza.",
       h1: "Política de cookies",
       lede: [
-        "Este sitio no pone ninguna cookie propia. No hay inicio de sesión ni nada que recordar entre visitas.",
-        "La excepción es la publicidad, y esta página dice exactamente qué implica.",
+        "Este sitio no pone ninguna cookie salvo que digas que sí a la analítica. No hay inicio de sesión ni nada más que recordar entre visitas.",
+        "Esta página dice exactamente qué implican la analítica y, más adelante, la publicidad.",
       ],
       sections: [
         {
@@ -1054,8 +1070,9 @@ const es: Dictionary = {
         {
           heading: "Cookies que pone este sitio",
           body: [
-            "Ninguna. Ni una, al momento de escribir esto.",
+            "Ninguna, salvo que pulses «Permitir» en la barra de analítica. Entonces Google Analytics pone dos: _ga, que distingue a quien llega por primera vez de quien vuelve, y _ga_ seguida de un ID, que sigue la visita en curso. Las dos pueden durar hasta dos años. Si pulsas «No, gracias» o ignoras la barra, no se pone nada.",
             "No hay cuenta en la que permanecer, ni carrito, ni preferencia que guardar entre visitas. Incluso los ajustes del convertidor —estilo de viñeta, estilo de cercado, fila de encabezado, alineación— viven solo en la página mientras la tienes abierta, y se reinician al recargar. Tus archivos y su resultado tampoco se escriben nunca en almacenamiento local, IndexedDB o una cookie.",
+            "Lo único que sí guardamos es tu respuesta a la barra de analítica, en el almacenamiento local de este navegador, para no preguntarte en cada página.",
           ],
         },
         {
@@ -1069,7 +1086,7 @@ const es: Dictionary = {
           heading: "Consentimiento, si estás en Europa",
           body: [
             "Si estás en el Espacio Económico Europeo, el Reino Unido o Suiza, las cookies no esenciales solo se usan después de que hayas aceptado. Se te preguntará una vez, mediante un diálogo de consentimiento, y puedes rechazarlo y seguir usando cada parte del sitio: aquí nada está condicionado al consentimiento.",
-            "Puedes cambiar tu respuesta en cualquier momento desde el mismo diálogo, accesible desde el pie de página una vez activada la publicidad. Retirar el consentimiento detiene la puesta de nuevas cookies no esenciales.",
+            "Puedes cambiar tu respuesta cuando quieras: pulsa «Ajustes de analítica» al pie de cualquier página y la barra vuelve a aparecer. Decir que no después de un sí apaga la analítica y borra las cookies que haya puesto.",
           ],
         },
         {

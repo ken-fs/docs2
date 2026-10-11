@@ -50,11 +50,18 @@ const zhCN: Dictionary = {
     startOver: "回首页重来",
     startOverNote: "Markdown 转 HTML，首页那个",
     footerLeft: "docs2html.com —— 一个人做的小工具",
-    footerRight: "在浏览器里运行 · 不存文件 · 不做追踪",
+    footerRight: "在浏览器里运行 · 不存文件 · 你不允许就不统计",
     langLabel: "语言",
     footerLegal: "正式条款",
     legalContactCue: "这页哪里没写清楚，或者你希望改点什么？",
     legalUpdated: "生效日期",
+    consent: {
+      text: "可以用 Google Analytics 统计一下你的访问吗？它会设 cookie，所以你不点同意就不开。你的文件跟它没关系。",
+      privacy: "隐私政策",
+      accept: "允许",
+      decline: "不用了",
+      settings: "统计设置",
+    },
     siblingHeading: "想反着转？",
     siblingNote:
       "DocsToMD 是同一套东西反过来用 —— Word、PDF、Excel、HTML 转成 Markdown。做法一样，隐私模型一样，只是输出格式相反。",
@@ -683,7 +690,7 @@ const zhCN: Dictionary = {
       eyebrow: "关于本站",
       title: "关于 Docs 2 HTML —— 谁做的，为什么做",
       description:
-        "Docs 2 HTML 是一个免费的浏览器端转换工具，把 Markdown、Word、Google Docs、纯文本、CSV 和 Excel 转成干净的 HTML。不用注册，不上传，不追踪。这一页讲清怎么做的、为什么这么做。",
+        "Docs 2 HTML 是一个免费的浏览器端转换工具，把 Markdown、Word、Google Docs、纯文本、CSV 和 Excel 转成干净的 HTML。不用注册，不上传，你不允许就不统计。这一页讲清怎么做的、为什么这么做。",
       h1: "一个小工具，以及它背后的想法",
       lede: [
         "Docs 2 HTML 把文档转成你愿意署上自己名字的 HTML。这就是产品的全部。",
@@ -835,9 +842,17 @@ const zhCN: Dictionary = {
           ],
         },
         {
+          heading: "访问统计，你同意了才开",
+          body: [
+            "第一次来的时候，页面底部会有一条小横幅，问能不能统计你的访问。在你点「允许」之前，不加载任何统计脚本，也不设任何 cookie。",
+            "如果你允许，Google Analytics 就会加载，并设它自己的 cookie，用来数访问量、分清新访客和回头客。它能看到你在哪个页面、大概在哪个地区、用的什么浏览器。它看不到你的文件，也看不到你转换了什么。Google 信号和广告个性化都是关着的。",
+            "你的选择存在这个浏览器的 localStorage 里，这样不用每页都问一遍。想改主意，点任意页面底部的「统计设置」就行。同意之后再选不要，统计会关掉，它设的 cookie 也会删掉。",
+          ],
+        },
+        {
           heading: "Cookie 与广告",
           body: [
-            "站点本身不设置任何 cookie。它没有登录、没有购物车、也没有需要跨访问记住的偏好，没有什么要放进 cookie 里。",
+            "只要你不允许统计，站点就不设任何 cookie。它没有登录、没有购物车，也没别的东西要放进 cookie 里。唯一可能出现的是 Google Analytics 的 cookie，而且得你点了同意之后。",
             "我们打算展示 Google AdSense 的广告来覆盖托管成本。启用之后，Google 可能会按其自身政策设置 cookie 或读取设备标识符，用于投放和衡量广告。这是本站唯一有第三方了解到你的访问的地方 —— 而它了解的是你在哪个页面，不是你转换了什么文档，后者 Google 无从得知。",
             "如果你在欧洲经济区、英国或瑞士，在使用任何非必要 cookie 之前会先征求你的同意，之后也可以撤回。Cookie 政策里写了各个类别和改变主意的方法。",
           ],
@@ -849,7 +864,8 @@ const zhCN: Dictionary = {
             "Cloudflare Pages 托管构成本站的静态文件。",
             "Google AdSense 在启用后投放上面说的那些广告。",
             "Google Fonts 的字体文件是自托管的，从本域名提供，所以请求一个页面不会告诉 Google 你来过。",
-            "任何页面上都没有加载分析平台、会话录制、热图、聊天挂件或社交嵌入。",
+            "Google Analytics 统计访问量，但只在你点了「允许」之后，详见上文。",
+            "任何页面上都没有加载会话录制、热图、聊天挂件或社交嵌入。",
           ],
         },
         {
@@ -862,7 +878,7 @@ const zhCN: Dictionary = {
           heading: "你的权利",
           body: [
             "依据 GDPR、CCPA 及类似法律，你有权访问、更正、删除和携带你的个人数据，也有权反对其处理。这些我们全部尊重 —— 而实际上，这里的请求异常好答，因为我们手上没有你转换过的任何文件，也没有一份关于你的画像可以交出、更正或删除。",
-            "至于上面说的广告 cookie，控制者是 Google，它自己的工具能让你最直接地控制广告个性化。写信给我们，我们会告诉你去哪儿改。",
+            "至于上面说的统计和广告 cookie，控制者是 Google，它自己的工具能让你最直接地控制广告个性化。写信给我们，我们会告诉你去哪儿改。",
           ],
         },
         {
@@ -937,13 +953,13 @@ const zhCN: Dictionary = {
     cookies: {
       short: "Cookie",
       eyebrow: "Cookie 政策",
-      title: "Cookie 政策 —— Docs 2 HTML 不设自有 cookie",
+      title: "Cookie 政策 —— Docs 2 HTML 会设哪些 cookie",
       description:
-        "Docs 2 HTML 用到哪些 cookie。站点本身一个都不设。广告启用后可能会设置 cookie —— 在欧洲经济区、英国和瑞士，只在你同意之后。",
+        "Docs 2 HTML 用到哪些 cookie：你不允许统计就一个都没有，允许了 Google Analytics 会设它自己的。广告启用后，在欧洲经济区、英国和瑞士要先经你同意。",
       h1: "Cookie 政策",
       lede: [
-        "本站不设置任何属于自己的 cookie。没有登录，也没有需要跨访问记住的东西。",
-        "例外是广告，这一页把那件事说清楚。",
+        "只要你不同意统计，本站就不设 cookie。没有登录，也没别的需要跨访问记住的东西。",
+        "这一页把统计、以及以后的广告，各意味着什么说清楚。",
       ],
       sections: [
         {
@@ -955,8 +971,9 @@ const zhCN: Dictionary = {
         {
           heading: "本站设置的 cookie",
           body: [
-            "没有。写这段话的时候，一个都没有。",
+            "没有 —— 除非你在统计横幅上点了「允许」。那样的话 Google Analytics 会设两个：_ga，用来分清新访客和回头客；还有 _ga_ 加一串 ID 的那个，用来记录这一次访问。两个最长都能保留两年。点「不用了」，或者干脆不理横幅，就什么都不设。",
             "这里没有要保持登录的账号，没有购物车，也没有需要跨访问保存的偏好。就连转换器上那些开关 —— 片段还是整页、缩进、表头行、分隔符 —— 也只活在你打开的这个页面里，刷新就复位。你的文件和转换结果同样不会被写进 localStorage、IndexedDB 或 cookie。",
+            "我们唯一会存的，是你对统计横幅的选择，存在这个浏览器的 localStorage 里，这样不用每页都问你一遍。",
           ],
         },
         {
@@ -970,7 +987,7 @@ const zhCN: Dictionary = {
           heading: "如果你在欧洲，关于同意",
           body: [
             "如果你在欧洲经济区、英国或瑞士，非必要 cookie 只会在你同意之后才使用。会问你一次，通过一个同意对话框；你可以拒绝，并且照样使用本站的每一个功能 —— 这里没有任何东西被同意卡着。",
-            "你随时可以通过同一个对话框改变答案，广告启用后可从页脚进入。撤回同意后不会再设置新的非必要 cookie。",
+            "你随时可以改：点任意页面底部的「统计设置」，横幅就会重新出来。同意之后再选不要，统计会关掉，它设过的 cookie 也会删掉。",
           ],
         },
         {

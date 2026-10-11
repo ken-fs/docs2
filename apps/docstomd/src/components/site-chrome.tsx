@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AnalyticsSettingsButton } from "@/components/analytics-consent";
 import { Icon } from "@/components/icon";
 import { LangSwitch } from "@/components/lang-switch";
 import {
@@ -117,6 +118,7 @@ export function SiteFooter({ locale, route, dict }: ChromeProps) {
               {dict.legal[k].short}
             </Link>
           ))}
+          <AnalyticsSettingsButton label={c.consent.settings} />
         </nav>
         <div className="mt-4 flex flex-wrap items-baseline justify-between gap-3 border-t border-rule pt-4">
           <p className="font-mono text-[11px] text-ink-faint">{c.footerLeft}</p>

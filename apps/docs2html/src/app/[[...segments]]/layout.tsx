@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import { parseSegments, SITE } from "@/content/tools";
+import { AnalyticsConsent } from "@/components/analytics-consent";
+import { parseSegments, pathOf, SITE } from "@/content/tools";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { DEFAULT_LOCALE } from "@/i18n/locales";
 import "../globals.css";
@@ -68,29 +68,18 @@ export default async function RootLayout({
   const { segments } = await params;
   // 认不出的路径会渲染 not-found，这时 <html lang> 兜英文
   const locale = parseSegments(segments)?.locale ?? DEFAULT_LOCALE;
-  const { htmlLang } = await getDictionary(locale);
+  const { htmlLang, chrome } = await getDictionary(locale);
 
   return (
     <html
       lang={htmlLang}
       className={`${display.variable} ${sans.variable} ${mono.variable} h-full antialiased`}
     >
-      <head>
-        {/* Google tag (gtag.js) */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-Y81QDNRL1R"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-Y81QDNRL1R');
-          `}
-        </Script>
-      </head>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        {/* GA 不在首屏 HTML 里：点「允许」之后才由这个组件加载 gtag.js */}
+        <AnalyticsConsent copy={chrome.consent} privacyHref={pathOf(locale, "privacy")} />
+      </body>
     </html>
   );
 }
