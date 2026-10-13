@@ -177,7 +177,7 @@ const en: Dictionary = {
         "doc to md converter",
         "convert word to markdown online",
       ],
-      h1: ["Pull the words out of Word.", "Get clean Markdown."],
+      h1: ["Word to Markdown converter", "Pull the words out of Word."],
       lede: [
         "Drop a file in. Results in a few hundred milliseconds.",
         "Tables and headings stay put. Nothing gets uploaded.",
@@ -239,7 +239,7 @@ const en: Dictionary = {
         "docx to markdown free",
         "doc to markdown",
       ],
-      h1: ["Turn .docx into Markdown.", "No upload, no signup."],
+      h1: ["DOCX to Markdown converter", "No upload, no signup."],
       lede: [
         "Built for the file Word actually saves. Drop it in, read the Markdown, take it.",
         "Everything happens on your machine.",
@@ -304,7 +304,7 @@ const en: Dictionary = {
         "word to md",
         "doc to markdown converter",
       ],
-      h1: ["Word document in.", "Markdown out."],
+      h1: ["Word document to Markdown", "Word document in. Markdown out."],
       lede: [
         "For anyone who writes in Word and ships in Markdown.",
         "Drag the file over. Copy the result. Done in seconds.",
@@ -369,7 +369,7 @@ const en: Dictionary = {
         "extract text from pdf to markdown",
         "pdf to markdown free",
       ],
-      h1: ["Get the text out of a PDF.", "As Markdown, not a mess."],
+      h1: ["PDF to Markdown converter", "Get the text out of a PDF."],
       lede: [
         "A PDF has no headings — it has instructions for painting glyphs at coordinates.",
         "So we rebuild the structure from font size and spacing. Honest about where that guesses.",
@@ -446,7 +446,7 @@ const en: Dictionary = {
         "spreadsheet to markdown",
         "excel to md",
       ],
-      h1: ["Spreadsheet to Markdown table.", "Pick your sheets."],
+      h1: ["Excel to Markdown table", "Pick your sheets."],
       lede: [
         "Drop an .xlsx in and get a proper pipe table for each sheet you want.",
         "You get the values as displayed, not the formulas behind them.",
@@ -522,7 +522,7 @@ const en: Dictionary = {
         "csv to md",
         "csv to markdown online",
       ],
-      h1: ["CSV to a Markdown table.", "Paste it or drop it."],
+      h1: ["CSV to Markdown table", "Paste it or drop it."],
       lede: [
         "Quoted commas, embedded line breaks, semicolon-separated European exports — all handled.",
         "The delimiter is detected for you, or pick it yourself.",
@@ -598,7 +598,7 @@ const en: Dictionary = {
         "html to markdown online",
         "web page to markdown",
       ],
-      h1: ["HTML into Markdown.", "Sanitised on the way through."],
+      h1: ["HTML to Markdown converter", "Sanitised on the way through."],
       lede: [
         "Paste the source or drop a saved page. Out comes GitHub-flavoured Markdown.",
         "Scripts and event handlers are removed first — untrusted HTML never reaches the page.",
@@ -669,7 +669,7 @@ const en: Dictionary = {
         "export google docs to markdown",
         "google doc to md",
       ],
-      h1: ["Google Doc to Markdown.", "No add-on, no Drive access."],
+      h1: ["Google Docs to Markdown", "No add-on, no Drive access."],
       lede: [
         "We never ask for your Drive. You copy or export, we do the conversion.",
         "That way nothing of yours is ours.",
@@ -741,7 +741,7 @@ const en: Dictionary = {
         "ppt to md",
         "slides to markdown",
       ],
-      h1: ["Pull the text out of a deck.", "Speaker notes included."],
+      h1: ["PPTX to Markdown converter", "Pull the text out of a deck."],
       lede: [
         "Drop a .pptx in and get the words — slide titles, bullets, tables and the notes under each slide.",
         "It runs on your machine, so an internal deck is a fine thing to test with.",

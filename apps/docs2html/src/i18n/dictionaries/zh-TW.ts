@@ -189,7 +189,7 @@ const zhTW: Dictionary = {
         "markdown 轉 html 線上",
         "markdown 轉 html 免費",
       ],
-      h1: ["Markdown 進來。", "乾淨的 HTML 出去。"],
+      h1: ["Markdown 轉 HTML 轉換器", "Markdown 進來。乾淨的 HTML 出去。"],
       lede: [
         "貼進去，HTML 就在你眼前出現了。不用按按鈕，不用等，不用上傳。",
         "要片段就拿去貼進 CMS，要整頁就存下來直接雙擊開啟。",
@@ -258,7 +258,7 @@ const zhTW: Dictionary = {
         "commonmark 轉 html",
         "gfm 轉 html",
       ],
-      h1: ["把 Markdown 變成 HTML。", "表格和任務清單都在。"],
+      h1: ["GFM Markdown 轉 HTML", "表格和任務清單都在。"],
       lede: [
         "完整的 CommonMark 規範，再加上少了會覺得彆扭的那幾個 GitHub 擴充。",
         "在 sandbox 框架裡看一眼效果，然後複製原始碼或者下載檔案。",
@@ -328,7 +328,7 @@ const zhTW: Dictionary = {
         "doc 轉 html",
         "word 轉乾淨 html",
       ],
-      h1: ["Word 文件轉 HTML。", "不帶 Word 那堆垃圾。"],
+      h1: ["DOCX 轉 HTML", "不帶 Word 那堆垃圾。"],
       lede: [
         "「另存為網頁」會吐出幾千行 mso- 樣式。這裡給的是你自己會手寫的那種標記。",
         "標題變 <h2>，表格變 <table>，微軟專屬的東西一樣不留。",
@@ -401,7 +401,7 @@ const zhTW: Dictionary = {
         "google 文件匯出 html",
         "google docs 乾淨 html",
       ],
-      h1: ["Google 文件轉 HTML。", "不要那堆類別名稱。"],
+      h1: ["Google 文件轉 HTML", "不要那堆類別名稱。"],
       lede: [
         "從文件裡複製出來的 HTML，裹著一層類別名稱，而那份樣式表你手上並沒有。",
         "貼到這裡，剩下的就是文件本身：標題、清單、表格、連結。",
@@ -474,7 +474,7 @@ const zhTW: Dictionary = {
         "文字轉 html 段落",
         "線上文字轉 html",
       ],
-      h1: ["純文字轉 HTML。", "段落分得對。"],
+      h1: ["純文字轉 HTML", "段落分得對。"],
       lede: [
         "空一行就是新的 <p>。裸連結想成連結就成連結。角括號會被轉義，文字就老老實實是文字。",
         "本站最簡單的一個工具，也是最多人自己手工重做的那一個。",
@@ -546,7 +546,7 @@ const zhTW: Dictionary = {
         "tsv 轉 html 表格",
         "線上 csv 轉表格",
       ],
-      h1: ["CSV 轉 HTML 表格。", "語意化，不是一堆 div。"],
+      h1: ["CSV 轉 HTML 表格", "語意化，不是一堆 div。"],
       lede: [
         "第一列變成真正的 <thead>，帶 scope 屬性，螢幕閱讀器能把它當表格來念。",
         "帶引號的逗號、儲存格裡的換行、歐洲那種分號匯出，都處理得了。",
@@ -619,7 +619,7 @@ const zhTW: Dictionary = {
         "excel 轉表格",
         "試算表轉 html",
       ],
-      h1: ["試算表轉 HTML 表格。", "取的是值，不是公式。"],
+      h1: ["Excel 轉 HTML 表格", "取的是值，不是公式。"],
       lede: [
         "拖一個 .xlsx 進來，挑出要的工作表，每個都給你一個乾淨的 <table>。",
         "顏色和字型是故意不帶的 —— 一個自帶樣式的表格，貼到哪個站都要跟人家的 CSS 打一架。",

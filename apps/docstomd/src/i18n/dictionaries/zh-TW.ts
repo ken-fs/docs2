@@ -174,7 +174,7 @@ const zhHant: Dictionary = {
         "word轉md工具",
         "線上word轉markdown",
       ],
-      h1: ["把字從 Word 裡撈出來。", "得到乾淨的 Markdown。"],
+      h1: ["Word 轉 Markdown 轉換器", "把字從 Word 裡撈出來。"],
       lede: [
         "拖一個檔案進來，幾百毫秒就有結果。",
         "表格和標題都在原位。什麼都不上傳。",
@@ -236,7 +236,7 @@ const zhHant: Dictionary = {
         "docx轉markdown免費",
         "doc轉markdown",
       ],
-      h1: ["把 .docx 變成 Markdown。", "不上傳，不註冊。"],
+      h1: ["DOCX 轉 Markdown", "不上傳，不註冊。"],
       lede: [
         "就是衝著 Word 實際存出來的那種檔案做的。拖進來，看 Markdown，帶走。",
         "所有事都在你的機器上發生。",
@@ -301,7 +301,7 @@ const zhHant: Dictionary = {
         "word轉md",
         "doc轉markdown工具",
       ],
-      h1: ["Word 文件進。", "Markdown 出。"],
+      h1: ["Word 文件轉 Markdown", "Word 文件進。Markdown 出。"],
       lede: [
         "給那些用 Word 寫、拿 Markdown 交活的人。",
         "把檔案拖過來，複製結果，幾秒鐘的事。",
@@ -366,7 +366,7 @@ const zhHant: Dictionary = {
         "pdf擷取文字轉markdown",
         "pdf轉markdown免費",
       ],
-      h1: ["把 PDF 裡的字取出來。", "變成 Markdown，不是一團亂。"],
+      h1: ["PDF 轉 Markdown", "把 PDF 裡的字取出來。"],
       lede: [
         "PDF 裡沒有標題 —— 它存的是「在某個座標用某個字體畫這幾個字」。",
         "所以我們靠字級和行距把結構重建出來。哪裡是在猜，會直說。",
@@ -443,7 +443,7 @@ const zhHant: Dictionary = {
         "試算表轉markdown",
         "excel轉md",
       ],
-      h1: ["試算表轉 Markdown。", "工作表自己挑。"],
+      h1: ["Excel 轉 Markdown 表格", "工作表自己挑。"],
       lede: [
         "拖一個 .xlsx 進來，你挑的每張工作表都變成一個規矩的直線表格。",
         "拿到的是儲存格顯示的值，不是背後的公式。",
@@ -519,7 +519,7 @@ const zhHant: Dictionary = {
         "線上csv轉markdown",
         "csv轉markdown工具",
       ],
-      h1: ["CSV 轉 Markdown 表格。", "貼進來或者拖進來。"],
+      h1: ["CSV 轉 Markdown 表格", "貼進來或者拖進來。"],
       lede: [
         "引號裡的逗號、儲存格裡的換行、歐洲那邊用分號的匯出檔 —— 都能處理。",
         "分隔符號會自動認，也可以自己指定。",
@@ -595,7 +595,7 @@ const zhHant: Dictionary = {
         "網頁轉markdown",
         "html原始碼轉markdown",
       ],
-      h1: ["HTML 轉 Markdown。", "路上先淨化一遍。"],
+      h1: ["HTML 轉 Markdown", "路上先淨化一遍。"],
       lede: [
         "貼原始碼或者拖一個存下來的網頁。出來是 GitHub 風格的 Markdown。",
         "指令碼和事件屬性先被清掉 —— 不可信的 HTML 一步都不會進到頁面裡。",
@@ -666,7 +666,7 @@ const zhHant: Dictionary = {
         "google docs匯出markdown",
         "google文件轉md",
       ],
-      h1: ["Google 文件轉 Markdown。", "不裝外掛，不要硬碟權限。"],
+      h1: ["Google Docs 轉 Markdown", "不裝外掛，不要硬碟權限。"],
       lede: [
         "我們從不要你的雲端硬碟權限。你複製或匯出，我們負責轉換。",
         "這樣你的東西還是你的。",
@@ -737,7 +737,7 @@ const zhHant: Dictionary = {
         "簡報轉 markdown",
         "線上 pptx 轉 md",
       ],
-      h1: ["把投影片裡的字挖出來。", "備忘稿也一起。"],
+      h1: ["PPTX 轉 Markdown", "把投影片裡的字挖出來。"],
       lede: [
         "拖一個 .pptx 進來，把字帶走 —— 每張投影片的標題、重點、表格，還有每張下面那段備忘稿。",
         "轉換在你這台機器上跑，內部用的簡報也能放心試。",

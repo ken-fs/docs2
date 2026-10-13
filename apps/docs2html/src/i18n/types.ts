@@ -24,7 +24,7 @@ export type PageCopy = {
   title: string;
   description: string;
   keywords: string[];
-  /** H1 拆两半，后半截带下划线强调 */
+  /** [H1 = 这页的搜索词, 口号副标题（带下划线强调）] */
   h1: [string, string];
   lede: string[];
   /** 便签条 */

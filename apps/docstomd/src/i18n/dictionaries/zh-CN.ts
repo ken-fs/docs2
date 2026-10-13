@@ -175,7 +175,7 @@ const zhHans: Dictionary = {
         "word转md工具",
         "在线word转markdown",
       ],
-      h1: ["把字从 Word 里捞出来。", "得到干净的 Markdown。"],
+      h1: ["Word 转 Markdown 转换器", "把字从 Word 里捞出来。"],
       lede: [
         "拖一个文件进来，几百毫秒就有结果。",
         "表格和标题都在原位。什么都不上传。",
@@ -237,7 +237,7 @@ const zhHans: Dictionary = {
         "docx转markdown免费",
         "doc转markdown",
       ],
-      h1: ["把 .docx 变成 Markdown。", "不上传，不注册。"],
+      h1: ["DOCX 转 Markdown", "不上传，不注册。"],
       lede: [
         "就是冲着 Word 实际存出来的那种文件做的。拖进来，看 Markdown，拿走。",
         "所有事都在你机器上发生。",
@@ -302,7 +302,7 @@ const zhHans: Dictionary = {
         "word转md",
         "doc转markdown工具",
       ],
-      h1: ["Word 文档进。", "Markdown 出。"],
+      h1: ["Word 文档转 Markdown", "Word 文档进。Markdown 出。"],
       lede: [
         "给那些用 Word 写、拿 Markdown 交活的人。",
         "把文件拖过来，复制结果，几秒钟的事。",
@@ -367,7 +367,7 @@ const zhHans: Dictionary = {
         "pdf提取文字转markdown",
         "pdf转markdown免费",
       ],
-      h1: ["把 PDF 里的字取出来。", "变成 Markdown，不是一团乱。"],
+      h1: ["PDF 转 Markdown", "把 PDF 里的字取出来。"],
       lede: [
         "PDF 里没有标题 —— 它存的是「在某个坐标用某个字体画这几个字」。",
         "所以我们靠字号和行距把结构重建出来。哪里是在猜，会直说。",
@@ -444,7 +444,7 @@ const zhHans: Dictionary = {
         "表格转markdown",
         "excel转md",
       ],
-      h1: ["表格转 Markdown。", "工作表自己挑。"],
+      h1: ["Excel 转 Markdown 表格", "工作表自己挑。"],
       lede: [
         "拖一个 .xlsx 进来，你挑的每张工作表都变成一个规矩的竖线表格。",
         "拿到的是单元格显示的值，不是背后的公式。",
@@ -520,7 +520,7 @@ const zhHans: Dictionary = {
         "在线csv转markdown",
         "csv转markdown工具",
       ],
-      h1: ["CSV 转 Markdown 表格。", "贴进来或者拖进来。"],
+      h1: ["CSV 转 Markdown 表格", "贴进来或者拖进来。"],
       lede: [
         "引号里的逗号、单元格里的换行、欧洲那边用分号的导出文件 —— 都能处理。",
         "分隔符会自动认，也可以自己指定。",
@@ -596,7 +596,7 @@ const zhHans: Dictionary = {
         "网页转markdown",
         "html代码转markdown",
       ],
-      h1: ["HTML 转 Markdown。", "路上先净化一遍。"],
+      h1: ["HTML 转 Markdown", "路上先净化一遍。"],
       lede: [
         "贴源码或者拖一个保存下来的网页。出来是 GitHub 风格的 Markdown。",
         "脚本和事件属性先被清掉 —— 不可信的 HTML 一步都不会进到页面里。",
@@ -667,7 +667,7 @@ const zhHans: Dictionary = {
         "google docs导出markdown",
         "google文档转md",
       ],
-      h1: ["Google 文档转 Markdown。", "不装插件，不要硬盘权限。"],
+      h1: ["Google Docs 转 Markdown", "不装插件，不要硬盘权限。"],
       lede: [
         "我们从不要你的云端硬盘权限。你复制或导出，我们负责转换。",
         "这样你的东西还是你的。",
@@ -738,7 +738,7 @@ const zhHans: Dictionary = {
         "幻灯片转 markdown",
         "在线 pptx 转 md",
       ],
-      h1: ["把幻灯片里的字抠出来。", "备注也一起。"],
+      h1: ["PPTX 转 Markdown", "把幻灯片里的字抠出来。"],
       lede: [
         "拖一个 .pptx 进来，把字拿走 —— 每页的标题、要点、表格，还有每页下面那段备注。",
         "转换在你这台机器上跑，内部用的 deck 也能放心试。",

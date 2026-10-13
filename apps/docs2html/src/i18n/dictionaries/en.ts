@@ -193,7 +193,7 @@ const en: Dictionary = {
         "convert markdown to html online",
         "markdown to html free",
       ],
-      h1: ["Markdown in.", "Clean HTML out."],
+      h1: ["Markdown to HTML converter", "Markdown in. Clean HTML out."],
       lede: [
         "Paste it and the HTML appears as you look at it. No button, no wait, no upload.",
         "Take a fragment for your CMS, or a full page you can open straight from your desktop.",
@@ -262,7 +262,7 @@ const en: Dictionary = {
         "commonmark to html",
         "gfm to html",
       ],
-      h1: ["Turn Markdown into HTML.", "Tables and task lists included."],
+      h1: ["GFM Markdown to HTML", "Tables and task lists included."],
       lede: [
         "The full CommonMark spec, plus the GitHub extensions you'd miss if they were absent.",
         "Preview it in a sandboxed frame, then copy the source or download the file.",
@@ -332,7 +332,7 @@ const en: Dictionary = {
         "doc to html",
         "word to clean html",
       ],
-      h1: ["Word document to HTML.", "Without the Word junk."],
+      h1: ["DOCX to HTML converter", "Without the Word junk."],
       lede: [
         "Save As Web Page produces thousands of lines of mso- styles. This produces markup you'd write by hand.",
         "Headings become <h2>, tables become <table>, and nothing Microsoft-specific survives.",
@@ -405,7 +405,7 @@ const en: Dictionary = {
         "convert google doc to html",
         "google docs to clean html",
       ],
-      h1: ["Google Doc to HTML.", "Minus the class soup."],
+      h1: ["Google Docs to HTML", "Minus the class soup."],
       lede: [
         "Copying from a Doc gives you HTML wrapped in class names that point at a stylesheet you don't have.",
         "Paste it here and what's left is the document: headings, lists, tables, links.",
@@ -478,7 +478,7 @@ const en: Dictionary = {
         "text to html paragraphs",
         "convert text to html online",
       ],
-      h1: ["Plain text to HTML.", "Paragraphs, properly."],
+      h1: ["Text to HTML converter", "Paragraphs, properly."],
       lede: [
         "A blank line starts a new <p>. Bare URLs become links if you want them to. Angle brackets get escaped, so text stays text.",
         "The simplest tool on this site, and the one people rebuild by hand most often.",
@@ -550,7 +550,7 @@ const en: Dictionary = {
         "tsv to html table",
         "csv to table online",
       ],
-      h1: ["CSV to an HTML table.", "Semantic, not a grid of divs."],
+      h1: ["CSV to HTML table", "Semantic, not a grid of divs."],
       lede: [
         "The first row becomes a real <thead> with scope attributes, so screen readers can read the table as a table.",
         "Quoted commas, embedded line breaks and European semicolon exports are all handled.",
@@ -623,7 +623,7 @@ const en: Dictionary = {
         "convert excel to html table",
         "spreadsheet to html table",
       ],
-      h1: ["Spreadsheet to HTML table.", "Values, not formulas."],
+      h1: ["Excel to HTML table", "Values, not formulas."],
       lede: [
         "Drop an .xlsx in, pick the sheets you want, and get a clean <table> for each one.",
         "Colours and fonts are left behind deliberately — a table carrying its own styling fights every site you paste it into.",

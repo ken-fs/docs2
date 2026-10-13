@@ -69,11 +69,13 @@ export function ToolShell({
               <span className="inline-block h-[7px] w-[7px] bg-pine" />
               {page.eyebrow}
             </p>
+            {/* H1 is the page's search phrase; the slogan sits under it as a subtitle. */}
             <h1 className="font-display text-[2.5rem] leading-[1.05] tracking-tight text-ink sm:text-[3.4rem]">
               {page.h1[0]}
-              <br />
-              <span className="scribble">{page.h1[1]}</span>
             </h1>
+            <p className="mt-2 font-display text-[1.75rem] leading-[1.1] tracking-tight text-ink sm:text-[2.3rem]">
+              <span className="scribble">{page.h1[1]}</span>
+            </p>
             <div className="mt-5 max-w-[34rem] space-y-1 text-[15px] leading-relaxed text-ink-soft">
               {page.lede.map((line) => (
                 <p key={line}>{line}</p>

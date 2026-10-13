@@ -194,7 +194,7 @@ const pt: Dictionary = {
         "converter markdown em html online",
         "markdown para html grátis",
       ],
-      h1: ["Markdown entra.", "Sai HTML limpo."],
+      h1: ["Conversor de Markdown para HTML", "Markdown entra. Sai HTML limpo."],
       lede: [
         "Cole e o HTML aparece enquanto você olha. Sem botão, sem espera, sem upload.",
         "Leve um fragmento para o seu CMS ou uma página inteira que abre direto da área de trabalho.",
@@ -263,7 +263,7 @@ const pt: Dictionary = {
         "commonmark para html",
         "gfm para html",
       ],
-      h1: ["Transforme Markdown em HTML.", "Com tabelas e listas de tarefas."],
+      h1: ["Markdown GFM para HTML", "Com tabelas e listas de tarefas."],
       lede: [
         "A especificação CommonMark inteira, mais as extensões do GitHub que você sentiria falta se não estivessem.",
         "Veja num quadro em sandbox e depois copie o código ou baixe o arquivo.",
@@ -333,7 +333,7 @@ const pt: Dictionary = {
         "doc para html",
         "word para html limpo",
       ],
-      h1: ["Documento do Word em HTML.", "Sem o entulho do Word."],
+      h1: ["Conversor de DOCX para HTML", "Sem o entulho do Word."],
       lede: [
         "Salvar como página da web produz milhares de linhas de estilo mso-. Isto produz marcação como a que você escreveria à mão.",
         "Títulos viram <h2>, tabelas viram <table>, e nada específico da Microsoft sobrevive.",
@@ -406,7 +406,7 @@ const pt: Dictionary = {
         "converter documento do google em html",
         "google docs html limpo",
       ],
-      h1: ["Documento do Google em HTML.", "Menos a sopa de classes."],
+      h1: ["Google Docs para HTML", "Menos a sopa de classes."],
       lede: [
         "Copiar de um documento devolve HTML embrulhado em nomes de classe que apontam para uma folha de estilo que você não tem.",
         "Cole aqui e o que sobra é o documento: títulos, listas, tabelas, links.",
@@ -479,7 +479,7 @@ const pt: Dictionary = {
         "texto em parágrafos html",
         "converter texto em html online",
       ],
-      h1: ["Texto puro em HTML.", "Com os parágrafos no lugar."],
+      h1: ["Conversor de texto para HTML", "Com os parágrafos no lugar."],
       lede: [
         "Uma linha em branco abre um <p> novo. URLs soltas viram links, se você quiser. Sinais de menor e maior são escapados, então texto continua texto.",
         "A ferramenta mais simples do site, e a que mais gente refaz à mão.",
@@ -551,7 +551,7 @@ const pt: Dictionary = {
         "tsv para tabela html",
         "csv em tabela online",
       ],
-      h1: ["CSV numa tabela HTML.", "Semântica, não uma grade de div."],
+      h1: ["CSV para tabela HTML", "Semântica, não uma grade de div."],
       lede: [
         "A primeira linha vira um <thead> de verdade com atributos scope, então um leitor de tela consegue ler a tabela como tabela.",
         "Vírgulas entre aspas, quebras de linha dentro de uma célula e exportações europeias com ponto e vírgula estão cobertas.",
@@ -624,7 +624,7 @@ const pt: Dictionary = {
         "converter excel em tabela html",
         "planilha para tabela html",
       ],
-      h1: ["Planilha em tabela HTML.", "Valores, não fórmulas."],
+      h1: ["Excel para tabela HTML", "Valores, não fórmulas."],
       lede: [
         "Solte um .xlsx, escolha as planilhas que quiser e receba uma <table> limpa para cada uma.",
         "Cores e fontes ficam de fora de propósito: uma tabela que traz o próprio estilo briga com todo lugar onde você a colar.",

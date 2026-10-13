@@ -182,7 +182,7 @@ const pt: Dictionary = {
         "doc para md",
         "converter word em markdown online",
       ],
-      h1: ["Tire as palavras do Word.", "Receba Markdown limpo."],
+      h1: ["Conversor de Word para Markdown", "Tire as palavras do Word."],
       lede: [
         "Solte um arquivo. Resultado em algumas centenas de milissegundos.",
         "Tabelas e títulos ficam no lugar. Nada é enviado.",
@@ -244,7 +244,7 @@ const pt: Dictionary = {
         "docx para markdown grátis",
         "doc para markdown",
       ],
-      h1: ["Transforme .docx em Markdown.", "Sem upload, sem cadastro."],
+      h1: ["Conversor de DOCX para Markdown", "Sem upload, sem cadastro."],
       lede: [
         "Feito para o arquivo que o Word realmente salva. Solte, leia o Markdown, leve embora.",
         "Tudo acontece na sua máquina.",
@@ -309,7 +309,7 @@ const pt: Dictionary = {
         "word para md",
         "conversor doc para markdown",
       ],
-      h1: ["Entra um documento do Word.", "Sai Markdown."],
+      h1: ["Documento do Word para Markdown", "Entra um documento do Word. Sai Markdown."],
       lede: [
         "Para quem escreve no Word e entrega em Markdown.",
         "Arraste o arquivo. Copie o resultado. Pronto em segundos.",
@@ -374,7 +374,7 @@ const pt: Dictionary = {
         "extrair texto de pdf para markdown",
         "pdf para markdown grátis",
       ],
-      h1: ["Tire o texto de um PDF.", "Como Markdown, não como bagunça."],
+      h1: ["Conversor de PDF para Markdown", "Tire o texto de um PDF."],
       lede: [
         "Um PDF não tem títulos: ele tem instruções para pintar glifos em certas coordenadas.",
         "Então a estrutura é reconstruída a partir do tamanho da fonte e do espaçamento. E a gente diz onde isso é chute.",
@@ -451,7 +451,7 @@ const pt: Dictionary = {
         "planilha para markdown",
         "excel para md",
       ],
-      h1: ["Planilha em tabela Markdown.", "Escolha suas abas."],
+      h1: ["Excel para tabela Markdown", "Escolha suas abas."],
       lede: [
         "Solte um .xlsx e receba uma tabela de barras em ordem para cada aba que você quiser.",
         "Você recebe os valores como eles aparecem, não as fórmulas por trás.",
@@ -527,7 +527,7 @@ const pt: Dictionary = {
         "csv para md",
         "csv para markdown online",
       ],
-      h1: ["CSV em tabela Markdown.", "Cole ou solte."],
+      h1: ["CSV para tabela Markdown", "Cole ou solte."],
       lede: [
         "Vírgulas entre aspas, quebras de linha dentro de uma célula, exportações europeias com ponto e vírgula: tudo tratado.",
         "O delimitador é detectado para você, ou escolhido por você.",
@@ -603,7 +603,7 @@ const pt: Dictionary = {
         "html para markdown online",
         "página web para markdown",
       ],
-      h1: ["HTML em Markdown.", "Higienizado no caminho."],
+      h1: ["Conversor de HTML para Markdown", "Higienizado no caminho."],
       lede: [
         "Cole o código ou solte uma página salva. Sai Markdown no estilo do GitHub.",
         "Scripts e atributos de evento são removidos primeiro: HTML não confiável nunca chega à página.",
@@ -674,7 +674,7 @@ const pt: Dictionary = {
         "exportar google docs para markdown",
         "documento do google para md",
       ],
-      h1: ["Google Docs em Markdown.", "Sem complemento, sem acesso ao Drive."],
+      h1: ["Google Docs para Markdown", "Sem complemento, sem acesso ao Drive."],
       lede: [
         "A gente nunca pede seu Drive. Você copia ou exporta, nós fazemos a conversão.",
         "Assim nada seu passa a ser nosso.",
@@ -745,7 +745,7 @@ const pt: Dictionary = {
         "slides para markdown",
         "ppt para md online",
       ],
-      h1: ["Tire o texto de uma apresentação.", "Com as notas."],
+      h1: ["Converter PPTX para Markdown", "Tire o texto de uma apresentação."],
       lede: [
         "Solte um .pptx e leve as palavras: os títulos, os tópicos, as tabelas e as notas embaixo de cada slide.",
         "Roda na sua máquina, então uma apresentação interna é boa para testar.",

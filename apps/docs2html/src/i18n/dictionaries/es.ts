@@ -194,7 +194,7 @@ const es: Dictionary = {
         "convertir markdown a html online",
         "markdown a html gratis",
       ],
-      h1: ["Markdown entra.", "Sale HTML limpio."],
+      h1: ["Convertidor de Markdown a HTML", "Markdown entra. Sale HTML limpio."],
       lede: [
         "Pégalo y el HTML aparece mientras lo miras. Sin botón, sin espera, sin subida.",
         "Llévate un fragmento para tu CMS o una página completa que puedas abrir desde el escritorio.",
@@ -263,7 +263,7 @@ const es: Dictionary = {
         "commonmark a html",
         "gfm a html",
       ],
-      h1: ["Convierte Markdown en HTML.", "Con tablas y listas de tareas."],
+      h1: ["Markdown GFM a HTML", "Con tablas y listas de tareas."],
       lede: [
         "La especificación CommonMark completa, más las extensiones de GitHub que echarías de menos si faltaran.",
         "Míralo en un marco con sandbox y después copia el código o descarga el archivo.",
@@ -333,7 +333,7 @@ const es: Dictionary = {
         "doc a html",
         "word a html limpio",
       ],
-      h1: ["Documento de Word a HTML.", "Sin la basura de Word."],
+      h1: ["Convertidor de DOCX a HTML", "Sin la basura de Word."],
       lede: [
         "Guardar como página web produce miles de líneas de estilos mso-. Esto produce marcado como el que escribirías a mano.",
         "Los títulos se vuelven <h2>, las tablas <table>, y no sobrevive nada específico de Microsoft.",
@@ -406,7 +406,7 @@ const es: Dictionary = {
         "convertir documento de google a html",
         "google docs a html limpio",
       ],
-      h1: ["Documento de Google a HTML.", "Menos la sopa de clases."],
+      h1: ["Google Docs a HTML", "Menos la sopa de clases."],
       lede: [
         "Copiar de un documento te da HTML envuelto en nombres de clase que apuntan a una hoja de estilos que tú no tienes.",
         "Pégalo aquí y lo que queda es el documento: títulos, listas, tablas, enlaces.",
@@ -479,7 +479,7 @@ const es: Dictionary = {
         "texto a párrafos html",
         "convertir texto a html online",
       ],
-      h1: ["Texto plano a HTML.", "Con los párrafos bien puestos."],
+      h1: ["Convertidor de texto a HTML", "Con los párrafos bien puestos."],
       lede: [
         "Una línea en blanco abre un <p> nuevo. Las URL sueltas se enlazan si quieres. Los signos de menor y mayor se escapan, así que el texto sigue siendo texto.",
         "La herramienta más simple del sitio, y la que más gente rehace a mano.",
@@ -551,7 +551,7 @@ const es: Dictionary = {
         "tsv a tabla html",
         "csv a tabla online",
       ],
-      h1: ["CSV a una tabla HTML.", "Semántica, no una rejilla de div."],
+      h1: ["CSV a tabla HTML", "Semántica, no una rejilla de div."],
       lede: [
         "La primera fila se vuelve un <thead> real con atributos scope, así que un lector de pantalla puede leer la tabla como una tabla.",
         "Las comas entre comillas, los saltos de línea dentro de una celda y las exportaciones europeas con punto y coma están cubiertos.",
@@ -624,7 +624,7 @@ const es: Dictionary = {
         "convertir excel a tabla html",
         "hoja de cálculo a tabla html",
       ],
-      h1: ["Hoja de cálculo a tabla HTML.", "Valores, no fórmulas."],
+      h1: ["Excel a tabla HTML", "Valores, no fórmulas."],
       lede: [
         "Suelta un .xlsx, elige las hojas que quieras y obtén una <table> limpia por cada una.",
         "Los colores y las tipografías se quedan fuera a propósito: una tabla que trae su propio estilo pelea con todos los sitios donde la pegues.",

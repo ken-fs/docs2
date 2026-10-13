@@ -179,7 +179,7 @@ const es: Dictionary = {
         "doc a md",
         "convertir word a markdown online",
       ],
-      h1: ["Saca las palabras de Word.", "Consigue Markdown limpio."],
+      h1: ["Convertidor de Word a Markdown", "Saca las palabras de Word."],
       lede: [
         "Suelta un archivo. Resultados en unos cientos de milisegundos.",
         "Las tablas y los títulos se quedan en su sitio. Nada se sube.",
@@ -241,7 +241,7 @@ const es: Dictionary = {
         "docx a markdown gratis",
         "doc a markdown",
       ],
-      h1: ["Convierte .docx en Markdown.", "Sin subidas, sin registro."],
+      h1: ["Convertidor de DOCX a Markdown", "Sin subidas, sin registro."],
       lede: [
         "Hecho para el archivo que Word guarda de verdad. Suéltalo, lee el Markdown, llévatelo.",
         "Todo ocurre en tu máquina.",
@@ -306,7 +306,7 @@ const es: Dictionary = {
         "word a md",
         "convertidor doc a markdown",
       ],
-      h1: ["Entra un documento de Word.", "Sale Markdown."],
+      h1: ["Documento de Word a Markdown", "Entra un documento de Word. Sale Markdown."],
       lede: [
         "Para quien escribe en Word y entrega en Markdown.",
         "Arrastra el archivo. Copia el resultado. Listo en segundos.",
@@ -371,7 +371,7 @@ const es: Dictionary = {
         "extraer texto de pdf a markdown",
         "pdf a markdown gratis",
       ],
-      h1: ["Saca el texto de un PDF.", "Como Markdown, no como un caos."],
+      h1: ["Convertidor de PDF a Markdown", "Saca el texto de un PDF."],
       lede: [
         "Un PDF no tiene títulos: tiene instrucciones para pintar glifos en unas coordenadas.",
         "Así que reconstruimos la estructura a partir del tamaño de letra y el espaciado. Y decimos dónde eso es una conjetura.",
@@ -448,7 +448,7 @@ const es: Dictionary = {
         "hoja de cálculo a markdown",
         "excel a md",
       ],
-      h1: ["Hoja de cálculo a tabla Markdown.", "Elige tus hojas."],
+      h1: ["Excel a tabla Markdown", "Elige tus hojas."],
       lede: [
         "Suelta un .xlsx y obtén una tabla de barras en regla por cada hoja que quieras.",
         "Recibes los valores tal como se muestran, no las fórmulas que hay detrás.",
@@ -524,7 +524,7 @@ const es: Dictionary = {
         "csv a md",
         "csv a markdown online",
       ],
-      h1: ["CSV a una tabla Markdown.", "Pégalo o suéltalo."],
+      h1: ["CSV a tabla Markdown", "Pégalo o suéltalo."],
       lede: [
         "Comas entrecomilladas, saltos de línea dentro de una celda, exportaciones europeas con punto y coma: todo se trata.",
         "El delimitador se detecta por ti, o lo eliges tú.",
@@ -600,7 +600,7 @@ const es: Dictionary = {
         "html a markdown online",
         "página web a markdown",
       ],
-      h1: ["HTML a Markdown.", "Saneado por el camino."],
+      h1: ["Convertidor de HTML a Markdown", "Saneado por el camino."],
       lede: [
         "Pega el código o suelta una página guardada. Sale Markdown al estilo de GitHub.",
         "Los scripts y los atributos de evento se quitan primero: el HTML no confiable nunca llega a la página.",
@@ -671,7 +671,7 @@ const es: Dictionary = {
         "exportar google docs a markdown",
         "documento de google a md",
       ],
-      h1: ["Google Docs a Markdown.", "Sin complementos ni acceso a Drive."],
+      h1: ["Google Docs a Markdown", "Sin complementos ni acceso a Drive."],
       lede: [
         "Nunca te pedimos tu Drive. Tú copias o exportas, nosotros hacemos la conversión.",
         "Así nada tuyo pasa a ser nuestro.",
@@ -742,7 +742,7 @@ const es: Dictionary = {
         "diapositivas a markdown",
         "ppt a md online",
       ],
-      h1: ["Saca el texto de una presentación.", "Con las notas."],
+      h1: ["Convertir PPTX a Markdown", "Saca el texto de una presentación."],
       lede: [
         "Suelta un .pptx y llévate las palabras: los títulos, las viñetas, las tablas y las notas debajo de cada diapositiva.",
         "Corre en tu máquina, así que una presentación interna es buena para probar.",
