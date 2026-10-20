@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Converter } from "@/components/converter";
+import { PrintTool } from "@/components/print-tool";
 import { Icon } from "@/components/icon";
 import {
   Breadcrumb,
@@ -124,7 +125,21 @@ export function ToolShell({
         </section>
 
         {/* lang 传下去是给「整页模式」产物的 <html lang> 用的：日语用户
-            转出来的整页文件，lang 该是 ja，不该硬写 en */}
+            转出来的整页文件，lang 该是 ja，不该硬写 en。
+            唯一例外是 markdown-to-pdf：同一套 markdown 引擎，产物却不是
+            HTML 文本而是打印出来的 PDF，复制/下载那两个 tab 在那儿都不对，
+            所以换成 PrintTool（2026-10-20 加，md to pdf 14,800/月 · KD 9）。 */}
+        {pageKey === "markdown-to-pdf" && page.print ? (
+          <PrintTool
+            labels={page.print}
+            lang={dict.htmlLang}
+            placeholder={dict.converter.pastePlaceholderMarkdown}
+            fileLabel={dict.converter.pick}
+            clearLabel={dict.converter.clear}
+            previewTitle={dict.converter.preview}
+            emptyLabel={dict.converter.pickOne}
+          />
+        ) : (
         <Converter
           t={dict.converter}
           input={input}
@@ -154,6 +169,7 @@ export function ToolShell({
              死路：说了「DocsToMD 收」却要用户自己去找。 */
           sibling={{ label: c.siblingCta, href: SIBLING_SITE }}
         />
+        )}
 
         {/* 方案 §8.7 要求的正文：怎么用、支持什么、限制是什么。
             这三段不是给爬虫凑字数的 —— 每个转换器的限制都是真的（Excel 不还原

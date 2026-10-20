@@ -318,6 +318,80 @@ const en: Dictionary = {
         PRIVACY,
       ],
     },
+    "markdown-to-pdf": {
+      short: "MD → PDF",
+      eyebrow: "Markdown → PDF",
+      title: "Markdown to PDF Converter — Real Text, Real Pages, Free",
+      description:
+        "Turn Markdown into a PDF with your browser's print dialog: selectable text, tables that stay whole, headings that don't strand at the bottom of a page. Nothing is uploaded.",
+      keywords: [
+        "markdown to pdf",
+        "md to pdf",
+        "markdown to pdf converter",
+        "convert markdown to pdf",
+        "markdown pdf",
+        "print markdown",
+      ],
+      h1: ["Markdown to PDF", "Print it, save it, send it."],
+      lede: [
+        "Paste or drop your Markdown, check the preview, then print it to PDF. What comes out is text you can select and search, not a picture of a page.",
+        "No account, no upload, no watermark — the whole layout is built in your tab.",
+      ],
+      print: {
+        button: "Print / Save as PDF",
+        hint: "Opens your browser's print dialog — pick “Save as PDF” as the destination. Paper size, margins and page numbers are set there.",
+      },
+      note: {
+        heading: "What you get",
+        items: [
+          "Selectable text, real fonts, links that still work",
+          "A4 with 18 mm margins, headings never stranded at the foot of a page",
+          "Tables and code blocks kept whole instead of cut in half",
+        ],
+      },
+      body: {
+        stepsHeading: "How it works",
+        steps: [
+          "Paste Markdown into the box, or drop a .md file onto it.",
+          "The preview on the right is the printed page: same width, same type, same page breaks.",
+          "Press the button and choose “Save as PDF” in the print dialog. That file is the output.",
+        ],
+        supportedHeading: "What's supported",
+        supported: [
+          "Headings, paragraphs, ordered and unordered lists, blockquotes, rules",
+          "GFM pipe tables with borders and a shaded header row, sized to the page",
+          "Fenced code blocks in a monospace face, wrapped instead of overflowing",
+          "Images, remote or embedded; links stay clickable in the PDF",
+        ],
+        limitsHeading: "What it won't do",
+        limits: [
+          "No PDF/A, no digital signature, no metadata editing — your browser writes the file",
+          "Page numbers and header text come from the print dialog, not from this page",
+          "Paper size follows your print settings; the layout is tuned for A4 portrait",
+          "A table wider than the page is scaled down, not split into columns",
+          "Files over 25 MB",
+        ],
+      },
+      faq: [
+        {
+          q: "Where does the PDF end up?",
+          a: "In your browser's print dialog, as the destination. Chrome and Edge call it “Save as PDF”, Safari has it under “PDF”, Firefox calls it “Print to File”. Pick it, press Save, then choose the folder.",
+        },
+        {
+          q: "Why the print dialog instead of a direct download?",
+          a: "Because the browser's print engine sets type better than any JavaScript PDF library we could ship: real fonts, page breaks in sensible places, and selectable text — without adding megabytes to the page. The file you get is the same one you'd get printing on paper.",
+        },
+        {
+          q: "Can I add page numbers or a header?",
+          a: "Yes, from the print dialog. Every desktop browser has a “Headers and footers” switch that adds the title, the URL and the page number, and it obeys the margins you set there. We don't draw our own, because ours would ignore those settings.",
+        },
+        {
+          q: "Does it work offline?",
+          a: "Yes, once the page has loaded. The conversion, the preview and the print document are all built in the tab, so the Markdown never travels anywhere.",
+        },
+        PRIVACY,
+      ],
+    },
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",

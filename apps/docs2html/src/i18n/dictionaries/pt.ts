@@ -319,6 +319,79 @@ const pt: Dictionary = {
         PRIVACY,
       ],
     },
+    "markdown-to-pdf": {
+      short: "MD → PDF",
+      eyebrow: "Markdown → PDF",
+      title: "Converter Markdown em PDF — texto real, páginas reais",
+      description:
+        "Converta Markdown em PDF pela janela de impressão do navegador: texto selecionável, tabelas inteiras e títulos que não ficam órfãos no pé da página. Nada é enviado.",
+      keywords: [
+        "markdown para pdf",
+        "md para pdf",
+        "converter markdown em pdf",
+        "markdown pdf",
+        "imprimir markdown",
+      ],
+      h1: ["Markdown para PDF", "Diagrame, imprima, envie."],
+      lede: [
+        "Cole ou arraste seu Markdown, confira a prévia e imprima em PDF. O que sai é texto que dá para selecionar e buscar, não uma captura da página.",
+        "Sem conta, sem upload e sem marca d'água — a diagramação acontece na sua aba.",
+      ],
+      print: {
+        button: "Imprimir / Salvar como PDF",
+        hint: "Abre a janela de impressão do navegador — escolha “Salvar como PDF” como destino. Tamanho do papel, margens e números de página são definidos ali.",
+      },
+      note: {
+        heading: "O que você recebe",
+        items: [
+          "Texto selecionável, fontes reais e links que continuam funcionando",
+          "A4 com margens de 18 mm, sem títulos órfãos no pé da página",
+          "Tabelas e blocos de código inteiros, não cortados no meio",
+        ],
+      },
+      body: {
+        stepsHeading: "Como funciona",
+        steps: [
+          "Cole Markdown na caixa ou arraste um arquivo .md para cima dela.",
+          "A prévia à direita é a página impressa: mesma largura, mesma tipografia, mesmas quebras.",
+          "Clique no botão e escolha “Salvar como PDF” na janela de impressão. Esse arquivo é o resultado.",
+        ],
+        supportedHeading: "O que é suportado",
+        supported: [
+          "Títulos, parágrafos, listas ordenadas e não ordenadas, citações e separadores",
+          "Tabelas GFM com bordas e cabeçalho sombreado, ajustadas à página",
+          "Blocos de código em fonte monoespaçada, com linhas longas quebrando em vez de vazar",
+          "Imagens remotas ou embutidas; os links continuam clicáveis no PDF",
+        ],
+        limitsHeading: "O que ele não faz",
+        limits: [
+          "Sem PDF/A, sem assinatura digital e sem editar metadados — o arquivo é escrito pelo navegador",
+          "Números de página e cabeçalho vêm da janela de impressão, não desta página",
+          "O papel segue a sua configuração de impressão; o layout é pensado para A4 retrato",
+          "Uma tabela mais larga que a página é reduzida, não dividida em colunas",
+          "Arquivos acima de 25 MB",
+        ],
+      },
+      faq: [
+        {
+          q: "Onde fica o PDF?",
+          a: "Na janela de impressão, como destino. Chrome e Edge chamam de “Salvar como PDF”, o Safari tem no menu “PDF” e o Firefox em “Imprimir em arquivo”. Escolha, clique em Salvar e selecione a pasta.",
+        },
+        {
+          q: "Por que a janela de impressão em vez de um download direto?",
+          a: "Porque o motor de impressão do navegador compõe melhor do que qualquer biblioteca PDF em JavaScript que pudéssemos carregar: fontes reais, quebras de página sensatas e texto selecionável, sem somar megabytes à página.",
+        },
+        {
+          q: "Dá para incluir números de página ou cabeçalho?",
+          a: "Sim, na janela de impressão. Todo navegador de desktop tem a opção “Cabeçalhos e rodapés”, que acrescenta título, URL e número de página e respeita as margens definidas ali.",
+        },
+        {
+          q: "Funciona offline?",
+          a: "Sim, depois que a página carrega. A conversão, a prévia e o documento de impressão são gerados na aba, então o Markdown não vai a lugar nenhum.",
+        },
+        PRIVACY,
+      ],
+    },
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",

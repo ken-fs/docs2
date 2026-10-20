@@ -39,11 +39,22 @@ export type PageCopy = {
     limits: string[];
   };
   faq: Faq[];
+  /**
+   * 只给「输出不是 HTML 文本」的页面用（目前只有 markdown-to-pdf）：
+   * 那个页面的产物是浏览器打印出来的 PDF，所以按钮和提示得自己一套词，
+   * 不能借用 converter 的 copy/download。其他页不写这个字段。
+   */
+  print?: {
+    button: string;
+    /** 按钮下面那行小字：说清楚 PDF 是浏览器打印出来的，不是服务端生成 */
+    hint: string;
+  };
 };
 
 export type PageKey =
   | "home"
   | "markdown-to-html"
+  | "markdown-to-pdf"
   | "docx-to-html"
   | "google-docs-to-html"
   | "text-to-html"

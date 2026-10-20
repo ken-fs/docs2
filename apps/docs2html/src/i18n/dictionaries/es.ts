@@ -319,6 +319,79 @@ const es: Dictionary = {
         PRIVACY,
       ],
     },
+    "markdown-to-pdf": {
+      short: "MD → PDF",
+      eyebrow: "Markdown → PDF",
+      title: "Convertir Markdown a PDF — texto real, páginas reales",
+      description:
+        "Convierte Markdown en PDF con el diálogo de impresión del navegador: texto seleccionable, tablas que no se cortan y encabezados que no quedan huérfanos. Nada se sube.",
+      keywords: [
+        "markdown a pdf",
+        "md a pdf",
+        "convertir markdown a pdf",
+        "markdown pdf",
+        "imprimir markdown",
+      ],
+      h1: ["Markdown a PDF", "Maqueta, imprime, envía."],
+      lede: [
+        "Pega o suelta tu Markdown, revisa la vista previa y envíalo a PDF. Lo que sale es texto que puedes seleccionar y buscar, no una captura de la página.",
+        "Sin cuenta, sin subidas y sin marca de agua: la maquetación se hace en tu pestaña.",
+      ],
+      print: {
+        button: "Imprimir / Guardar como PDF",
+        hint: "Abre el diálogo de impresión: elige «Guardar como PDF» como destino. El tamaño de papel, los márgenes y los números de página se ajustan ahí.",
+      },
+      note: {
+        heading: "Lo que obtienes",
+        items: [
+          "Texto seleccionable, tipografías reales y enlaces que funcionan",
+          "A4 con márgenes de 18 mm, sin títulos huérfanos al pie de página",
+          "Tablas y bloques de código enteros, no partidos por la mitad",
+        ],
+      },
+      body: {
+        stepsHeading: "Cómo funciona",
+        steps: [
+          "Pega Markdown en la caja o suelta un archivo .md sobre ella.",
+          "La vista previa de la derecha es la página impresa: mismo ancho, misma tipografía, mismos saltos.",
+          "Pulsa el botón y elige «Guardar como PDF» en el diálogo. Ese archivo es el resultado.",
+        ],
+        supportedHeading: "Qué admite",
+        supported: [
+          "Encabezados, párrafos, listas ordenadas y sin ordenar, citas y separadores",
+          "Tablas GFM con bordes y cabecera sombreada, ajustadas a la página",
+          "Bloques de código con fuente monoespaciada, con líneas largas que se ajustan",
+          "Imágenes remotas o incrustadas; los enlaces siguen siendo clicables en el PDF",
+        ],
+        limitsHeading: "Qué no hace",
+        limits: [
+          "Sin PDF/A, sin firma digital y sin editar metadatos: el archivo lo escribe tu navegador",
+          "Los números de página y el encabezado vienen del diálogo de impresión, no de esta página",
+          "El papel depende de tu configuración de impresión; la maqueta está pensada para A4 vertical",
+          "Una tabla más ancha que la página se reduce, no se divide en columnas",
+          "Archivos de más de 25 MB",
+        ],
+      },
+      faq: [
+        {
+          q: "¿Dónde queda el PDF?",
+          a: "En el diálogo de impresión, como destino. Chrome y Edge lo llaman «Guardar como PDF», Safari lo tiene en el menú «PDF» y Firefox en «Imprimir a archivo». Elígelo, pulsa Guardar y escoge la carpeta.",
+        },
+        {
+          q: "¿Por qué el diálogo de impresión y no una descarga directa?",
+          a: "Porque el motor de impresión del navegador compone mejor que cualquier biblioteca PDF en JavaScript que pudiéramos cargar: tipografías reales, saltos de página sensatos y texto seleccionable, sin sumar megabytes a la página.",
+        },
+        {
+          q: "¿Puedo añadir números de página o un encabezado?",
+          a: "Sí, desde el diálogo de impresión. Todos los navegadores de escritorio tienen una casilla de «Encabezados y pies de página» que añade título, URL y número de página, y respeta los márgenes que fijes allí.",
+        },
+        {
+          q: "¿Funciona sin conexión?",
+          a: "Sí, una vez cargada la página. La conversión, la vista previa y el documento de impresión se generan en la pestaña, así que el Markdown no viaja a ninguna parte.",
+        },
+        PRIVACY,
+      ],
+    },
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",

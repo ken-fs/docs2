@@ -16,6 +16,7 @@ import {
 export const PAGE_KEYS: PageKey[] = [
   "home",
   "markdown-to-html",
+  "markdown-to-pdf",
   "docx-to-html",
   "google-docs-to-html",
   "text-to-html",
@@ -225,6 +226,14 @@ export const TOOL_INPUT: Record<PageKey, ToolInput> = {
     rich: false,
   },
   "markdown-to-html": {
+    engine: "markdown",
+    accept: ".md,.markdown,.txt,.mdown,text/markdown,text/plain",
+    paste: "markdown",
+    rich: false,
+  },
+  // 同一套 markdown 引擎，产物却不是 HTML 文本而是打印出来的 PDF，
+  // 所以渲染时走 PrintTool 而不是 Converter（见 tool-shell.tsx）
+  "markdown-to-pdf": {
     engine: "markdown",
     accept: ".md,.markdown,.txt,.mdown,text/markdown,text/plain",
     paste: "markdown",
