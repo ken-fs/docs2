@@ -1715,21 +1715,22 @@ const en: Dictionary = {
     },
   },
   preview: {
-    short: "Markdown Preview",
+    short: "Markdown viewer",
     eyebrow: "Preview Markdown",
-    title: "Markdown Preview — Render Markdown Live in Your Browser",
+    title: "Markdown Viewer — Open a .md File or Paste Markdown",
     description:
-      "Paste or type Markdown and see it rendered instantly. A free, private Markdown viewer that runs entirely in your browser — nothing is uploaded.",
+      "Open a .md file or paste Markdown and read it rendered, live. A free, private Markdown viewer that runs in your browser — the file never leaves your device.",
     keywords: [
-      "markdown preview",
       "markdown viewer",
-      "preview markdown online",
+      "md viewer",
+      "open md file",
+      "markdown preview",
+      "view markdown file",
       "render markdown",
-      "markdown editor",
     ],
-    h1: ["Paste Markdown,", "see it rendered"],
+    h1: ["Open a .md file,", "read it rendered"],
     lede: [
-      "Type or paste Markdown on the left and watch it render on the right, live as you edit.",
+      "Paste Markdown, or open an .md file, and read it rendered on the right — live as you edit.",
       "It runs in your browser — the text never leaves your machine and nothing is uploaded.",
     ],
     editorLabel: "Markdown",
@@ -1758,6 +1759,7 @@ Fenced code blocks keep their spacing.
 \`\`\`
 `,
     clear: "Clear",
+    open: "Open .md file",
     emptyState: "Your rendered Markdown appears here as you type.",
     charCount: { one: "{n} character", other: "{n} characters" },
     note: {

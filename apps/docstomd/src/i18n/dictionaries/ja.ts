@@ -1717,21 +1717,21 @@ const ja: Dictionary = {
     },
   },
   preview: {
-    short: "Markdown プレビュー",
+    short: "Markdown ビューアー",
     eyebrow: "Markdown をプレビュー",
-    title: "Markdown プレビュー — ブラウザで Markdown をその場でレンダリング",
+    title: "Markdown ビューアー — .md を開くか貼り付けて表示",
     description:
-      "Markdown を貼り付けるか入力すると、その場でレンダリング結果が見られます。すべてブラウザ内で動く無料でプライベートな Markdown ビューアー。何もアップロードしません。",
+      "Markdown を貼り付けるか .md ファイルを開くと、その場でレンダリング結果が見られます。すべてブラウザ内で動く無料のビューアー。ファイルは端末から出ません。",
     keywords: [
-      "markdown プレビュー",
       "markdown ビューアー",
-      "markdown オンライン プレビュー",
+      "md ファイル 開く",
+      "md 表示 オンライン",
+      "markdown プレビュー",
       "markdown レンダリング",
-      "markdown エディタ",
     ],
-    h1: ["Markdown を貼って、", "その場で確認"],
+    h1: ["md ファイルを開いて、", "その場で確認"],
     lede: [
-      "左に Markdown を入力または貼り付けると、右で編集しながらリアルタイムにレンダリングされます。",
+      "Markdown を貼り付けるか、.md ファイルを開くと、右で編集しながらリアルタイムにレンダリングされます。",
       "ブラウザ内で動くので、テキストは端末から出ず、何もアップロードされません。",
     ],
     editorLabel: "Markdown",
@@ -1760,6 +1760,7 @@ const ja: Dictionary = {
 \`\`\`
 `,
     clear: "クリア",
+    open: ".md を開く",
     emptyState: "入力した Markdown がここにその場でレンダリングされます。",
     charCount: { one: "{n} 文字", other: "{n} 文字" },
     note: {

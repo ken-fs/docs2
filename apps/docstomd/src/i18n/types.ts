@@ -75,6 +75,8 @@ export type PreviewCopy = {
   sampleMarkdown: string;
   /** 「清空」按钮 */
   clear: string;
+  /** 「打开 .md 文件」按钮 */
+  open: string;
   /** 预览栏在输入框为空时显示的那句话 */
   emptyState: string;
   /** 字数统计，{n} 是字符数 */

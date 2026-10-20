@@ -1719,21 +1719,21 @@ const pt: Dictionary = {
     },
   },
   preview: {
-    short: "Prévia de Markdown",
+    short: "Visualizador de Markdown",
     eyebrow: "Pré-visualizar Markdown",
-    title: "Prévia de Markdown — Renderize Markdown no seu navegador",
+    title: "Visualizador de Markdown — Abra um .md ou cole Markdown",
     description:
-      "Cole ou digite Markdown e veja renderizado na hora. Um visualizador de Markdown gratuito e privado que roda inteiramente no seu navegador — nada é enviado.",
+      "Abra um arquivo .md ou cole Markdown e leia renderizado na hora. Um visualizador gratuito e privado que roda no seu navegador — o arquivo nunca sai da sua máquina.",
     keywords: [
-      "prévia de markdown",
       "visualizador de markdown",
-      "pré-visualizar markdown online",
+      "abrir arquivo md",
+      "ver markdown online",
+      "prévia de markdown",
       "renderizar markdown",
-      "editor de markdown",
     ],
-    h1: ["Cole Markdown,", "veja renderizado"],
+    h1: ["Abra um .md,", "veja renderizado"],
     lede: [
-      "Digite ou cole Markdown à esquerda e veja renderizar à direita, ao vivo enquanto edita.",
+      "Cole Markdown ou abra um arquivo .md e veja renderizado à direita, ao vivo enquanto edita.",
       "Roda no seu navegador — o texto nunca sai da sua máquina e nada é enviado.",
     ],
     editorLabel: "Markdown",
@@ -1762,6 +1762,7 @@ Blocos de código mantêm o espaçamento.
 \`\`\`
 `,
     clear: "Limpar",
+    open: "Abrir arquivo .md",
     emptyState: "Seu Markdown renderizado aparece aqui enquanto você digita.",
     charCount: { one: "{n} caractere", other: "{n} caracteres" },
     note: {

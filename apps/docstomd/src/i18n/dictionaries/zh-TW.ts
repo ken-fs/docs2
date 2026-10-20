@@ -1711,21 +1711,21 @@ const zhHant: Dictionary = {
     },
   },
   preview: {
-    short: "Markdown 預覽",
+    short: "Markdown 檢視器",
     eyebrow: "預覽 Markdown",
-    title: "Markdown 預覽 —— 在瀏覽器裡即時渲染 Markdown",
+    title: "Markdown 檢視器 —— 開啟 .md 檔案或貼上 Markdown",
     description:
-      "貼上或輸入 Markdown，即時看到渲染效果。免費、私密的 Markdown 預覽工具，全程在你的瀏覽器裡執行，什麼都不上傳。",
+      "開啟 .md 檔案或貼上 Markdown，即時看到渲染結果。免費、私密的 Markdown 檢視器，全程在瀏覽器裡執行，檔案不離開你的電腦。",
     keywords: [
-      "markdown 預覽",
-      "markdown 線上預覽",
       "markdown 檢視器",
+      "md 檔案檢視",
+      "線上開啟 md 檔案",
+      "markdown 預覽",
       "渲染 markdown",
-      "markdown 編輯器",
     ],
-    h1: ["貼上 Markdown，", "即時看渲染"],
+    h1: ["開啟 .md 檔案，", "直接看渲染"],
     lede: [
-      "在左邊輸入或貼上 Markdown，右邊隨著編輯即時渲染。",
+      "貼上 Markdown，或直接開啟 .md 檔案，右邊隨著編輯即時渲染。",
       "全程在瀏覽器裡跑 —— 文字不離開你的電腦，什麼都不上傳。",
     ],
     editorLabel: "Markdown",
@@ -1754,6 +1754,7 @@ const zhHant: Dictionary = {
 \`\`\`
 `,
     clear: "清空",
+    open: "開啟 .md 檔案",
     emptyState: "你輸入的 Markdown 會在這裡即時渲染出來。",
     charCount: { one: "{n} 個字元", other: "{n} 個字元" },
     note: {

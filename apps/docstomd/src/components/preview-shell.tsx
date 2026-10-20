@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Icon } from "@/components/icon";
 import { MarkdownPreview } from "@/components/markdown-preview";
 import { Breadcrumb, SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -38,6 +38,19 @@ export function PreviewShell({
 
   const [md, setMd] = useState("");
   const chars = md.length;
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  /**
+   * 打开本地 .md 文件读进编辑器（2026-10-20 加）。
+   * 搜「md viewer / 打开 md 文件」的人手里已经有一个文件，光给粘贴框就等于让他
+   * 先自己找编辑器打开、全选、复制。File.text() 在浏览器里读，不发请求，
+   * 跟「什么都不上传」那句是一致的。
+   */
+  async function openFile(file: File | undefined) {
+    if (!file) return;
+    setMd(await file.text());
+    if (fileRef.current) fileRef.current.value = "";
+  }
 
   return (
     <>
@@ -96,6 +109,21 @@ export function PreviewShell({
                 {p.editorLabel}
               </span>
               <div className="flex items-center gap-2">
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain"
+                  className="sr-only"
+                  onChange={(e) => void openFile(e.target.files?.[0])}
+                />
+                <Button
+                  tone="ghost"
+                  size="sm"
+                  onClick={() => fileRef.current?.click()}
+                >
+                  <Icon icon="ph:folder-open-bold" />
+                  {p.open}
+                </Button>
                 <Button
                   tone="ghost"
                   size="sm"
