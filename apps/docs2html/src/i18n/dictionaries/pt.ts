@@ -395,9 +395,9 @@ const pt: Dictionary = {
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",
-      title: "Converter Word (DOCX) para HTML — HTML limpo, sem entulho do Word",
+      title: "DOCX para HTML — conversão limpa, sem entulho do Word",
       description:
-        "Converta .docx em HTML semântico limpo no seu navegador. Estilos mso- e classes redundantes do Word são removidos. As imagens são embutidas em base64 ou baixadas junto com o HTML num zip.",
+        "Converta DOCX para HTML semântico e limpo no seu navegador. Estilos mso- e classes redundantes do Word são removidos. As imagens são embutidas em base64 ou baixadas junto com o HTML num zip.",
       keywords: [
         "docx para html",
         "word para html",
@@ -408,7 +408,7 @@ const pt: Dictionary = {
       ],
       h1: ["Conversor de DOCX para HTML", "Sem o entulho do Word."],
       lede: [
-        "Salvar como página da web produz milhares de linhas de estilo mso-. Isto produz marcação como a que você escreveria à mão.",
+        "Converta DOCX para HTML e receba marcação limpa, sem as milhares de linhas de estilo mso- do Word.",
         "Títulos viram <h2>, tabelas viram <table>, e nada específico da Microsoft sobrevive.",
       ],
       note: {
@@ -687,9 +687,9 @@ const pt: Dictionary = {
     "excel-to-html-table": {
       short: "Excel → tabela",
       eyebrow: "Excel → tabela HTML",
-      title: "Converter Excel em tabela HTML — Excel para HTML, grátis",
+      title: "Excel para HTML — tabelas limpas, grátis e no navegador",
       description:
-        "Converta uma pasta de trabalho .xlsx em tabelas HTML semânticas. Escolha quais planilhas incluir, defina a linha de cabeçalho e receba os valores exibidos nas células em vez do código das fórmulas. Nada é enviado.",
+        "Converta Excel para HTML no seu navegador: uma pasta .xlsx vira tabelas semânticas. Escolha quais planilhas incluir, defina a linha de cabeçalho e receba os valores exibidos em vez do código das fórmulas. Nada é enviado.",
       keywords: [
         "excel para tabela html",
         "xlsx para html",
@@ -699,7 +699,7 @@ const pt: Dictionary = {
       ],
       h1: ["Excel para tabela HTML", "Valores, não fórmulas."],
       lede: [
-        "Solte um .xlsx, escolha as planilhas que quiser e receba uma <table> limpa para cada uma.",
+        "Converta Excel para HTML: solte um .xlsx, escolha as planilhas e receba uma <table> limpa para cada uma.",
         "Cores e fontes ficam de fora de propósito: uma tabela que traz o próprio estilo briga com todo lugar onde você a colar.",
       ],
       note: {
