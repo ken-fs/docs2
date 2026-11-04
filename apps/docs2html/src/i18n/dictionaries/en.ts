@@ -614,7 +614,7 @@ const en: Dictionary = {
     "csv-to-html-table": {
       short: "CSV → table",
       eyebrow: "CSV → HTML table",
-      title: "CSV to HTML Table Converter — free, paste or upload",
+      title: "CSV to HTML Table Converter — convert CSV to HTML free",
       description:
         "Turn CSV into a semantic HTML table. Commas, semicolons and tabs are detected automatically, the first row becomes <thead>, and optional responsive CSS makes it scroll on narrow screens.",
       keywords: [
@@ -626,7 +626,7 @@ const en: Dictionary = {
       ],
       h1: ["CSV to HTML table", "Semantic, not a grid of divs."],
       lede: [
-        "The first row becomes a real <thead> with scope attributes, so screen readers can read the table as a table.",
+        "To convert CSV to HTML, paste the rows or drop a file. The first row becomes a real <thead> with scope attributes, so screen readers can read the table as a table.",
         "Quoted commas, embedded line breaks and European semicolon exports are all handled.",
       ],
       note: {

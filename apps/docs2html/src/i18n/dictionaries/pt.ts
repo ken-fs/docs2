@@ -408,7 +408,7 @@ const pt: Dictionary = {
       ],
       h1: ["Conversor de DOCX para HTML", "Sem o entulho do Word."],
       lede: [
-        "Converta DOCX para HTML e receba marcação limpa, sem as milhares de linhas de estilo mso- do Word.",
+        "Para converter DOCX para HTML, solte o arquivo aqui e receba marcação limpa, sem as milhares de linhas de estilo mso- do Word. Grátis, direto no navegador.",
         "Títulos viram <h2>, tabelas viram <table>, e nada específico da Microsoft sobrevive.",
       ],
       note: {
@@ -687,7 +687,7 @@ const pt: Dictionary = {
     "excel-to-html-table": {
       short: "Excel → tabela",
       eyebrow: "Excel → tabela HTML",
-      title: "Excel para HTML — tabelas limpas, grátis e no navegador",
+      title: "Converter Excel em HTML (Excel para HTML) — grátis, no navegador",
       description:
         "Converta Excel para HTML no seu navegador: uma pasta .xlsx vira tabelas semânticas. Escolha quais planilhas incluir, defina a linha de cabeçalho e receba os valores exibidos em vez do código das fórmulas. Nada é enviado.",
       keywords: [
@@ -699,7 +699,7 @@ const pt: Dictionary = {
       ],
       h1: ["Excel para tabela HTML", "Valores, não fórmulas."],
       lede: [
-        "Converta Excel para HTML: solte um .xlsx, escolha as planilhas e receba uma <table> limpa para cada uma.",
+        "Para converter Excel em HTML, solte um .xlsx, escolha as planilhas e receba uma <table> limpa para cada uma. Tudo roda no seu navegador.",
         "Cores e fontes ficam de fora de propósito: uma tabela que traz o próprio estilo briga com todo lugar onde você a colar.",
       ],
       note: {
