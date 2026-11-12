@@ -616,11 +616,13 @@ const en: Dictionary = {
       eyebrow: "CSV → HTML table",
       title: "CSV to HTML Table Converter — convert CSV to HTML free",
       description:
-        "Turn CSV into a semantic HTML table. Commas, semicolons and tabs are detected automatically, the first row becomes <thead>, and optional responsive CSS makes it scroll on narrow screens.",
+        "Convert CSV to an HTML table: paste the rows or drop a file. Commas, semicolons and tabs are detected, and the first row becomes a real <thead>.",
       keywords: [
         "csv to html table",
         "csv to html",
         "convert csv to html table",
+        "csv to table",
+        "html table from csv",
         "tsv to html table",
         "csv to table online",
       ],
@@ -679,6 +681,18 @@ const en: Dictionary = {
         {
           q: "A cell contains a comma. Will my columns shift?",
           a: "No, provided the field is quoted, which every correct CSV writer does. \"Smith, John\" arrives as a single <td>. A newline inside a quoted field is kept as well, emitted as a <br> so the row doesn't split in two.",
+        },
+        {
+          q: "Can I just view a CSV as a table in my browser?",
+          a: "Yes. Switch to Full page and download the file. Double-click it and the browser opens your rows as a real table, with borders, a shaded header and striped rows. No spreadsheet app needed, and the file still opens next year.",
+        },
+        {
+          q: "Which CSV option should I pick in Excel or Google Sheets?",
+          a: "In Excel, pick \"CSV UTF-8 (Comma delimited)\". The plain \"CSV\" option saves in an older, system-specific encoding, so accents and € signs can come out garbled. Google Sheets always exports UTF-8: File → Download → Comma-separated values. Already have the .xlsx? Skip the CSV step and use the Excel page.",
+        },
+        {
+          q: "How do I put the table on a WordPress page or in a CMS?",
+          a: "Leave it on Fragment and copy the HTML. In WordPress, add a Custom HTML block and paste it in. Most other editors have an HTML or source view that does the same job. With the responsive CSS on, the table sits in a .table-wrap div — add that one rule to your theme, or the wrapper does nothing.",
         },
         PRIVACY,
         MODES,
@@ -1403,18 +1417,20 @@ const en: Dictionary = {
     "plain-text-to-html-paragraphs": {
       short: "Text to paragraphs",
       eyebrow: "Guide · Text → HTML",
-      title: "Blank line between paragraphs in HTML: plain text to <p> tags",
+      title: "Blank line in HTML: how to add one between paragraphs",
       description:
-        "A blank line in your text starts a new paragraph, but empty lines in HTML source collapse — the browser ignores them. How blank lines become <p> tags, when to use <br>, and how single newlines and bare URLs are handled.",
+        "Pressing Enter in HTML adds no gap. Add a blank line with two <br> tags, <p>&nbsp;</p> or a CSS margin, and see how blank lines in text become <p> tags.",
       keywords: [
+        "html blank line",
         "blank line between paragraphs html",
         "empty line in html",
         "add blank line in html",
+        "how to add a blank line in html",
         "plain text to html",
         "text to html paragraphs",
         "convert text to html p tags",
       ],
-      h1: "Blank lines and paragraphs in HTML",
+      h1: "How to add a blank line in HTML",
       lede: [
         "Text pasted straight into a page collapses into one block, because HTML ignores your newlines. Every run of whitespace is one space as far as a browser is concerned.",
         "Two rules decide the whole result: blank lines separate paragraphs, and single newlines are yours to choose about. Everything else follows from those.",
@@ -1422,7 +1438,17 @@ const en: Dictionary = {
       tool: "text-to-html",
       sections: [
         {
-          heading: "A blank line between paragraphs",
+          heading: "Four ways to get a blank line",
+          body: [
+            "Pressing Enter twice in your HTML does nothing on screen. Here's what does, most common first.",
+            "Between paragraphs: close one <p> and open another. Browsers give every <p> a 1em margin above and below, roughly one line, so the gap is already there.",
+            "Inside one paragraph: two <br> tags in a row, as in line one<br><br>line three. The first ends the line, the second leaves an empty one.",
+            "An empty paragraph: <p>&nbsp;</p>. A bare <p></p> has no height, so it shows nothing. The non-breaking space gives it one line of height.",
+            "More or less space than one line: set it in CSS, for example p { margin-bottom: 2em; }. That's the clean option when the gap is a design choice rather than part of the text.",
+          ],
+        },
+        {
+          heading: "Blank lines in plain text become <p> tags",
           body: [
             "One blank line between two blocks of text produces two <p> elements. That's the only paragraph rule there is, and it's the same convention every plain-text email has used for thirty years.",
             "In HTML itself, empty lines in the source are ignored — a browser collapses any run of whitespace to a single space — so pressing Enter in your markup adds no visible gap. Paragraph spacing comes from the <p> tags themselves; a single <br> only breaks a line. This converter turns each blank line in your text into a real <p> break so you don't hand-write any of that.",

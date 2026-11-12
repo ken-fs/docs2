@@ -39,7 +39,7 @@ const SLUGS_A = [
   "guides/word-to-markdown-without-uploading",
 ];
 const SLUGS_B = [
-  "", "markdown-to-html", "docx-to-html", "google-docs-to-html",
+  "", "markdown-to-html", "markdown-to-pdf", "docx-to-html", "google-docs-to-html",
   "text-to-html", "csv-to-html-table", "excel-to-html-table",
   "guides",
   "guides/markdown-tables-to-html",

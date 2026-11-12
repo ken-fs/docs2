@@ -38,7 +38,7 @@ const SITES = [
     name: "docs2html",
     origin: "http://localhost:3312",
     slugs: [
-      "", "markdown-to-html", "docx-to-html", "google-docs-to-html",
+      "", "markdown-to-html", "markdown-to-pdf", "docx-to-html", "google-docs-to-html",
       "text-to-html", "csv-to-html-table", "excel-to-html-table",
       "about", "contact", "privacy", "terms", "cookies",
       "guides",

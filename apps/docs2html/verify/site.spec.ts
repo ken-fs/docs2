@@ -54,7 +54,13 @@ const GUIDES = [
 ];
 
 /** sitemap 和 canonical 检查覆盖全站，不只是工具页。 */
-const ALL_SLUGS = [...SLUGS, ...LEGAL, ...GUIDES];
+/**
+ * 打印成 PDF 的那页没有复制 / 下载按钮（产物是浏览器打印的），
+ * 所以不进 SLUGS 那批工具页断言，只进全站清单（sitemap、canonical、404）。
+ */
+const PRINT_PAGES = ["markdown-to-pdf"];
+
+const ALL_SLUGS = [...SLUGS, ...PRINT_PAGES, ...LEGAL, ...GUIDES];
 
 /** 只有这两页的输入本来就带垃圾，所以只有它们该有「清掉了什么」那一节。 */
 const DIRTY_PAGES = ["docx-to-html", "google-docs-to-html"];
