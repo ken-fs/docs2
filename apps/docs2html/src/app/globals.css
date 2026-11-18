@@ -97,6 +97,12 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  /* 韩语按词（어절）换行，默认会在音节中间断开（「놓으세/요」） */
+  html:lang(ko) {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
   body {
     color: var(--graphite);
     background-color: var(--sheet);

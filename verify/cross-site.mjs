@@ -58,7 +58,9 @@ const SLUGS_B = [
  * 再想，抄的是「先写英文再翻译」这条流水线的源头 —— 六份译文全都跟着抄了一遍。
  * 只查英文的话，改完英文这个检查就绿了，而线上五种语言仍然是复制品。
  */
-const LOCALES = ["", "zh-cn", "zh-tw", "es", "pt", "ja"];
+const LOCALES = ["", "zh-cn", "zh-tw", "es", "pt", "ja", "de", "fr", "it", "ko"];
+/** docstomd 只有前六种；后四种只查 docs2html 站内重合（2026-11-18 加） */
+const A_LOCALES = new Set(["", "zh-cn", "zh-tw", "es", "pt", "ja"]);
 
 const pathOf = (locale, slug) =>
   "/" + [locale, slug].filter(Boolean).join("/") + (locale || slug ? "/" : "");
@@ -177,7 +179,7 @@ for (const locale of LOCALES) {
   console.log(`\n######## ${locale || "en"}`);
   const setsA = new Map();
   const setsB = new Map();
-  for (const s of SLUGS_A) setsA.set(pathOf(locale, s), await sentencesOf(A, pathOf(locale, s)));
+  if (A_LOCALES.has(locale)) for (const s of SLUGS_A) setsA.set(pathOf(locale, s), await sentencesOf(A, pathOf(locale, s)));
   for (const s of SLUGS_B) setsB.set(pathOf(locale, s), await sentencesOf(B, pathOf(locale, s)));
 
   // 1. 跨站：docstomd 的每一页 vs docs2html 的每一页

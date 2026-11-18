@@ -54,6 +54,8 @@ const SITES = [
 ];
 
 const LOCALES = ["zh-cn", "zh-tw", "es", "pt", "ja"];
+/** docs2html 多四种（2026-11-18 加），docstomd 没有这几种 */
+const EXTRA = { docs2html: ["de", "fr", "it", "ko"] };
 
 const pathOf = (locale, slug) =>
   "/" + [locale, slug].filter(Boolean).join("/") + (locale || slug ? "/" : "");
@@ -197,7 +199,7 @@ for (const site of SITES) {
     const en = await proseOf(page, site.origin, pathOf("", slug));
     const enByPath = new Map(en.map((e) => [e.path, e.text]));
 
-    for (const locale of LOCALES) {
+    for (const locale of [...LOCALES, ...(EXTRA[site.name] ?? [])]) {
       const loc = await proseOf(page, site.origin, pathOf(locale, slug));
       const leaked = [];
       for (const { path, text } of loc) {
@@ -218,5 +220,5 @@ for (const site of SITES) {
 }
 
 await browser.close();
-console.log(`\n${problems.length ? `❌ ${problems.length} 个页面有漏翻` : "✅ 六种语言没有明显漏翻"}`);
+console.log(`\n${problems.length ? `❌ ${problems.length} 个页面有漏翻` : "✅ 各语言没有明显漏翻"}`);
 process.exit(problems.length ? 1 : 0);

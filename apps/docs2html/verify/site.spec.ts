@@ -25,6 +25,10 @@ const LOCALES = [
   ["es", "es"],
   ["pt", "pt"],
   ["ja", "ja"],
+  ["de", "de"],
+  ["fr", "fr"],
+  ["it", "it"],
+  ["ko", "ko"],
 ] as const;
 
 /** 方案 §6 的六个工具页，加首页。 */
@@ -1444,8 +1448,8 @@ test("paths that don't exist are real 404s, not soft ones", async ({ request }) 
     "/nonsense-path/",
     "/docx-to-html/extra/",
     // 没做的语种就是没有这一页
-    "/de/",
-    "/ko/docx-to-html/",
+    "/ru/",
+    "/nl/docx-to-html/",
     // 大小写不同的前缀不该另开一份，路径一律小写
     "/ZH-CN/",
     // 英文不带前缀，/en/ 不该存在，否则同一份内容两个地址

@@ -872,7 +872,7 @@ const pt: Dictionary = {
         {
           heading: "Traduções",
           body: [
-            "Este site está em seis idiomas. O inglês é o original e o resto foi traduzido com cuidado, mas um falante nativo ainda vai notar o que uma tradução cuidadosa não vê: uma frase tecnicamente correta que soa estranha, um termo que o mundo local do software chama de outro jeito.",
+            "Este site está em dez idiomas. O inglês é o original e o resto foi traduzido com cuidado, mas um falante nativo ainda vai notar o que uma tradução cuidadosa não vê: uma frase tecnicamente correta que soa estranha, um termo que o mundo local do software chama de outro jeito.",
             "Se você notar algum, diga o idioma e a página, e cite a frase. Correções pequenas são bem-vindas e entram rápido.",
           ],
         },
@@ -916,7 +916,7 @@ const pt: Dictionary = {
           heading: "O que nós coletamos",
           body: [
             "Não pedimos nem armazenamos seu nome, seu e-mail ou dados de conta, porque não existem contas.",
-            "O site é hospedado no Cloudflare Pages. Como qualquer hospedagem web, ele processa dados de requisição padrão quando o seu navegador pede uma página: endereço IP, agente de usuário, a URL pedida e a hora. Isso é inerente ao funcionamento da web e serve para entregar o site e barrar abusos. Nós olhamos esses dados de forma agregada para saber quais páginas recebem tráfego. Eles não estão ligados a nada que você converta, porque suas conversões nunca chegam a servidor nenhum.",
+            "O site é hospedado no Cloudflare Workers. Como qualquer hospedagem web, ele processa dados de requisição padrão quando o seu navegador pede uma página: endereço IP, agente de usuário, a URL pedida e a hora. Isso é inerente ao funcionamento da web e serve para entregar o site e barrar abusos. Nós olhamos esses dados de forma agregada para saber quais páginas recebem tráfego. Eles não estão ligados a nada que você converta, porque suas conversões nunca chegam a servidor nenhum.",
           ],
         },
         {
@@ -939,7 +939,7 @@ const pt: Dictionary = {
           heading: "Terceiros",
           body: ["A lista é deliberadamente curta:"],
           items: [
-            "O Cloudflare Pages hospeda os arquivos estáticos que compõem este site.",
+            "O Cloudflare Workers hospeda os arquivos estáticos que compõem este site.",
             "O Google AdSense, quando ligado, entrega os anúncios descritos acima.",
             "Os arquivos do Google Fonts são hospedados aqui, servidos deste domínio, então pedir uma página não conta ao Google que você passou por aqui.",
             "O Google Analytics conta visitas, mas só depois que você clica em “Permitir”, como descrito acima.",

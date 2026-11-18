@@ -12,6 +12,10 @@ const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
   es: () => import("./dictionaries/es").then((m) => m.default),
   pt: () => import("./dictionaries/pt").then((m) => m.default),
   ja: () => import("./dictionaries/ja").then((m) => m.default),
+  de: () => import("./dictionaries/de").then((m) => m.default),
+  fr: () => import("./dictionaries/fr").then((m) => m.default),
+  it: () => import("./dictionaries/it").then((m) => m.default),
+  ko: () => import("./dictionaries/ko").then((m) => m.default),
 };
 
 export const getDictionary = (locale: Locale) => dictionaries[locale]();

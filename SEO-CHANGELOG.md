@@ -9,6 +9,27 @@
 
 ---
 
+## 2026-11-18 · docs2html · 加德 / 法 / 意 / 韩四种语言 + 英文 Word 词改落工具页
+
+**改了什么**
+- 新语言：/de/ /fr/ /it/ /ko/ 下全套页面（工具页 8 + guides 8 + about/contact/法律页），全站 138 → 212 页；sitemap、hreflang、语言切换自动带上。每种语言的 title / H1 按当地谷歌联想词写（如 de「Word in HTML umwandeln」、fr「Convertir Word en HTML」、it「Convertire Word in HTML」、ko「워드 HTML 변환」「엑셀 HTML 변환」；空行 guide 用 de「HTML Leerzeile einfügen」、fr「sauter une ligne html」、ko「html 한 줄 띄우기」）。韩语加 `word-break: keep-all`
+- https://docs2html.com/docx-to-html/（英文）：title「DOCX to HTML Converter — clean semantic HTML, no Word junk」→「Word to HTML Converter — DOCX to clean HTML, free, in your browser」；H1「DOCX to HTML converter」→「Word to HTML converter」；description 以「Convert a Word document (.docx)」开头；keywords 前三个换成 word to html / word to html converter / convert word to html
+- https://docs2html.com/guides/word-to-html-without-uploading/（英文）：title 去掉「Convert Word to HTML」→「No-upload document conversion: build the HTML in your tab, check it in a sandbox」；H1 →「Your .docx never leaves the tab: how to check that yourself」，把泛词让给工具页
+- 各语言联系页「本站有六种语言」→ 十种；隐私页「托管在 Cloudflare Pages」→ Cloudflare Workers（实际部署方式）
+- autopilot（Ship/scripts，fee498b）：/pt/docx-to-html/、/pt/excel-to-html-table/ 进 protect 列表，11-26 前不再改标题
+
+**为什么**（GSC 90 天）
+- 非英语页排第 5–30（zh-tw text-to-html 5.7 / 17 点击、ja google-docs 8.1、es 6–20），英文页排第 40–70；点击 60%+ 来自台湾 / 日本 / 巴西。德法意韩是高 CPM 市场里还没覆盖的，联想词里都有现成搜法
+- 英文「word to html」（56 曝光）、converting word to html（45）、word html（16）、word doc to html（14）等全落在隐私 guide（排 50–75），工具页标题只写了 DOCX
+- 葡语两页 10-13～11-04 标题改了 3 次，排名一直 25–35，前排是 convertio / aspose / freeconvert，差的是站的分量不是标题
+
+**预期**：四种新语言 4 周内被收录、开始有曝光，至少一种语言的 Word / Excel 页进前 20；英文 word to html 这批词改落 /docx-to-html/
+
+**复查 📅 2026-12-16**：GSC 28 天按语言前缀（/de/ /fr/ /it/ /ko/）的曝光 / 点击 / 排名、收录页数；word to html 这批词落在哪页、排第几
+**结果**：（待补）
+
+---
+
 ## 2026-11-12 · docs2html · CSV 页补问答 + 空行 guide 对准「html blank line」
 
 **改了什么**

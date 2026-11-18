@@ -395,18 +395,20 @@ const en: Dictionary = {
     "docx-to-html": {
       short: "DOCX → HTML",
       eyebrow: "DOCX → HTML",
-      title: "DOCX to HTML Converter — clean semantic HTML, no Word junk",
+      title: "Word to HTML Converter — DOCX to clean HTML, free, in your browser",
       description:
-        "Convert .docx to clean semantic HTML in your browser. Word's mso- styles and redundant classes are stripped out. Images inline as base64 or download alongside the HTML as a zip.",
+        "Convert a Word document (.docx) to clean HTML in your browser. Word's mso- styles and extra classes are stripped. Images inline as base64 or come in a zip.",
       keywords: [
-        "docx to html",
         "word to html",
+        "word to html converter",
+        "convert word to html",
+        "docx to html",
         "docx to html converter",
         "convert word document to html",
         "doc to html",
         "word to clean html",
       ],
-      h1: ["DOCX to HTML converter", "Without the Word junk."],
+      h1: ["Word to HTML converter", "DOCX in, clean markup out."],
       lede: [
         "Save As Web Page produces thousands of lines of mso- styles. This produces markup you'd write by hand.",
         "Headings become <h2>, tables become <table>, and nothing Microsoft-specific survives.",
@@ -886,7 +888,7 @@ const en: Dictionary = {
         {
           heading: "Translations",
           body: [
-            "This site is in six languages. English is the original and the rest were translated with care, but a native speaker will still catch things a careful translation misses — a phrase that's technically right and reads oddly, a term the local software world says differently.",
+            "This site is in ten languages. English is the original and the rest were translated with care, but a native speaker will still catch things a careful translation misses — a phrase that's technically right and reads oddly, a term the local software world says differently.",
             "If you spot one, tell us which language and which page, and quote the phrase. Small corrections are welcome and get applied quickly.",
           ],
         },
@@ -930,7 +932,7 @@ const en: Dictionary = {
           heading: "What we do collect",
           body: [
             "We don't ask for or store your name, email address, or any account details, because there are no accounts.",
-            "The site is hosted on Cloudflare Pages. Like any web host, it processes standard request data when your browser asks for a page — IP address, user agent, the URL requested, and the time. This is inherent to how the web works and is used for delivering the site and blocking abuse. We use it in aggregate to see which pages get traffic. It is not linked to anything you convert, because your conversions never reach any server.",
+            "The site is hosted on Cloudflare Workers. Like any web host, it processes standard request data when your browser asks for a page — IP address, user agent, the URL requested, and the time. This is inherent to how the web works and is used for delivering the site and blocking abuse. We use it in aggregate to see which pages get traffic. It is not linked to anything you convert, because your conversions never reach any server.",
           ],
         },
         {
@@ -953,7 +955,7 @@ const en: Dictionary = {
           heading: "Third parties",
           body: ["The list is deliberately short:"],
           items: [
-            "Cloudflare Pages hosts the static files that make up this site.",
+            "Cloudflare Workers hosts the static files that make up this site.",
             "Google AdSense, once enabled, serves the advertising described above.",
             "Google Fonts files are self-hosted, served from this domain, so requesting a page doesn't tell Google you visited.",
             "Google Analytics counts visits, but only after you click Allow, as described above.",
@@ -1119,7 +1121,7 @@ const en: Dictionary = {
     "word-to-html-without-uploading": {
       short: "No upload",
       eyebrow: "Guide · Word → HTML",
-      title: "Convert Word to HTML without uploading — and read the source before you ship it",
+      title: "No-upload document conversion: build the HTML in your tab, check it in a sandbox",
       description:
         "The document becomes HTML inside this tab, and the preview runs in a locked-down sandbox. Why that beats a server-side converter, how to inspect the markup yourself, and where converting in the browser stops helping.",
       keywords: [
@@ -1129,7 +1131,7 @@ const en: Dictionary = {
         "safe document to html converter",
         "word to html no server",
       ],
-      h1: "Word to HTML, built in your tab and shown in a sandbox",
+      h1: "Your .docx never leaves the tab: how to check that yourself",
       lede: [
         "This converter assembles the HTML on your own machine and shows it in a preview that can't reach the network. Two separate promises, and both can be checked.",
         "When the document is a client deliverable or something not yet public, the useful question isn't whether they delete it — it's whether it was ever sent. Here it wasn't.",
