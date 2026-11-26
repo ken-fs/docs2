@@ -384,13 +384,25 @@ ${body}
 </html>`;
 }
 
-/** 每行前面加 n 层缩进。空行不加，免得留下一串尾随空格。 */
+/**
+ * 每行前面加 n 层缩进。空行不加，免得留下一串尾随空格。
+ *
+ * <pre> 里面的行不加：那里的空白是内容，多两个空格就是代码变了。跟
+ * prettyHtml 一样先把整块 <pre> 抠出来占位（占位只占一行，只有开标签那行
+ * 跟着缩进），缩进完再放回去。
+ */
 function indent(text: string, levels: number) {
   const pad = "  ".repeat(levels);
-  return text
+  const stash: string[] = [];
+  const masked = text.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => {
+    stash.push(m);
+    return `\u0000${stash.length - 1}\u0000`;
+  });
+  return masked
     .split("\n")
     .map((line) => (line.trim() ? pad + line : line))
-    .join("\n");
+    .join("\n")
+    .replace(/\u0000(\d+)\u0000/g, (_m, i) => stash[Number(i)]);
 }
 
 /**
