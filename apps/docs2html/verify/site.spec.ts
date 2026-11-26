@@ -555,6 +555,32 @@ test("the full-page html carries the site language, not a hardcoded en", async (
   await expect.poll(() => source(page).innerText()).toContain('<html lang="ja">');
 });
 
+test("the full-page html leaves code block whitespace alone", async ({ page }) => {
+  // 整页模式会把 <body> 里的内容整体缩进一格。<pre> 里的行不能跟着缩，
+  // 否则下载下来的代码从第二行起每行多两个空格（11-26 前就是这样）
+  await page.goto("/markdown-to-html/");
+  await page.locator("textarea").fill("```\nline1\nline2\n    line3\n```");
+  await page.getByRole("button", { name: /^convert$/i }).click();
+  await expect(source(page)).toBeVisible({ timeout: 15000 });
+  await page.getByRole("button", { name: /^full page$/i }).click();
+  await expect.poll(() => source(page).innerText()).toContain("<!DOCTYPE html>");
+  expect(await source(page).innerText()).toContain("line1\nline2\n    line3\n</code></pre>");
+});
+
+test("markdown to pdf honours page-break lines, but not inside code", async ({ page }) => {
+  await page.goto("/markdown-to-pdf/");
+  await page
+    .locator("textarea")
+    .first()
+    .fill('one\n\n<div class="page"/>\n\ntwo\n\n\\newpage\n\n```\n\\pagebreak\n```\n\n<!-- pagebreak -->\n\nthree');
+  const frame = page.locator("iframe[srcdoc]").first();
+  await expect.poll(async () => (await frame.getAttribute("srcdoc")) ?? "", { timeout: 15000 }).toContain("three");
+  const src = (await frame.getAttribute("srcdoc")) ?? "";
+  expect(src.match(/class="page-break"/g)?.length).toBe(3);
+  expect(src).toContain("<code>\\pagebreak");
+  expect(src).not.toContain("DOCSTWOHTML");
+});
+
 test("indentation is on by default and can be switched off", async ({ page }) => {
   await page.goto("/markdown-to-html/");
   await page.locator("textarea").fill("# Title\n\n- one\n- two");

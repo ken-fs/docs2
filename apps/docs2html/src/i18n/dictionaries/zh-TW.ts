@@ -357,6 +357,7 @@ const zhTW: Dictionary = {
           "GFM 表格，帶框線和表頭底色，寬度依頁面排",
           "圍欄程式碼區塊用等寬字體，長行折行而不是溢出半頁",
           "圖片（遠端連結或內嵌），連結在 PDF 裡仍可點擊",
+          "手動分頁：在單獨一行寫 <div class=\"page\"/>、\\newpage、\\pagebreak 或 <!-- pagebreak -->，下一頁就從那裡開始。預覽裡顯示成一條虛線",
         ],
         limitsHeading: "做不到什麼",
         limits: [

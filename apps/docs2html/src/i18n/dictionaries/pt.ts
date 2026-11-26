@@ -362,6 +362,7 @@ const pt: Dictionary = {
           "Tabelas GFM com bordas e cabeçalho sombreado, ajustadas à página",
           "Blocos de código em fonte monoespaçada, com linhas longas quebrando em vez de vazar",
           "Imagens remotas ou embutidas; os links continuam clicáveis no PDF",
+          "Quebras de página: escreva <div class=\"page\"/>, \\newpage, \\pagebreak ou <!-- pagebreak --> sozinho numa linha e a próxima página começa ali. Na pré-visualização aparece como uma linha tracejada",
         ],
         limitsHeading: "O que ele não faz",
         limits: [

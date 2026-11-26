@@ -66,7 +66,59 @@ const PRINT_CSS = `
   img { max-width: 100%; height: auto; }
   a { color: #0b57d0; text-decoration: underline; }
   hr { border: 0; border-top: 1px solid #ddd; margin: 1.6em 0; }
+  .page-break { break-after: page; height: 0; margin: 0; border: 0; }
+  /* 中日韩：按 <html lang> 指定本地字体，免得落到另一种语言的字形
+     （同一个汉字中日字形不同）；Windows 的游ゴシック常规体太细，先用 Medium */
+  :root:lang(ja) body { font-family: -apple-system, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif; }
+  :root:lang(zh-TW) body { font-family: -apple-system, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif; }
+  :root:lang(zh-CN) body { font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif; }
+  :root:lang(ko) body { font-family: -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
 `;
+
+/** 预览里看得见分页在哪：打印时这条虚线不出现（打印稿用上面的 PRINT_CSS）。 */
+const PREVIEW_BREAK_CSS = `<style>.page-break{border-top:2px dashed #b8b8b8;margin:2em 0;height:0}</style>`;
+
+/**
+ * 手动分页。
+ *
+ * 净化器把 class / style 全删了（sanitize.ts 的白名单），所以别处教的
+ * 那几种分页写法在这里原本都没用。这里在转换前认出它们，换成一个占位段落，
+ * 转换（含净化）之后再把占位换成我们自己写死的 <div class="page-break">。
+ * 插进去的是常量，不是用户给的 HTML，所以不绕过净化。
+ *
+ * 认的写法（整行只有它才算，代码块里的不动）：
+ *   <div class="page"/>              VS Code「Markdown PDF」插件的写法
+ *   <div style="page-break-after: always"></div>（以及 break-after: page）
+ *   \newpage  \pagebreak             Pandoc / LaTeX 的写法
+ *   <!-- pagebreak -->               一些编辑器的写法
+ */
+const BREAK_TOKEN = "DOCSTWOHTMLPAGEBREAKMARK";
+const BREAK_LINE =
+  /^\s*(?:<div\s+class=["']page(?:-break)?["']\s*\/?>(?:\s*<\/div>)?|<div\s+style=["']\s*(?:page-)?break-(?:after|before)\s*:\s*(?:always|page)\s*;?\s*["']\s*\/?>(?:\s*<\/div>)?|\\(?:newpage|pagebreak)|<!--\s*(?:page-?break|newpage)\s*-->)\s*$/i;
+
+function markPageBreaks(md: string): string {
+  let fence: string | null = null;
+  return md
+    .split(/\r?\n/)
+    .map((line) => {
+      const f = line.match(/^\s{0,3}(`{3,}|~{3,})/);
+      if (f) {
+        if (fence === null) fence = f[1][0];
+        else if (f[1][0] === fence) fence = null;
+        return line;
+      }
+      if (fence === null && BREAK_LINE.test(line)) return `\n${BREAK_TOKEN}\n`;
+      return line;
+    })
+    .join("\n");
+}
+
+function restorePageBreaks(html: string): string {
+  return html.replace(
+    new RegExp(`<p>\\s*${BREAK_TOKEN}\\s*</p>`, "g"),
+    '<div class="page-break" aria-hidden="true"></div>',
+  );
+}
 
 /** 把已净化的 HTML 片段包成一份可打印文档。 */
 function printDocument(fragment: string, lang: string, title: string): string {
@@ -124,8 +176,8 @@ export function PrintTool({
       void (async () => {
         try {
           const { convertMarkdown } = await import("@document-tools/converters/markdown-to-html");
-          const result = convertMarkdown(next, { ...DEFAULT_HTML_OPTIONS, mode: "document", lang }, "Document");
-          setPreview(result.html);
+          const result = convertMarkdown(markPageBreaks(next), { ...DEFAULT_HTML_OPTIONS, mode: "document", lang }, "Document");
+          setPreview(restorePageBreaks(result.html).replace("</head>", `${PREVIEW_BREAK_CSS}</head>`));
         } catch {
           setPreview("");
         }
@@ -147,7 +199,7 @@ export function PrintTool({
     try {
       const { convertMarkdown } = await import("@document-tools/converters/markdown-to-html");
       // 片段模式：不带壳，壳和打印样式由 printDocument 自己给
-      const result = convertMarkdown(md, { ...DEFAULT_HTML_OPTIONS, mode: "fragment", lang }, "Document");
+      const result = convertMarkdown(markPageBreaks(md), { ...DEFAULT_HTML_OPTIONS, mode: "fragment", lang }, "Document");
       const title = (result.html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "")
         .replace(/<[^>]*>/g, "")
         .trim() || "Document";
@@ -159,7 +211,7 @@ export function PrintTool({
       const doc = frame.contentDocument;
       if (!doc) throw new Error("no frame");
       doc.open();
-      doc.write(printDocument(result.html, lang, title));
+      doc.write(printDocument(restorePageBreaks(result.html), lang, title));
       doc.close();
       // 图片多数是内联 base64，但 Markdown 里可以写远程图。等它们到位再印，
       // 否则打印出来是一堆空框；最多等 1.5 秒，宁可少一张图也不要卡住。

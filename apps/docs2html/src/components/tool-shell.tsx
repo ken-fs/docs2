@@ -230,6 +230,50 @@ export function ToolShell({
           </div>
         </section>
 
+        {page.methods && (
+          <section id="methods" className="mt-20 border-t border-grid-firm pt-10">
+            <h2
+              id="methods-heading"
+              className="font-display text-2xl leading-tight text-graphite"
+            >
+              {page.methods.heading}
+            </h2>
+            <p className="mt-2 max-w-[46rem] text-[13px] leading-relaxed text-graphite-soft">
+              {page.methods.lede}
+            </p>
+            {/* 可键盘滚动的区域 + 容器查询：窄的时候每行变成一张卡片，
+                列名靠 data-label 注入（见 globals.css 的 .methods-table） */}
+            <div
+              tabIndex={0}
+              role="region"
+              aria-labelledby="methods-heading"
+              className="methods-wrap mt-5"
+            >
+              <table className="methods-table">
+                <thead>
+                  <tr>
+                    {page.methods.columns.map((col) => (
+                      <th key={col} scope="col">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {page.methods.rows.map((row) => (
+                    <tr key={row.name}>
+                      <th scope="row">{row.name}</th>
+                      <td data-label={page.methods!.columns[1]}>{row.how}</td>
+                      <td data-label={page.methods!.columns[2]}>{row.fit}</td>
+                      <td data-label={page.methods!.columns[3]}>{row.watch}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+
         {showClean && (
           <section
             id="cleans"

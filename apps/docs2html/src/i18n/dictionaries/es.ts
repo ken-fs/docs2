@@ -362,6 +362,7 @@ const es: Dictionary = {
           "Tablas GFM con bordes y cabecera sombreada, ajustadas a la página",
           "Bloques de código con fuente monoespaciada, con líneas largas que se ajustan",
           "Imágenes remotas o incrustadas; los enlaces siguen siendo clicables en el PDF",
+          "Saltos de página: escribe <div class=\"page\"/>, \\newpage, \\pagebreak o <!-- pagebreak --> solo en una línea y ahí empieza la página siguiente. En la vista previa se ve como una línea discontinua",
         ],
         limitsHeading: "Qué no hace",
         limits: [

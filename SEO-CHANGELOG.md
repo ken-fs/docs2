@@ -9,6 +9,29 @@
 
 ---
 
+## 2026-11-26 · docs2html · 日语 5 个工具页加「方法比较」表 + Markdown→PDF 支持手动分页 + Word 页标题改成 Word 开头
+
+**改了什么**
+- https://docs2html.com/ja/markdown-to-pdf/：title「Markdown を PDF に変換 — 文字が選べる、ページ割りも正しく」→「Markdown を PDF に変換 — 無料・登録不要、日本語も改ページもそのまま」；H1「Markdown を PDF に」→「Markdown を PDF に変換」；description 重写；keywords 加 markdown pdf / md pdf 変換 / markdown pdf 改ページ / マークダウン pdf 変換；supported 加改ページ和日语字体两条；FAQ 加 3 条（改ページ / 文字化け / 跟 VS Code「Markdown PDF」的区别）
+- 新功能（全语言）：Markdown→PDF 认整行的 `<div class="page"/>`（VS Code Markdown PDF 写法）、`\newpage`、`\pagebreak`、`<!-- pagebreak -->` 为分页，代码块里的不算；预览显示虚线。打印稿按 `<html lang>` 给日 / 繁 / 简 / 韩指定本地字体。9 种其它语言的 supported 各加一行分页说明
+- /ja/markdown-to-pdf/、/ja/markdown-to-html/、/ja/docx-to-html/、/ja/text-to-html/、/ja/excel-to-html-table/ 各加一节「〇〇 にする方法の比較」（这页 / VS Code 插件 / Word・Excel 自带另存为网页 / Google 文档・表格 / Pandoc / 编辑器等，4 列：做法、适合谁、要注意），新组件 `methods`（可选字段，只有日语写了）
+- https://docs2html.com/ja/docx-to-html/：title「DOCX から HTML への変換ツール — …」→「Word を HTML に変換（.docx 対応）— 無料、Word のゴミを外したきれいな HTML」；H1「DOCX を HTML に変換」→「Word を HTML に変換」；keywords 把 word html 変換 / word html 放前面
+- https://docs2html.com/ja/guides/word-to-html-without-uploading/：title 去掉「Word を HTML に変換する」→「アップロードしない文書変換 —— HTML はタブの中で組み、sandbox で確かめる」，H1 同步改，把 Word 泛词让给工具页（同英文 11-18 的做法）
+- 顺手修 bug（共享转换包 html-out.ts）：整页模式把 `<pre>` 里的行也缩进了两格，下载的整页 HTML 代码块从第二行起每行多两个空格（Markdown / DOCX 等所有「ページ全体」输出都受影响）；加了回归测试
+
+**为什么**（GSC 90 天 + AIsa/Semrush jp 库 + 日本谷歌 SERP）
+- 日本是点击第二多的国家，但按词看，有量的词都排得靠后：markdown pdf（2,900/月）几乎不出现、markdown pdf 変換 390 排 29、markdown html 変換 320 排 42、word html 変換 320 排 60（还落在 guide 上）、テキスト html 変換 260 没出现、excel html 変換 210 排 74；之前说的「日本排 7–9」是国家平均，被长尾小词拉高的
+- 这几个词的前排一半是「方法」文章（VS Code 插件、Qiita、Word / Excel 的另存为网页、Pandoc），我们的工具页只讲自己，答不了「哪种办法适合我」；markdown pdf 改ページ 90/月，而我们原来做不到分页
+- Word 页标题以 DOCX 开头，日本人搜 word html 変換 320 / word html 170，docx html 変換 只有 30
+- 台湾量太小（Semrush tw 只有 markdown to html 170/月，其余没收录），/zh-tw/text-to-html/ 已排第 6，这次不动
+
+**预期**：/ja/markdown-to-pdf/ 的 markdown pdf 変換 进前 15、markdown pdf 开始有曝光；word html 変換 改落 /ja/docx-to-html/ 并进前 30；/ja/ 5 页 28 天曝光合计比改前翻倍
+
+**复查 📅 2026-12-24**：GSC 28 天，/ja/ 这 5 页的曝光 / 点击 / 排名，以及上面这些词各自落在哪页、排第几（基线：90 天 /ja/markdown-to-pdf/ 10 曝光 17.5 位、/ja/markdown-to-html/ 37 曝光 30.9 位、/ja/docx-to-html/ 29 曝光 9.6 位、/ja/text-to-html/ 72 曝光 8.5 位、/ja/excel-to-html-table/ 63 曝光 14.8 位）
+**结果**：（待补）
+
+---
+
 ## 2026-11-18 · docs2html · 加德 / 法 / 意 / 韩四种语言 + 英文 Word 词改落工具页
 
 **改了什么**

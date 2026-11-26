@@ -40,6 +40,19 @@ export type PageCopy = {
   };
   faq: Faq[];
   /**
+   * 「别的办法」对照表：搜这个词的人很多在比方法（VS Code 插件、Word 自带的
+   * 另存为网页、Pandoc……），只讲自己的工具页回答不了这个问题。可选，只给
+   * 搜索结果里确实是「方法文章」占前排的语言 / 页面写；写就要写真话，包括
+   * 别的办法比这页强的地方。
+   */
+  methods?: {
+    heading: string;
+    lede: string;
+    /** 四列表头：办法 / 怎么做 / 适合 / 要注意 */
+    columns: [string, string, string, string];
+    rows: { name: string; how: string; fit: string; watch: string }[];
+  };
+  /**
    * 只给「输出不是 HTML 文本」的页面用（目前只有 markdown-to-pdf）：
    * 那个页面的产物是浏览器打印出来的 PDF，所以按钮和提示得自己一套词，
    * 不能借用 converter 的 copy/download。其他页不写这个字段。

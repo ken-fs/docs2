@@ -365,6 +365,7 @@ const de: Dictionary = {
           "GFM-Pipe-Tabellen mit Rahmen und grau hinterlegter Kopfzeile, auf Seitenbreite gebracht",
           "Codeblöcke in Monospace-Schrift, umbrochen statt über den Rand hinaus",
           "Bilder, verlinkt oder eingebettet; Links bleiben im PDF klickbar",
+          "Seitenumbrüche: Schreib <div class=\"page\"/>, \\newpage, \\pagebreak oder <!-- pagebreak --> allein in eine Zeile, dann beginnt dort die nächste Seite. In der Vorschau siehst du eine gestrichelte Linie",
         ],
         limitsHeading: "Was es nicht kann",
         limits: [

@@ -357,6 +357,7 @@ const zhCN: Dictionary = {
           "GFM 竖线表格，带边框和表头底色，宽度按页面排",
           "围栏代码块用等宽字体，长行折行而不是溢出半页",
           "图片（远程链接或内嵌），链接在 PDF 里仍可点击",
+          "手动分页：在单独一行写 <div class=\"page\"/>、\\newpage、\\pagebreak 或 <!-- pagebreak -->，下一页就从那里开始。预览里显示成一条虚线",
         ],
         limitsHeading: "做不到什么",
         limits: [

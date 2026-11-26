@@ -365,6 +365,7 @@ const fr: Dictionary = {
           "Tableaux GFM à barres verticales avec bordures et ligne d’en-tête grisée, à la taille de la page",
           "Blocs de code en police à chasse fixe, renvoyés à la ligne au lieu de déborder",
           "Images distantes ou intégrées ; les liens restent cliquables dans le PDF",
+          "Sauts de page : écrivez <div class=\"page\"/>, \\newpage, \\pagebreak ou <!-- pagebreak --> seul sur une ligne, et la page suivante commence là. L’aperçu l’affiche en pointillés",
         ],
         limitsHeading: "Ce qu’il ne fait pas",
         limits: [

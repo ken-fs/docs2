@@ -260,3 +260,79 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- 「别的办法」对照表（tool-shell 的 #methods）----
+   宽的时候是四列表格，方法名是行表头；容器窄于 40rem 时每行变成一张卡片，
+   thead 藏掉，列名从 data-label 注入。用容器查询而不是媒体查询：表格所在
+   那一栏的宽度才是该看的。 */
+.methods-wrap {
+  container-type: inline-size;
+  overflow-x: auto;
+  max-inline-size: 100%;
+}
+.methods-wrap:focus-visible {
+  outline: 2px solid var(--prussian);
+  outline-offset: 2px;
+}
+.methods-table {
+  inline-size: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--graphite-soft);
+}
+.methods-table th,
+.methods-table td {
+  padding: 0.75rem 0.9rem 0.75rem 0;
+  text-align: start;
+  vertical-align: top;
+  border-block-end: 1px solid var(--grid);
+}
+.methods-table thead th {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite-faint);
+  border-block-end-color: var(--grid-firm);
+}
+.methods-table tbody th {
+  font-weight: 500;
+  color: var(--graphite);
+  min-inline-size: 9rem;
+}
+.methods-table tbody tr:first-child th {
+  color: var(--prussian);
+}
+@container (width < 40rem) {
+  .methods-table,
+  .methods-table thead,
+  .methods-table tbody,
+  .methods-table tr,
+  .methods-table th,
+  .methods-table td {
+    display: block;
+  }
+  .methods-table thead {
+    display: none;
+  }
+  .methods-table tr {
+    padding-block: 0.9rem;
+    border-block-end: 1px solid var(--grid-firm);
+  }
+  .methods-table th,
+  .methods-table td {
+    padding: 0.2rem 0;
+    border: 0;
+  }
+  .methods-table tbody th {
+    font-size: 14px;
+    padding-block-end: 0.35rem;
+  }
+  .methods-table td::before {
+    content: attr(data-label) " · ";
+    color: var(--graphite-faint);
+  }
+}

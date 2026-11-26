@@ -362,6 +362,7 @@ const en: Dictionary = {
           "GFM pipe tables with borders and a shaded header row, sized to the page",
           "Fenced code blocks in a monospace face, wrapped instead of overflowing",
           "Images, remote or embedded; links stay clickable in the PDF",
+          "Page breaks: put <div class=\"page\"/>, \\newpage, \\pagebreak or <!-- pagebreak --> on a line by itself and the next page starts there. The preview shows it as a dashed line",
         ],
         limitsHeading: "What it won't do",
         limits: [

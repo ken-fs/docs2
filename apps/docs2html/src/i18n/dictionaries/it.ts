@@ -365,6 +365,7 @@ const it: Dictionary = {
           "Tabelle GFM con bordi e riga di intestazione ombreggiata, adattate alla pagina",
           "Blocchi di codice delimitati in carattere monospazio, che vanno a capo invece di uscire dai margini",
           "Immagini, remote o incorporate; i link restano cliccabili nel PDF",
+          "Interruzioni di pagina: scrivi <div class=\"page\"/>, \\newpage, \\pagebreak o <!-- pagebreak --> da solo su una riga e lì inizia la pagina successiva. Nell'anteprima appare come una linea tratteggiata",
         ],
         limitsHeading: "Cosa non fa",
         limits: [

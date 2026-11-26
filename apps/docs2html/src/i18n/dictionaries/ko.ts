@@ -363,6 +363,7 @@ const ko: Dictionary = {
           "GFM 세로 막대 표, 테두리와 음영 머리글 행 포함, 페이지 폭에 맞춤",
           "펜스 코드 블록은 고정폭 글꼴, 넘치지 않고 줄바꿈",
           "원격·내장 이미지 모두, 링크는 PDF에서도 클릭 가능",
+          "페이지 나누기: <div class=\"page\"/>, \\newpage, \\pagebreak, <!-- pagebreak --> 중 하나를 한 줄에 단독으로 쓰면 거기서 다음 페이지가 시작돼요. 미리보기에서는 점선으로 보여요",
         ],
         limitsHeading: "안 되는 것",
         limits: [
