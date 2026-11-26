@@ -927,6 +927,7 @@ const zhTW: Dictionary = {
           body: [
             "只要你沒同意統計，站點就不設定任何 cookie。它沒有登入、沒有購物車，也沒有什麼要放進 cookie 裡。唯一可能出現的是 Google Analytics 的 cookie，而且要在你同意之後。",
             "我們打算展示 Google AdSense 的廣告來覆蓋主機成本。啟用之後，Google 可能會按其自身政策設定 cookie 或讀取裝置識別碼，用於投放和衡量廣告。這是本站唯一有第三方了解到你的造訪的地方 —— 而它了解的是你在哪個頁面，不是你轉換了什麼文件，後者 Google 無從得知。",
+            "包括 Google 在內的第三方供應商會使用 Cookie，根據使用者以前造訪本網站或其他網站的情況放送廣告。Google 透過廣告 Cookie，可以讓它和合作夥伴根據你造訪本網站和/或網路上其他網站的情況向你放送廣告。你可以在 Google 廣告設定（adssettings.google.com）裡關閉個人化廣告，也可以在 optout.aboutads.info（歐洲使用者可在 youronlinechoices.eu）關閉部分第三方供應商用於個人化廣告的 Cookie。",
             "如果你在歐洲經濟區、英國或瑞士，在使用任何非必要 cookie 之前會先徵求你的同意，之後也可以撤回。Cookie 政策裡寫了各個類別和改變主意的方法。",
           ],
         },

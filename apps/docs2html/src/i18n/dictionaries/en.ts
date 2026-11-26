@@ -948,6 +948,7 @@ const en: Dictionary = {
           body: [
             "Unless you allow analytics, the site sets no cookies. It has no login, no shopping cart and nothing else for a cookie to hold. The only cookies that can appear are Google Analytics' ones, after you say yes.",
             "We intend to show advertising from Google AdSense to cover hosting costs. When that is enabled, Google may set cookies or read device identifiers to serve and measure ads, in accordance with its own policies. That is the one part of this site where a third party sees something about your visit — and it's about the page you're on, not the document you converted, which Google has no way of seeing.",
+            "Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to this site and/or other sites on the Internet. You can opt out of personalised advertising in Google Ads Settings (adssettings.google.com), and opt out of some third-party vendors' use of cookies for personalised advertising at optout.aboutads.info, or in Europe at youronlinechoices.eu.",
             "If you're in the European Economic Area, the United Kingdom or Switzerland, you will be asked for consent before any non-essential cookies are used, and you can withdraw it later. The cookie policy explains the categories and how to change your mind.",
           ],
         },

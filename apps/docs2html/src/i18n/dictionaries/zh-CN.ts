@@ -927,6 +927,7 @@ const zhCN: Dictionary = {
           body: [
             "只要你不允许统计，站点就不设任何 cookie。它没有登录、没有购物车，也没别的东西要放进 cookie 里。唯一可能出现的是 Google Analytics 的 cookie，而且得你点了同意之后。",
             "我们打算展示 Google AdSense 的广告来覆盖托管成本。启用之后，Google 可能会按其自身政策设置 cookie 或读取设备标识符，用于投放和衡量广告。这是本站唯一有第三方了解到你的访问的地方 —— 而它了解的是你在哪个页面，不是你转换了什么文档，后者 Google 无从得知。",
+            "包括 Google 在内的第三方供应商会使用 Cookie，根据用户以前访问本网站或其他网站的情况投放广告。Google 通过广告 Cookie，可以让它和合作伙伴根据你访问本网站和/或互联网上其他网站的情况向你投放广告。你可以在 Google 广告设置（adssettings.google.com）里关闭个性化广告，也可以在 optout.aboutads.info（欧洲用户可在 youronlinechoices.eu）关闭部分第三方供应商用于个性化广告的 Cookie。",
             "如果你在欧洲经济区、英国或瑞士，在使用任何非必要 cookie 之前会先征求你的同意，之后也可以撤回。Cookie 政策里写了各个类别和改变主意的方法。",
           ],
         },

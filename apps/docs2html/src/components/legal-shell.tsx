@@ -18,23 +18,43 @@ import type { Dictionary, LegalKey } from "@/i18n/types";
  */
 
 /**
- * 文案里出现邮箱的地方要变成能点的 mailto，不能只是一串字。
- * 六份字典都是纯字符串，在这儿统一加链接比在每种语言里塞 JSX 干净。
+ * 文案里出现邮箱和广告退出网址的地方要变成能点的链接，不能只是一串字。
+ * 字典都是纯字符串，在这儿统一加链接比在每种语言里塞 JSX 干净。
+ * 退出网址是 AdSense 审核要求隐私页给出的三处（Google 广告设置 /
+ * aboutads.info / youronlinechoices），字典里原样写域名，这里补成 https 链接。
  */
+const LINKS: Record<string, string> = {
+  [CONTACT_EMAIL]: `mailto:${CONTACT_EMAIL}`,
+  "adssettings.google.com": "https://adssettings.google.com/",
+  "optout.aboutads.info": "https://optout.aboutads.info/",
+  "youronlinechoices.eu": "https://www.youronlinechoices.eu/",
+};
+const LINK_RE = new RegExp(
+  `(${Object.keys(LINKS)
+    .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|")})`,
+);
+
 function withMailto(text: string, key: string) {
-  const at = text.indexOf(CONTACT_EMAIL);
-  if (at === -1) return text;
+  const parts = text.split(LINK_RE);
+  if (parts.length === 1) return text;
   return (
     <>
-      {text.slice(0, at)}
-      <a
-        href={`mailto:${CONTACT_EMAIL}`}
-        className="text-prussian underline decoration-prussian/40 underline-offset-2 hover:decoration-prussian"
-        key={key}
-      >
-        {CONTACT_EMAIL}
-      </a>
-      {text.slice(at + CONTACT_EMAIL.length)}
+      {parts.map((part, i) => {
+        const href = LINKS[part];
+        if (!href) return part;
+        const external = !href.startsWith("mailto:");
+        return (
+          <a
+            href={href}
+            className="text-prussian underline decoration-prussian/40 underline-offset-2 hover:decoration-prussian"
+            key={`${key}-${i}`}
+            {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          >
+            {part}
+          </a>
+        );
+      })}
     </>
   );
 }

@@ -59,6 +59,8 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   robots: { index: true, follow: true },
+  // AdSense 站点归属验证（所有站共用一个发布商号，ads.txt 在 public/）
+  other: { "google-adsense-account": "ca-pub-4969757168101127" },
 };
 
 export default async function RootLayout({
