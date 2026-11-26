@@ -111,6 +111,9 @@ function isFormatPair(t) {
 /** 邮箱地址没有语言。整条就是一个邮箱时放过，句子里带邮箱不放过。 */
 const EMAIL_ONLY = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** 同理，整条就是一个域名（隐私页的广告退出链接 adssettings.google.com 之类）。 */
+const DOMAIN_ONLY = /^(?:[a-z0-9-]+\.)+[a-z]{2,}$/i;
+
 /**
  * 整条就是一串扩展名：`.md .markdown .txt .mdown`。
  *
@@ -129,6 +132,7 @@ function isProse(s) {
   if (PROPER.has(t.toLowerCase())) return false;
   if (isFormatPair(t)) return false;
   if (EMAIL_ONLY.test(t)) return false;
+  if (DOMAIN_ONLY.test(t)) return false;
   if (EXTENSIONS_ONLY.test(t)) return false;
   // 数一下拉丁字母。少于 MIN_LETTERS 的当成标签、数字、符号
   const letters = (t.match(/[A-Za-z]/g) ?? []).length;
